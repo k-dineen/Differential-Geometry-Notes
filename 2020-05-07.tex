@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Defining Manifolds (May 7)}
+
+\subsection{Submanifolds of $\R^n$}
+
+We'll formally write out the definition of a $k$-manifold $M$ in $\R^n$ now.
+\begin{definition}
+A subset $M \subset \R^n$ is a $k$-dimensional manifold if for every $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subset \R^k$, and a function $f : V \to U \cap M$ such that
+\begin{enumerate}
+\item $f$ is a homeomorphism,
+\item $f$ is smooth,
+\item $Df(x)$ has rank $k$ at every $x \in V$.
+\end{enumerate}
+\end{definition}
+The first two conditions are natural. Why the third? We'd like the \textit{tangent space to $M$ at $p$} to be a $k$-dimensional subspace of $\R^n$. If $Df(x)$ has rank $k$, then $Df(x)(\R^k)$ is a $k$-dimensional subspace of $\R^n$, which is what we would like $T_p M$ to be (roughly).
+
+We have an equivalent definition, stated here as a theorem:
+\begin{theorem}
+$M \subset \R^n$ is a $k$-manifold if and only if for each $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subset \R^k$, and a smooth $f : V \to \R^{n-k}$ such that $U \cap M = \Gamma_f$ (up to a permutation of the coordinates in $U$).
+\end{theorem}
+That last condition is a little odd, but what it means is that we can consider graphs of the form $(x, f(x))$ and $(f(y), y)$. This is essential in ensuring that, say, $S^1 = \{x^2 + y^2 = 1\}$ is a manifold. The definition may be shown to be equivalent to the old one using the implicit function theorem.
+
+\subsection{Topological Manifolds}
+
+By way of the subspace topology, every manifold in $\R^n$ is Hausdorff and second countable. It turns out that these are the conditions we would like our abstract manifolds to have in order to exclude some pathological cases.
+
+\begin{definition}
+A topological space $M$ is locally Euclidean of dimension $m$ if for each $p \in U$ there is an open neighbourhood $U$ of $p$ in $M$ and a map $\phi : U \to \R^m$ which is a homeomorphism onto its image. The pair $(U, \phi)$ is called a coordinate chart, $U$ is called a coordinate neighbourhood, and $\phi$ is called a coordinate system. 
+\end{definition}
+
+\begin{definition}
+$M$ is a topological manifold of dimension $m$ if it is Hausdorff, second countable, and locally Euclidean of dimension $m$.
+\end{definition}
+Is the dimension of a topological manifold well-defined? That is, if $(U, \phi)$ and $(V, \psi)$ are two coordinate charts with $U \cap V \neq \emptyset$ and $\phi(U) \subset \R^n$, $\psi(V) \subset \R^m$, is $n = m$? Consider the \textit{transition mapping}
+\[
+\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V).
+\]
+This is a homeomorphism from an open subset of $\R^n$ to an open subset of $\R^m$. If $n \neq m$, this contradicts a non-trivial theorem called \textit{Invariance of Domain}. We will not prove it here.
+
+If we drop the Hausdorff condition, then the "line with two origins" becomes a topological manifold. If we drop the countable basis condition, then the "long line" becomes a topological manifold. These are both topological spaces that intuitively should not be manifolds - the extra conditions excludes them from being so.
+
+\subsection{Defining a Smooth Manifold}
+
+How should we define a smooth function on a manifold, say, $f : M \to \R$? The reasonable thing to do is to say that $f$ is smooth if $f \circ \phi^{-1}$ is smooth, for some coordinate system $\phi$. Then we run into a problem - this isn't independent of the choice of coordinate system, so long as $M$ is only a topological manifold. We will define a \textit{smooth structure} on $M$ which allows us to make this natural definition.
+
+\begin{definition}
+Two coordinate charts $(U, \phi)$ and $(V, \psi)$ are said to be smoothly compatible (or $C^\infty$-compatible) if the transition mappings are diffeomorphisms, i.e.
+\begin{align*}
+&\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V) \\
+&\phi \circ \psi^{-1} : \psi(U \cap V) \to \phi(U \cap V)
+\end{align*}
+are $C^\infty$ maps of open subsets of Euclidean space.
+\end{definition}
+
+Smooth compatability is clearly a reflexive and symmetric relation. Is it transitive? Unfortunately, the answer is no. Suppose $(U_1, \phi_1)$ is smoothly compatible with $(U_2, \phi_2)$ and similarly for $(U_2, \phi_2)$ with $(U_3, \phi_3)$. The natural thing to do is write
+\[
+\phi_3 \circ \phi_1^{-1} = (\phi_3 \circ \phi_2^{-1}) \circ (\phi_2 \circ \phi_1^{-1}).
+\]
+But this only makes sense on $\phi_1(U_1 \cap U_2 \cap U_3)$, which may be empty!
+
+\begin{definition}
+A smooth atlas (or $C^\infty$ atlas) on $M$ is a collection of pairwise smoothly compatible coordinate charts covering $M$.
+\end{definition}
+
+We can now properly define a smooth function on a manifold. For unsaid technical reasons, however, it's beneficial to consider a little more structure. (Unfortunately the rest of the lecture went a little fast, as we ran out of time.)
+
+\begin{definition}
+A smooth maximal atlas is a smooth atlas not contained in any other smooth atlas.
+\end{definition}
+
+\begin{definition}
+A smooth manifold of dimension $n$ is a Hausdorff, second countable topological manifold of dimension $n$ equipped with a smooth maximal atlas $\mathcal{A}$. The smooth maximal atlas $\mathcal{A}$ is called a smooth structure on $M$.
+\end{definition}
+
+\begin{lemma}
+Any smooth atlas for $M$ is contained in a unique maximal smooth atlas.
+\end{lemma}
+The proof for this lemma proceeds roughly as follows: first one proves that if a two coordinate charts are smoothly compatible with a given atlas (meaning they are compatible with every chart in the atlas), then they are themselves compatible. Then one picks a smooth atlas and adjoins (by union) all of the charts with which the smooth atlas is compatible. It is then shown that this larger atlas is the desired unique maximal atlas.
+
+Because of this lemma, we have a simple "test" for a smooth manifold.
+\begin{corollary}
+A topological space $M$ is a smooth manifold if and only if
+\begin{enumerate}
+\item It is Hausdorff and second countable,
+\item It admits a smooth atlas.
+\end{enumerate}
+\end{corollary}
+
+\end{document}

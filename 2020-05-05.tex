@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+\begin{document}
+
+\section{Introduction (May 5)}
+
+\subsection{Trying to Define Things}
+
+The straightforward approach is
+\begin{definition}
+A set $S \subset \R^3$ is a surface if there is an open set $U \subset \R^2$ and a smooth function $f : U \to \R$ for which $S = \Gamma_f$ is the graph of $f$.
+\end{definition}
+This isn't a great definition though. Its problem is that it's way too specific. The sphere $S^2 = \{x^2 + y^2 + z^2 = 1\}$ fails to be a surface under this definition, as it's not the graph of a function. We can remedy this by thinking about the following question:
+\[
+\textit{If we were standing on a surface, what should our surroundings look like?}
+\]
+Here's another attempt at defining a surface, albeit in an imprecise way.
+\begin{definition}
+A set $S \subset \R^3$ is a surface if for every $p \in S$ there is a neighbourhood of $p$ in $S$ that "looks like a piece of the plane".
+\end{definition}
+In more precise (but still not formal) wording, we are "locally diffeomorphic to pieces of $\R^2$". It turns out that this condition is equivalent to $S$ being locally a graph; that follows from the implicit function theorem.
+
+We'd like to generalize the above notions to define a $k$-dimensional "surface" in $\R^n$. Following in the footsteps of the previous definition, we obtain a new
+\begin{definition}
+A set $S \subset \R^n$ is a $k$-dimensional manifold if it "locally looks like $\R^n$".
+\end{definition}
+Equivalently, if for each $p \in S$ there is an open $U \subset \R^n$ containing $p$ such that $S \cap U$ is the graph of a smooth function from an open subset of $\R^k$ to $\R^{n-k}$.
+
+The key idea with the last two definitions is that they are \textit{local} - they are concerned with describing "pieces" of the surface or manifold, as opposed to the first definition being "global" by describing the entire surface.
+
+\subsection{Leaving $\R^n$ for the Intrinsic View}
+Almost all of the geometry that is done on manifolds depends only on the manifold itself, and not on the space in which the manifold lies. (An example of Riemannian geometry is curvature.) Moreover, there are many sets we'd like to call manifolds whose points do not lie in Euclidean space. An example is \textit{real projective space} $\R P^n$, which is defined as the quotient $(\R^{n+1} \setminus \{0\})/(x \sim \lambda x)$, where $\lambda \neq 0$. The real projective space contains equivalence classes of points of Euclidean space, so it is not a subset of Euclidean space. Therefore we'd like to define manifolds so that $\R P^n$ is an $n$-dimensional manifold. 
+
+Concisely, we would like to study manifolds \textit{intrinsically}: we would like to drop all of the unnecessary data around our manifold and consider only the key properties of what a manifold should be.
+
+\end{document}
