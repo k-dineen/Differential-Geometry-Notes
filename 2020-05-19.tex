@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Smooth Maps and Differentiable Structures (May 19)}
+
+\subsection{Smooth Maps on a Manifold}
+The notion of the pullback of a function on a manifold (which by MAT257 we know is a $0$-form on a manifold - not that that's important right now) is the following:
+\begin{definition}
+Let $F : M \to N$ and $f : N \to \R$ be functions. The pullback of $f$ by $F$ is the function $F^*f:M \to \R$ defined by $F^*f = f \circ F$. That is, the pullback of $f$ by $F$ is the unique function for which the following diagram commutes:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+M \arrow[rd, "F^*f"] \arrow[d, "F"] \\
+N \arrow[r, "f"] & \R
+\end{tikzcd} 
+\]
+\end{definition}
+Now for the main definitions.
+\begin{definition}
+Fix a smooth manifold $M$. A function $f : M \to \R$ is $C^\infty$ at $p \in M$ if there is a chart $(U, \phi)$ about $p$ such that $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$ at $\phi(p)$, in the usual sense. Alternatively, $f$ is $C^\infty$ at $p$ if the pullback $(\phi^{-1})^*f$ of $f$ by the inverse of some coordinate system $\phi$ about $p$ is $C^\infty$ at $\phi(p)$.
+\end{definition}
+We'd like to show that this does not depend on the choice of chart about $p$. If $(V, \psi)$ is another chart about $p$, then
+\[
+f \circ \psi^{-1} = (f \circ \phi^{-1}) \circ (\phi \circ \psi^{-1}),
+\]
+is $C^\infty$ at $\psi(p)$ on the open set $\psi(U \cap V)$, since $\phi \circ \psi^{-1}$ is $C^\infty$ at $\psi(p)$ and $f \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$. Therefore smoothness of a function on a manifold at a point doesn't depend on the choice of chart about that point. We will say that $f$ is $C^\infty$ on $M$ if it is $C^\infty$ at every point of $M$. Note that if $f : M \to \R$ is $C^\infty$ at $p$, then $f = (f \circ \phi^{-1}) \circ \phi$ is continuous at $p$.
+
+These considerations give us a
+\begin{proposition}
+Let $f : M \to \R$ be a continuous function on a smooth manifold $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $f : M \to \R$ is $C^\infty$.
+\item There is an atlas $\mathcal{A}$ of $M$ such that for any $(U, \phi) \in \mathcal{A}$, the function $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+Note that we implicitly assume $\mathcal{A}$ in the above is a subset of our choice of maximal atlas for $M$. When we say $M$ is a smooth manifold, we also assume a choice of maximal atlas has been made.
+
+What about maps between manifolds? The definition is a natural extension of the one we just made.
+\begin{definition}
+Let $N$ and $M$ be smooth manifolds and let $F : N \to M$ be continuous. We say $F$ is $C^\infty$ at $p \in N$ if there is a chart $(V, \psi)$ about $F(p)$ and a chart $(U, \phi)$ about $p$ such that 
+\[
+\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m
+\]
+is $C^\infty$ at $\phi(p)$.
+\end{definition}
+Note that continuity of $F$ was essential, for if that were not the case, the set $\phi(U \cap F^{-1}(V))$ may not be open, in which case we may not be able to talk about smoothness at $p$. 
+
+As before, we check that this is independent of the charts. Choose charts $(\tilde{U}, \tilde{\phi})$ about $p$ and $(\tilde{V}, \tilde{\psi})$ about $F(p)$. Then
+\[
+\tilde{\psi} \circ F \circ \tilde{\phi}^{-1} = (\tilde{\psi} \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1}) \circ (\phi \circ \tilde{\phi}^{-1})
+\]
+is $C^\infty$ at $\tilde{\phi}(p)$ by similar reasoning as before. We say that $F : N \to M$ is $C^\infty$ if it is so at every point of $N$.
+
+We have a similar proposition coming from the independence of charts:
+\begin{proposition}
+Let $F : N \to M$ be a continuous function of smooth manifolds $N$ and $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$ on $N$.
+\item There are atlases $\mathcal{A}$ of $N$ and $\mathcal{B}$ of $M$ such that for every $(U, \phi) \in \mathcal{A}$ and $(V, \psi) \in \mathcal{B}$, the map $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+
+% everything after this needs checking
+
+We need to make sure this is actually a generalization of the notion of smoothness we know from calculus. We will make sure that our definition is the usual notion of smoothness when the manifolds are Euclidean spaces, and we will make sure that smoothness is preserved by compositions.
+\begin{proposition}
+If $N = \R^n$ and $M = \R^m$ are given their usual smooth structures, then $F : N \to M$ is smooth as defined above if and only if it is smooth as a function of Euclidean spaces.
+\end{proposition}
+\begin{proof}
+Choose the atlases $\{(\R^n, \mathrm{Id}_{\R^n})\}$ on $\R^n$ and $\{(\R^m, \mathrm{Id}_{\R^m})\}$ on $\R^m$. Then $F : N \to M$ is smooth as defined above if and only if
+\[
+\mathrm{Id}_{\R^m} \circ F \circ \mathrm{Id}_{\R^n}^{-1} : N \to M
+\]
+is smooth. But this function is just $F : \R^n \to \R^m$.
+\end{proof}
+Note that this holds if $N$ and $M$ had merely been open sets of Euclidean spaces, for the usual smooth structure on them (i.e. the one we do ordinary calculus with) is the maximal atlas corresponding to the restrictions of the charts given above to those open sets.
+
+\begin{proposition}
+If $F : N \to M$ and $G : M \to P$ are $C^\infty$ maps of manifolds, then $G \circ F : N \to P$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+Suppose $p \in N$. Choose charts $(U, \phi)$ about $p$, $(V, \psi)$ about $F(p)$, and $(W, \sigma)$ about $G(F(p))$. Then 
+\[
+\sigma \circ (G \circ F) \circ \phi^{-1} = (\sigma \circ G \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1})
+\]
+is $C^\infty$ at $\phi(p)$, since $\sigma \circ G \circ \psi^{-1}$ is $C^\infty$ at $\psi(F(p))$ and $\psi \circ F \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$.
+\end{proof}
+
+We have one last property: vector-valued functions behave how we want them to.
+\begin{proposition}
+Let $N$ be a smooth manifold and $F : N \to \R^m$ be a continuous function. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$.
+\item Each component function $F^i : N \to \R$ is smooth.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+The proof was left as an exercise, so here's a solution. We have
+\begin{align*}
+F \text{ is } C^\infty &\iff \text{ for every chart } (U, \phi) \text{ on } N \text{, the map } F \circ \phi^{-1} : \phi(U) \to \R^m \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{ and for every chart } (U, \phi) \text{ on } N \text{, the map } F^i \circ \phi^{-1} : \phi(U) \to \R \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{, the map } F^i : N \to \R \text{ is } C^\infty.
+\end{align*}
+\end{proof}
+
+Just as two vector spaces or groups are equivalent if they are isomorphic, or two topological spaces are equivalent if they are homeomorphic, or two sets are equivalent if they are in bijection with eachother, we have a notion of "isomorphism" or equivalence of smooth manifolds.
+\begin{definition}
+A function $F : N \to M$ of smooth manifolds is said to be a diffeomorphism if it is smooth and has a smooth inverse.
+\end{definition}
+Then we can state: \emph{differential topology is the study of properties of smooth manifolds invariant under diffeomorphism}.
+
+\subsection{Differentiable Structures}
+
+We can exhibit two diffeomorphic but unequal smooth structures on $\R$. Define two atlases
+\begin{alignat*}{2}
+\mathcal{A}_1 &= \{(\R, \mathrm{Id})\} \qquad &&\text{(call this one $\R$)}\\
+\mathcal{A}_2 &= \{ (\R, \psi(x) := x^3) \} \qquad &&\text{(call this one $\R'$)}
+\end{alignat*}
+These charts are not $C^\infty$ compatible, since $\mathrm{Id} \circ \psi^{-1}$ sends $x$ to $\sqrt[3]{x}$; not a diffeomorphism. Therefore the smooth structures corresponding to $\mathcal{A}_1$ and $\mathcal{A}_2$ are different.
+
+Nevertheless, define $f : \R \to \R'$ by $f(x) = \sqrt[3]{x}$. Then 
+\[
+\psi \circ f \circ \mathrm{Id}^{-1} : \R \to \R' \qquad x \mapsto x
+\]
+is a diffeomorphism!
+
+We can exhibit non-diffeomorphic smooth structures on manifolds; see the exotic sphere $S^7$. Even better, $\R^4$ has uncountably many smooth structures \emph{up to diffeomorphism}. It is known that every topological manifold of dimension $<4$ admits a unique smooth structure, up to diffeomorphism.
+ 
+\end{document}
+ 

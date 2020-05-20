@@ -1,0 +1,608 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[hidelinks]{hyperref}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\hypersetup{linktoc=all}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+
+% HOW TO READ THESE
+% (definiton/theory/corollary/lemma) a.b.c is the cth respective object of section a, subsection b
+
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{corollary}{Corollary}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+\newtheorem{proposition}{Proposition}
+
+\pagestyle{myheadings}
+\title{MAT367 Course Notes}
+\author{Kain Dineen}
+
+\begin{document}
+\maketitle
+
+The following are course notes for the course MAT367 (Differential Geometry) offered in the Summer of 2020, taught by Ahmed Ellithy. The course notes are based off of handwritten notes created during lectures. They may contain errors or other false statements. The dates for each lecture are included, and any additional sections are supplementary material. (Exercises to very important/relevant problems, etc.)
+
+\tableofcontents
+
+\newpage
+\section{Introduction (May 5)}
+
+\subsection{Trying to Define Things}
+
+The straightforward approach is
+\begin{definition}
+A set $S \subset \R^3$ is a surface if there is an open set $U \subset \R^2$ and a smooth function $f : U \to \R$ for which $S = \Gamma_f$ is the graph of $f$.
+\end{definition}
+This isn't a great definition though. Its problem is that it's way too specific. The sphere $S^2 = \{x^2 + y^2 + z^2 = 1\}$ fails to be a surface under this definition, as it's not the graph of a function. We can remedy this by thinking about the following question:
+\[
+\textit{If we were standing on a surface, what should our surroundings look like?}
+\]
+Here's another attempt at defining a surface, albeit in an imprecise way.
+\begin{definition}
+A set $S \subset \R^3$ is a surface if for every $p \in S$ there is a neighbourhood of $p$ in $S$ that "looks like a piece of the plane".
+\end{definition}
+In more precise (but still not formal) wording, we are "locally diffeomorphic to pieces of $\R^2$". It turns out that this condition is equivalent to $S$ being locally a graph; that follows from the implicit function theorem.
+
+We'd like to generalize the above notions to define a $k$-dimensional "surface" in $\R^n$. Following in the footsteps of the previous definition, we obtain a new
+\begin{definition}
+A set $S \subset \R^n$ is a $k$-dimensional manifold if it "locally looks like $\R^n$".
+\end{definition}
+Equivalently, if for each $p \in S$ there is an open $U \subset \R^n$ containing $p$ such that $S \cap U$ is the graph of a smooth function from an open subset of $\R^k$ to $\R^{n-k}$.
+
+The key idea with the last two definitions is that they are \textit{local} - they are concerned with describing "pieces" of the surface or manifold, as opposed to the first definition being "global" by describing the entire surface.
+
+\subsection{Leaving $\R^n$ for the Intrinsic View}
+Almost all of the geometry that is done on manifolds depends only on the manifold itself, and not on the space in which the manifold lies. (An example of Riemannian geometry is curvature.) Moreover, there are many sets we'd like to call manifolds whose points do not lie in Euclidean space. An example is \textit{real projective space} $\R P^n$, which is defined as the quotient $(\R^{n+1} \setminus \{0\})/(x \sim \lambda x)$, where $\lambda \neq 0$. The real projective space contains equivalence classes of points of Euclidean space, so it is not a subset of Euclidean space. Therefore we'd like to define manifolds so that $\R P^n$ is an $n$-dimensional manifold. 
+
+Concisely, we would like to study manifolds \textit{intrinsically}: we would like to drop all of the unnecessary data around our manifold and consider only the key properties of what a manifold should be.
+
+\newpage
+\section{Defining Manifolds (May 7)}
+
+\subsection{Submanifolds of $\R^n$}
+
+We'll formally write out the definition of a $k$-manifold $M$ in $\R^n$ now.
+\begin{definition}
+A subset $M \subset \R^n$ is a $k$-dimensional manifold if for every $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subset \R^k$, and a function $f : V \to U \cap M$ such that
+\begin{enumerate}
+\item $f$ is a homeomorphism,
+\item $f$ is smooth,
+\item $Df(x)$ has rank $k$ at every $x \in V$.
+\end{enumerate}
+\end{definition}
+The first two conditions are natural. Why the third? We'd like the \textit{tangent space to $M$ at $p$} to be a $k$-dimensional subspace of $\R^n$. If $Df(x)$ has rank $k$, then $Df(x)(\R^k)$ is a $k$-dimensional subspace of $\R^n$, which is what we would like $T_p M$ to be (roughly).
+
+We have an equivalent definition, stated here as a theorem:
+\begin{theorem}
+$M \subset \R^n$ is a $k$-manifold if and only if for each $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subset \R^k$, and a smooth $f : V \to \R^{n-k}$ such that $U \cap M = \Gamma_f$ (up to a permutation of the coordinates in $U$).
+\end{theorem}
+That last condition is a little odd, but what it means is that we can consider graphs of the form $(x, f(x))$ and $(f(y), y)$. This is essential in ensuring that, say, $S^1 = \{x^2 + y^2 = 1\}$ is a manifold. The definition may be shown to be equivalent to the old one using the implicit function theorem.
+
+\subsection{Topological Manifolds}
+
+By way of the subspace topology, every manifold in $\R^n$ is Hausdorff and second countable. It turns out that these are the conditions we would like our abstract manifolds to have in order to exclude some pathological cases.
+
+\begin{definition}
+A topological space $M$ is locally Euclidean of dimension $m$ if for each $p \in U$ there is an open neighbourhood $U$ of $p$ in $M$ and a map $\phi : U \to \R^m$ which is a homeomorphism onto its image. The pair $(U, \phi)$ is called a coordinate chart, $U$ is called a coordinate neighbourhood, and $\phi$ is called a coordinate system. 
+\end{definition}
+
+\begin{definition}
+$M$ is a topological manifold of dimension $m$ if it is Hausdorff, second countable, and locally Euclidean of dimension $m$.
+\end{definition}
+Is the dimension of a topological manifold well-defined? That is, if $(U, \phi)$ and $(V, \psi)$ are two coordinate charts with $U \cap V \neq \emptyset$ and $\phi(U) \subset \R^n$, $\psi(V) \subset \R^m$, is $n = m$? Consider the \textit{transition mapping}
+\[
+\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V).
+\]
+This is a homeomorphism from an open subset of $\R^n$ to an open subset of $\R^m$. If $n \neq m$, this contradicts a non-trivial theorem called \textit{Invariance of Domain}. We will not prove it here.
+
+If we drop the Hausdorff condition, then the "line with two origins" becomes a topological manifold. If we drop the countable basis condition, then the "long line" becomes a topological manifold. These are both topological spaces that intuitively should not be manifolds - the extra conditions excludes them from being so.
+
+\subsection{Defining a Smooth Manifold}
+
+How should we define a smooth function on a manifold, say, $f : M \to \R$? The reasonable thing to do is to say that $f$ is smooth if $f \circ \phi^{-1}$ is smooth, for some coordinate system $\phi$. Then we run into a problem - this isn't independent of the choice of coordinate system, so long as $M$ is only a topological manifold. We will define a \textit{smooth structure} on $M$ which allows us to make this natural definition.
+
+\begin{definition}
+Two coordinate charts $(U, \phi)$ and $(V, \psi)$ are said to be smoothly compatible (or $C^\infty$-compatible) if the transition mappings are diffeomorphisms, i.e.
+\begin{align*}
+&\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V) \\
+&\phi \circ \psi^{-1} : \psi(U \cap V) \to \phi(U \cap V)
+\end{align*}
+are $C^\infty$ maps of open subsets of Euclidean space.
+\end{definition}
+
+Smooth compatability is clearly a reflexive and symmetric relation. Is it transitive? Unfortunately, the answer is no. Suppose $(U_1, \phi_1)$ is smoothly compatible with $(U_2, \phi_2)$ and similarly for $(U_2, \phi_2)$ with $(U_3, \phi_3)$. The natural thing to do is write
+\[
+\phi_3 \circ \phi_1^{-1} = (\phi_3 \circ \phi_2^{-1}) \circ (\phi_2 \circ \phi_1^{-1}).
+\]
+But this only makes sense on $\phi_1(U_1 \cap U_2 \cap U_3)$, which may be empty!
+
+\begin{definition}
+A smooth atlas (or $C^\infty$ atlas) on $M$ is a collection of pairwise smoothly compatible coordinate charts covering $M$.
+\end{definition}
+
+We can now properly define a smooth function on a manifold. For unsaid technical reasons, however, it's beneficial to consider a little more structure. (Unfortunately the rest of the lecture went a little fast, as we ran out of time.)
+
+\begin{definition}
+A smooth maximal atlas is a smooth atlas not contained in any other smooth atlas.
+\end{definition}
+
+\begin{definition}
+A smooth manifold of dimension $n$ is a Hausdorff, second countable topological manifold of dimension $n$ equipped with a smooth maximal atlas $\mathcal{A}$. The smooth maximal atlas $\mathcal{A}$ is called a smooth structure on $M$.
+\end{definition}
+
+\begin{lemma}
+Any smooth atlas for $M$ is contained in a unique maximal smooth atlas.
+\end{lemma}
+The proof for this lemma proceeds roughly as follows: first one proves that if a two coordinate charts are smoothly compatible with a given atlas (meaning they are compatible with every chart in the atlas), then they are themselves compatible. Then one picks a smooth atlas and adjoins (by union) all of the charts with which the smooth atlas is compatible. It is then shown that this larger atlas is the desired unique maximal atlas.
+
+Because of this lemma, we have a simple "test" for a smooth manifold.
+\begin{corollary}
+A topological space $M$ is a smooth manifold if and only if
+\begin{enumerate}
+\item It is Hausdorff and second countable,
+\item It admits a smooth atlas.
+\end{enumerate}
+\end{corollary}
+
+\newpage
+\section{Smooth Structures, Examples (May 12)}
+
+\subsection{More on Maximal Atlases}
+
+Consider the two atlases $\mathcal{A}_1 = \{(\R^n, Id)\}$ and $\mathcal{A}_2 = \{(B_1(x), Id) : x \in \R^n\}$ on $\R^n$. These two atlases determine the same maximal atlas, or the same smooth structure. Why? We have three equivalent reasons
+\begin{itemize}
+\item for any $(U, \phi) \in \mathcal{A}_1$ and $(V, \psi) \in \mathcal{A}_2$, the charts $(U, \phi)$ and $(V, \psi)$ are $C^\infty$ compatible.
+\item $\mathcal{A}_1 \cup \mathcal{A}_2$ is a $C^\infty$ atlas.
+\item $\mathcal{A}_1$ and $\mathcal{A}_2$ belong to the same maximal atlas.
+\end{itemize}
+Define a relation $\sim$ on the atlases by $\mathcal{A}_1 \sim \mathcal{A}_2$ if and only if $\mathcal{A}_1 \cup \mathcal{A}_2$ is another $C^\infty$ atlas. Symmetry and reflexivity are immediate. For transitivity, suppose $\mathcal{A}_1 \cup \mathcal{A}_2$ and $\mathcal{A}_2 \cup \mathcal{A}_3$ are $C^\infty$ atlases. Choose $(U_1, \phi_1) \in \mathcal{A}_1$ and $(U_3, \phi_3) \in \mathcal{A}_3$. We obtain a diffeomorphism
+\[
+\phi_1 \circ \phi_3^{-1} = \phi_1 \circ \phi_2^{-1} \circ \phi_2 \circ \phi_3^{1} 
+\]
+defined on $\phi_3(U_{13} \cap U_2)$. Since $\{U_2 : (U_2, \phi_2) \in \mathcal{A}_2$ covers $M$, the map $\phi_1 \circ \phi_3^{-1}$ is smooth at every point of $\phi_3(U_{13})$. Therefore $\sim$ is an equivalence relation.
+
+Now given an atlas $\mathcal{A}$ on $M$, we can talk about the equivalence class $[\mathcal{A}]$. Define 
+\[
+\mathcal{M} = \bigcup_{\mathcal{A}^\prime \in [\mathcal{A}]} \mathcal{A}^\prime.
+\]
+Then $\mathcal{M}$ is a new atlas on $M$; it is the unique maximal atlas containing $\mathcal{A}$. (Exercise.)
+
+So we can make the
+\begin{definition}
+A smooth $n$-manifold $M$ is a topological $n$-manifold with a maximal atlas. The choice of maximal atlas is called a smooth structure on $M$.
+\end{definition}
+
+Considering the previous remarks, we arrive at a sufficient condition for a space to be a smooth manifold: If $M$ is a topological space for which
+\begin{enumerate}
+\item $M$ is Hausdorff, second-countable, and
+\item $M$ admits a $C^\infty$ atlas $\mathcal{A}$
+\end{enumerate}
+then $M$ is a smooth manifold with smooth structure $\mathcal{M} = \bigcup_{\mathcal{A}^\prime \in [\mathcal{A}]} \mathcal{A}^\prime$.
+
+\subsection{Examples}
+
+\begin{enumerate}
+\item (Open subsets) Let $M$ be a smooth $n$-manifold with a smooth atlas $\mathcal{A} = \{ (U_\alpha, \phi_\alpha) \}$. Let $A \subset M$ be an open set. Then $\mathcal{A}_A = \{ (U_\alpha \cap A, \phi_\alpha |_{U_\alpha \cap A}) \}$ is a smooth atlas on $A$, so $A$ is a smooth $n$-manifold.
+
+\item (Finite dimensional vector spaces) Let $V$ be a finite dimensional real vector space. Choose a basis $\beta = \{v_1, \dots, v_n\}$ of $V$, and consider the isomorphism $\Phi : V \to \R^n$ given by $\Phi(v_i) = e_i$. 
+
+Define a norm on $V$ by $\|\sum a_i v_i\| := \|\sum a_i e_i \|$, where the norm on the left is the standard Euclidean norm. With this norm we may define an open ball in $V$ as $B_r(v_0) = \{ v \in V : \| v - v_0 \| < r\}$. This gives a topology on $V$. Since all norms on finite dimensional vector spaces are equivalent, this topology does not depend on our choice of basis.
+
+Then $\Phi$ is an isometry (it does not change distances), so it takes balls to balls and so does its inverse. That is, $\Phi$ is a homeomorphism, so we have a $C^\infty$ atlas $\{(V, \Phi)\}$ on $V$, making $V$ a smooth $n$-manifold.
+
+This atlas determines a maximal atlas on $V$. Does this maximal atlas depend on the choice of basis? No. Choose another basis $\beta^\prime$ of $V$ and define $\Phi^\prime : V \to \R^n$ similarly. Then we'll get another $C^\infty$ atlas $\{(V, \Phi^\prime)\}$ on $V$. The charts $(U, \Phi)$ and $(V, \Phi^\prime)$ are $C^\infty$-compatible, for the transition map $\Phi^\prime \circ \Phi^{-1}$ is a linear isomorphism of $\R^n$ with itself (certainly $C^\infty$). 
+
+\textbf{Remark:} We also could have talked about complex vector spaces, since $\mathbb{C} \cong \R^2$.
+
+\item (Matrices, general linear group) $\mathrm{Mat}_{m \times n}(\R) \cong \R^{mn}$, so $\mathrm{Mat}_{m \times n}(\R)$ is a smooth manifold of dimension $mn$. 
+
+The general linear group is $GL(n, \R) = \{A \in \mathrm{Mat}_{m \times n}(\R) : \det(A) \neq 0\}$. By continuity of $\det$ it is an open subset of $\mathrm{Mat}_{m \times n}(\R)$, so by the first example we know it's a smooth $n^2$-dimensional manifold.
+\end{enumerate}
+
+\newpage
+
+\section{More examples of manifolds, Quotients (May 14)}
+
+\subsection{More Examples}
+\begin{enumerate}
+\item (The circle) Define $S^1 = \{x^2 + y^2 = 1\} \subset \R^2$. We can define four functions on open sets of $\R$, the collection of which form a set of functions of which $S^1$ is locally the graph. Define an open cover $\{V_1, V_2, V_3, V_4\}$ of $S^1$ by
+\begin{alignat*}{2}
+V_1 &= S^1 \cap ((0, \infty) \times (-1,1)) \qquad &&\text{"open right half"}\\
+V_2 &= S^1 \cap ((\infty, 0) \times (-1,1)) \qquad &&\text{"open left half"} \\
+V_3 &= S^1 \cap ((-1, 1) \times (0, \infty)) \qquad &&\text{"open top half"}\\
+V_4 &= S^1 \cap ((-1, 1) \times (-\infty, 0))\qquad &&\text{"open bottom half"}
+\end{alignat*}
+Define $f_1, f_2, f_3, f_4 : (-1, 1) \to \R$ by
+\begin{alignat*}{2}
+f_1 (y) &= \sqrt{1-y^2} \qquad &&\text{so that } \Gamma_{f_1} = V_1 \\
+f_2 (y) &= -\sqrt{1-y^2} \qquad &&\text{so that } \Gamma_{f_2} = V_2  \\
+f_3 (x) &= \sqrt{1-x^2} \qquad &&\text{so that } \Gamma_{f_3} = V_3  \\
+f_4 (x) &= -\sqrt{1-x^2} \qquad &&\text{so that } \Gamma_{f_4} = V_4 
+\end{alignat*}
+What are the charts? Define $\phi_1 : V_1 \to (-1,1)$ by $\phi_1(x,y) = y$. This is continuous with continuous inverse $\phi_1^{-1}(y) = (\sqrt{1-y^2}, y)$. The other coordinate systems $\phi_2, \phi_3, \phi_4$ are defined similarly. Consider 
+\[
+\mathcal{A} = \{ (V_1, \phi_1),(V_2, \phi_2),(V_3, \phi_3),(V_4, \phi_4) \}.
+\]
+We claim that $\mathcal{A}$ is a smooth atlas on $S^1$. For example, one transition map is $\phi_1 \circ \phi_3^{-1} : \phi_3(V_{13}) \to \phi_1(V_{13})$, which is a map from $(0, 1)$ to itself. It is given by
+\[
+(\phi_1 \circ \phi_3^{-1})(t) = \phi_1(t, \sqrt{1-t^2}) = \sqrt{1-t^2},
+\]
+which is a diffeomorphism of $(0, 1)$ with itself. As a similar proposition holds for the other transition maps, we conclude that $(S^1, \mathcal{A})$ is a smooth manifold of dimension $1$.
+
+Let $f : \R^2 \to \R$ be $f(x,y) = x^2+y^2$. Then $S^1 = f^{-1}(1)$ (preimage). We get a collection of $1$-dimensional manifolds covering $\R^2 \setminus \{0\}$; we say that $\{f^{-1}(r) : r > 0\}$ is a \textit{one-dimensional foliation} of $\R^2 \setminus \{0\}$. (More on that in a later lecture.)
+
+\item (Level sets) Consider a smooth map $F : \R^{n+1} \to \R$. Let $c \in \R$ be such that $F^{-1}(c) \neq \emptyset$ and $\nabla F(a) \neq 0$ for each $a \in F^{-1}(c)$. 
+
+For example, if $F(x) = \|x\|^2$, then $S^n = F^{-1}(1)$ and $\left. \nabla F \right|_{F^{-1}(c)} \neq 0$. (We say $\{F^{-1}(r) : r > 0$ is an \textit{$n$-dimensional foliation} of $\R^{n+1} \setminus \{0\}$.)
+
+Choose $a \in F^{-1}(c)$. Then $DF(a) \neq 0$, so there is an $i$ such that $\frac{\pd F}{\pd x_i}(a) \neq 0$. Then the equation $F(x_1, \dots, x_i, \dots, x_{n+1}) = c$ can be solved locally for $x_i$ in terms of the other coordinates, i.e. $F^{-1}(c)$ is the graph of a smooth function near $a$.
+
+Making this precise, the implicit function theorem provides us with a neighbourhood $U$ of $(a_1, \dots, \hat{a_i}, \dots, a_{n+1})$ in $\R^n$ and a smooth function $g : U \to \R$ satisfying
+\begin{itemize}
+\item $g(a_1, \dots, \hat{a_i}, \dots, a_{n+1}) = a_i$,
+\item $F(x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1}) = c$ for all $(x_1, \dots, \hat{x_i}, \dots, x_{n+1}) \in U$,
+\end{itemize}
+i.e.
+\[
+\Gamma_g = \{(x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1}) \in \R^{n+1} : (x_1, \dots, \hat{x_i}, \dots, x_{n+1}) \in U\} = V \cap F^{-1}(c)
+\]
+for some neighbourhood $V$ of $a$ in $\R^{n+1}$.
+
+So we conclude that if $\nabla F(a) \neq 0$ for all $a \in F^{-1}(c) \neq \emptyset$, then $F^{-1}(c)$ is locally the graph of a function. What are the charts? $(V \cap F^{-1}(c), \phi)$, where $\phi : V \cap F^{-1}(c) \to U$ is given by $\phi(x_1, \dots, x_{n+1}) = (x_1, \dots, \hat{x_i}, \dots, x_{n+1})$ with the inverse $\phi^{-1}(x_1, \dots, \hat{x_i}, \dots, x_{n+1}) = (x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1})$. This is clearly a chart.
+
+Now consider the collection of such charts $\mathcal{A} = \{ (V_a \cap F^{-1}(c), \phi_a) \}$. Consider a transition mapping $\phi_a \circ \phi_b^{-1} : \phi_b(V_{ab}) \to \phi_a(V_{ab})$. This is
+\begin{align*}
+(\phi_a \circ \phi_b^{-1})(x_1, \dots, x_i, \dots, \hat{x_j}, \dots, x_{n+1}) &= \phi_a(x_1, \dots, x_i, \dots, g_b(x_1, \dots, \hat{x_j}, \dots, x_{n+1}), \dots, x_{n+1}) \\
+&= (x_1, \dots, \hat{x_i}, \dots, g_b(x_1, \dots, \hat{x_j}, \dots, x_{n+1}), \dots, x_{n+1})
+\end{align*}
+which is $C^\infty$, and similarly for its inverse. So $\mathcal{A}$ is a $C^\infty$ atlas on $F^{-1}(c)$, making $F^{-1}(c)$ a smooth manifold of dimension $n$.
+
+\item (Products) Consider two smooth manifolds $M$ and $N$ of dimensions $m$ and $n$, respectively. Equip them with smooth atlases $\mathcal{A}_M$ and $\mathcal{A}_N$, respectively. Define
+\[
+\mathcal{A}_{M \times N} = \{ (U \times V, \phi \times \psi) : (U, \phi) \in \mathcal{A}_M \text{ and } (V, \psi) \in \mathcal{A}_N \}.
+\]
+$\mathcal{A}_{M \times N}$ is a smooth atlas on $M \times N$, making $M \times N$ a smooth manifold of dimension $m + n$. To see this, note that the sets $U \times V$ certainly cover $M \times N$, and that the products of homeomorphisms are homeomorphisms. If $(U_1 \times V_1, \phi_1 \times \psi_1), (U_2 \times V_2, \phi_2 \times \psi_2) \in \mathcal{A}_{M \times N}$, then the transition map
+\[ 
+(\phi_1 \times \psi_1) \circ (\phi_2 \times \psi_2)^{-1} : (\phi_2 \times \psi_2)((U_1 \times V_1) \cap (U_2 \times V_2)) \to (\phi_1 \times \psi_1)((U_1 \times V_1) \cap (U_2 \times V_2))
+\]
+is, by set theory, equal to
+\[
+(\phi_1 \circ \phi_2^{-1}) \times (\psi_1 \times \psi_2^{-1}) : \phi_2(U_{12}) \times \psi_2({V_{12}}) \to \phi_1(U_{12}) \times \psi_1(V_{12}),
+\]
+which is clearly a diffeomorphism.
+
+For example, the cylinder $S^1 \times \R$ is a smooth manifold of dimension $2$, and the torus $S^1 \times S^1$ is a smooth manifold of dimension $2$. We also have the higher tori $T^n = S^1 \times \dots \times S^n$, a smooth manifold of dimension $n$. 
+
+(Algebraic topology remark: $T^n \not\cong S^n$, as the former has first fundamental group $\Z^n$, whereas the latter is simply connected for $n \geq 2$.)
+\end{enumerate}
+
+\subsection{Gluing Manifolds}
+Due to the informal visual nature of this part of the lecture, the examples can only be described in words.
+
+\begin{enumerate}
+\item Glue the endpoints of $[0, 1]$ to get the circle. They aren't homeomorphic however, since removing an interior point from $[0, 1]$ disconnects it, whereas the circle will remain connected if a point is removed.
+
+\item
+Glue the two vertical sides of $[0,1]^2$ to get a cylinder. (Note: in order to visualize this, we need to go up one dimension.)
+
+\item Glue the two vertical sides of $[0, 1]^2$, but with points identified "by reflecting through the centre $(1/2,1/2)$". This produces a Mobius strip.
+
+\item Glue the opposite sides of $[0,1]^2$ together as in example 2, but with each opposite side glued. This produces a torus.
+
+\item Glue the opposite vertical sides of $[0,1]^2$ together as in example 2, and the opposite horizontal sides together as in example 3. This produces a "Klein bottle", an example of a manifold which cannot be embedded in $\R^3$.
+\end{enumerate}
+
+\subsection{The Quotient Topology}
+
+Let $S$ be a topological space and $\sim$ an equivalence relation on $S$. Let $\pi : S \to S /_\sim$ be the projection map $\pi(x) = [x]$. Topologize $S /_\sim$ by declaring $U \subset S /_\sim$ to be open if and only if $\pi^{-1}(U)$ is open in $S$. This topology on $S /_\sim$ is called the \emph{quotient topology} - it is the finest topology on $S /_\sim$ with respect to which $\pi$ is continuous, as is easily seen.
+
+Now consider a function $f : S \to Y$, where $Y$ is a set. Suppose $f$ is constant on the fibres of $\pi$ (i.e. $f$ is constant on every equivalence class of $\sim$). Then $f$ induces a map $\tilde{f} : S /_\sim \to Y$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+S \arrow[rd, "f"] \arrow[d, "\pi"] \\
+S /_\sim \arrow[r, dashed, "\tilde{f}"] & Y
+\end{tikzcd} 
+\]
+The function $\tilde{f}$ is defined in the obvious way: $\tilde{f}([x]) = f(x)$. The new function $\tilde{f}$ is well-defined since we assumed $f$ was constant on equivalence classes. We say that $f$ \emph{descends to the quotient}. If $Y$ is a topological space, we have a very useful lemma.
+\begin{lemma}
+Suppose $f : S \to Y$ is a function of topological spaces, and that $\sim$ is an equivalence relation on $S$ on whose equivalence classes $f$ is constant. Then the induced map $\tilde{f} : S /_\sim \to Y$ is continuous if and only if $f$ is continuous.
+\end{lemma}
+\begin{proof}
+If $\tilde{f}$ is continuous, then $f = \tilde{f} \circ \pi$ is continuous as a composition of continuous maps. If $f$ is continuous, then given $U$ open in $Y$, $f^{-1}(U)$ is open in $S$. But $f^{-1}(U) = \pi^{-1}(\tilde{f}^{-1}(U))$, so by the definition of the quotient topology, $\tilde{f}^{-1}(U)$ is open in $S /_\sim$, proving continuity of $\tilde{f}$.
+\end{proof}
+
+Let's discuss the example of gluing the endpoints of the interval. Define $\sim$ on $I = [0,1]$ by $x \sim x$ for $x \in (0, 1)$ and $x \sim y$ for $x,y \in \{0,1\}$. We claim that $I /_\sim \cong S^1$. An explicit homeomorphism can be found by descending to the quotient.
+
+Define $f : I \to S^1$ by $f(t) = (\cos 2\pi t, \sin 2\pi t)$. Then $f(0) = f(1) = (1,0)$, so $f$ is constant on the equivalence classes of $\sim$. Then $f$ descends to a continuous map $\tilde{f} : I /_\sim \to S^1$, given by
+\[
+\tilde{f}([t]) = \begin{cases} 
+(\cos 2\pi t, \sin 2 \pi t), & [t] \neq [0] \\
+(1,0), & t = [0] = [1]
+\end{cases}
+\]
+which is bijective. Since $I /_\sim = \pi(I)$ is compact and $S^1$ is Hausdorff, the map $\tilde{f}$ is a homeomorphism of topological spaces. So indeed, $I /_\sim \cong S^1$.
+
+In order to tackle the question of "when is a quotient a manifold", we need to derive some conditions for when the quotient of a space is Hausdorff or second countable. Here's a simple necessary condition.
+\begin{lemma}
+If $S /_\sim$ is Hausdorff, then equivalence classes are closed in $S$.
+\end{lemma}
+\begin{proof}
+Each $\{[x]\} = \{\pi(x)\}$ is closed in $S /_\sim$ by Hausdorffness, so by continuity $\pi^{-1}(\{\pi(x)\}) = [x]$ is closed in $S$.
+\end{proof}
+For a simple application of this necessary condition, consider $\R / (0, \infty)$ - the quotient space obtained by identifying all points of $(0, \infty)$. The lemma dictates that $\R / (0, \infty)$ is not Hausdorff because the equivalence class $(0, \infty)$ is not closed in $\R$.
+
+\subsection{Open Equivalence Relations}
+
+\begin{definition}
+An equivalence relation $\sim$ on a space $S$ is said to be open if the projection $\pi : S \to S /_\sim$ is an open mapping. Equivalently, $\sim$ is open if and only if 
+\[
+\pi^{-1}(\pi(U)) = \bigcup_{x \in U}[x]
+\]
+is open in $S$, for each $U$ open in $S$.
+\end{definition}
+
+This definition is worth making, as the projections need not be open in general. Consider $\R / \{-1, 1\}$. The interval $(-2, 0)$ is open, but
+\[
+\pi^{-1}(\pi((-2, 0))) = \bigcup_{-2 < x < 0}[x] = (-2, 0) \cup \{1\}
+\]
+is not open in $\R$. Therefore $\sim$ identifying $-1$ and $1$ on $\R$ is not an open equivalence relation. (Note that $\R / \{-1,1\}$ is not a topological manifold, as it is homeomorphic to the symbol $\propto$ with the ends extending infinitely.)
+
+\begin{definition}
+The graph of an equivalence relation $\sim$ on $S$ is the set $R = \{(x, y) \in S \times S : x \sim y\}$.
+\end{definition}
+\begin{theorem}
+Suppose $\sim$ is an open equivalence relation on $S$. Then $S /_\sim$ is Hausdorff if and only if the graph $R$ of $\sim$ is closed in $S \times S$.
+\end{theorem}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. We have a sequence of equivalent statements
+\begin{align*}
+R \text{ is closed} &\iff S \times S \setminus R \text{ is open} \\
+&\iff \text{for all } (x, y) \in S \times S \setminus R \text{ there are open sets } U, V \text{ such that } (x,y) \in U \times V \subset S \times S \setminus R \\
+&\iff \text{for all } x \not\sim y \text{ in } S \text{ there are open sets } U \ni x, V \ni Y \text{ such that } (U \times V) \cap R = \emptyset \\
+&\iff \text{for all } [x] \neq [y] \text{ in } S /_\sim \text{there are open sets } U \ni x, V \ni y \text{ such that } \pi(U) \cap \pi(V) = \emptyset
+\end{align*}
+This last statement is equivalent to $S /_\sim$ being Hausdorff, which we now prove. If this statement is true, then $\pi(U)$ and $\pi(V)$ are disjoint open (because $\sim$ is open) sets of $S /_\sim$ separating $[x]$ and $[y]$, which shows that $S /_\sim$ is Hausdorff. Conversely, suppose $S /_\sim$ is Hausdorff. Given $[x] \neq [y]$ in $S /_\sim$, we can find disjoint open sets $U \ni [x]$, $V \ni [y]$ of $S /_\sim$. By surjectivity, $U = \pi(\pi^{-1}(U))$ and $V = \pi(\pi^{-1}(V))$, so $\pi^{-1}(U)$ and $\pi^{-1}(V)$ are open sets of $S$ containing $x$ and $y$, respectively, satisfying the condition of the last statement. So the last statement is equivalent to $S /_\sim$ being Hausdorff.
+\end{proof}
+With it is a corollary - a classic exercise in point-set topology.
+\begin{corollary}
+$S$ is Hausdorff if and only if $\Delta = \{(x, x) \in S \times S : x \in S\}$ is closed.
+\end{corollary}
+\begin{proof}
+Let $\sim$ be the equivalence relation identifying every point only with itself. Then $\sim$ is an open equivalence relation and $R = \Delta$. The spaces $S$ and $S /_\sim$ are homeomorphic, so the statement follows from the theorem immediately.
+\end{proof}
+It turns out that the above theorem and its corollary are equivalent. It's not too hard to see that the corollary implies the theorem by using the fact that $\pi$ is continuous and open.
+
+What about second countability?
+\begin{theorem}
+If $\sim$ is an open equivalence relation on $S$ and $\{B_n\}$ is a countable basis of $S$, then $\{\pi(B_n)\}$ is a countable basis of $S /_\sim$.
+\end{theorem}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. Note that the collection $\{\pi(B_n))\}$ is a collection of open sets because $\pi$ is an open mapping. Let $U \subset S /_\sim$ be open and consider $[x] \in U$. Then $x \in \pi^{-1}(U)$, so we can find a $B_n$ with $x \in B_n \subset \pi^{-1}(U)$. Then $[x] = \pi(x) \subset \pi(B_n) \subset \pi(\pi^{-1}(U)) = U$, proving that $\{B_n\}$ is a basis of $S /_\sim$.
+\end{proof}
+To summarize,
+\begin{itemize}
+\item quotient spaces of Hausdorff spaces under open equivalence relations are Hausdorff if and only if the graph of the relation is closed
+\item quotient spaces of second-countable spaces under open equivalence relations are second-countable, and bases for the quotient are obtained in the obvious way.
+\end{itemize}
+
+\subsection{Real Projective Space}
+
+Define $\sim$ on $\R^{n+1} \setminus \{0\}$ by $x \sim \lambda x$ for $\lambda \neq 0$. The quotient space $(\R^{n+1} \setminus \{0\}) /_\sim$ is denoted $\R P^n$ and is called \emph{real projective space}. It may be thought of as the set of lines passing through the origin.
+
+Each element of $\R P^n$ can be thought of as a pair of antipodal points on $S^n$, which motivates the following
+\begin{theorem}
+Define $\sim$ on $S^n$ by identifying antipodal points, i.e. $x \sim \pm x$. Define $f : \R^{n+1} \setminus \{0\} \to S^n$ by $f(x) = \frac{x}{\|x\|}$. Then $f$ induces a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$.
+\end{theorem}
+The proof will be essentially the proof given in class, but much more complete and explicit about how maps induce other maps.
+\begin{proof}
+Consider the following diagram:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{r}{f} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \\
+\R P^n & S^n /_\sim
+\end{tikzcd}
+\]
+where $\pi_1$ and $\pi_2$ are the projections to each quotient space as shown in the diagram. The map $\pi_2 \circ f : \R^{n+1} \setminus \{0\} \to S^n /_\sim$ is given by
+\[
+(\pi_2 \circ f)(x) = \pi_2\left( \frac{x}{\|x\|} \right) = \left\{ -\frac{x}{\|x\|}, \frac{x}{\|x\|} \right\} = [x]_2,
+\]
+which is continuous and constant on the fibres of $\pi_1$; the lines through the origin. It thus induces a continuous map $\tilde{f} : \R P^n \to S^n /_\sim$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{r}{f} \arrow{d}{\pi_1} \arrow{rd}{\pi_2 \circ f} & S^n \arrow{d}{\pi_2} \\
+\R P^n \arrow[dashed]{r}{\tilde{f}} & S^n /_\sim
+\end{tikzcd}
+\]
+We define a continuous inverse of $\tilde{f}$. Consider $g : S^n \to \R^{n+1} \setminus \{0\}$ given by $g(x) = x$. As before, consider the diagram
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \arrow{l}{g} \\
+\R P^n & S^n /_\sim
+\end{tikzcd}
+\]
+The map $\pi_1 \circ g : S^n \to \R P^n$ is given by
+\[
+(\pi_1 \circ g)(x) = \pi_1(x) = \{ \lambda x : \lambda \neq 0 \} = [x]_1,
+\]
+which is continuous and constant on the fibres of $\pi_2$; antipodal points on the $n$-sphere. It thus induces a continuous map $\tilde{g} : S^n /_\sim \to \R P^n$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \arrow{l}{g} \arrow{ld}{\pi_1 \circ g}\\
+\R P^n & S^n /_\sim \arrow[dashed]{l}{\tilde{g}}
+\end{tikzcd}
+\]
+We claim that $\tilde{f}$ and $\tilde{g}$ are inverses to each other, which will show that $\tilde{f}$ is a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$. We have
+\begin{align*}
+(\tilde{g} \circ \tilde{f})([x]_1) &= (\tilde{g} \circ \tilde{f} \circ \pi_1)(x) = (\tilde{g} \circ \pi_2 \circ f)(x) = (\pi_1 \circ g \circ f)(x) = \pi_1\left(g\left( \frac{x}{\|x\|} \right)\right) = \pi_1\left(\frac{x}{\|x\|}\right) = [x]_1 \\
+(\tilde{f} \circ \tilde{g})([x]_2) &= (\tilde{f} \circ \tilde{g} \circ \pi_2)(x) = (\tilde{f} \circ \pi_1 \circ g)(x) = (\pi_2 \circ f \circ g)(x) = \pi_2(f(x)) = \pi_2 \left( \frac{x}{\|x\|} \right) = [x]_2 
+\end{align*}
+So $\tilde{f}$ is a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$.
+\end{proof}
+In particular, $\R P^n$ is compact! Note that we could have just explicitly defined
+\begin{alignat*}{2}
+&\tilde{f} : \R P^n \to S^n /_\sim \qquad &&\tilde{f}([x]_1) := \pi_2(f(x)) = \left[ \frac{x}{\|x\|} \right]_2 \\
+&\tilde{g} : S^n /_\sim \to \R P^n \qquad &&\tilde{g}([x]_2) := \pi_1(g(x)) = [x]_1
+\end{alignat*}
+checked for well-definedness and continuity, and then we'd have been done. That's how the proof on page 362 of Tu goes. However, the abuse of tikz diagrams makes it very clear where the homeomorphism and its inverse come from, and that they're continuous (which is basically what Tu is doing anyway).
+
+% may need work
+\subsection{Visualizing $\R P^2$}
+In order to visualize $\R P^2$ we will consider some homeomorphisms. Define
+\begin{align*}
+H^2 &= \{(x,y,z) \in \R^3 : x^2 + y^2 + z^2 = 1, z \geq 0\} \\
+D^2 &= \{(x,y) \in \R^2 : x^2 + y^2 \leq 1\}.
+\end{align*}
+Consider the maps
+\begin{alignat*}{2}
+&\phi : H^2 \to D^2 \qquad &&\phi(x,y,z) = (x,y) \\
+&\psi : D^2 \to H^2 \qquad &&\psi(x,y) = (x,y,\sqrt{1-x^2-y^2})
+\end{alignat*}
+which are continuous inverses of each other. Define equivalence relations on $H^2$ and $D^2$ as follows:
+\begin{itemize}
+\item On $H^2$: identify antipodal points on the equator, call the projection $\pi_3$
+\item On $D^2$: identify antipodal points on the boundary, call the projection $\pi_4$
+\end{itemize}
+Considering diagrams similar to those in the previous proof, the map $\pi_4 \circ \phi$ induces a continuous map $\tilde{\phi} : H^2 /_\sim \to D^2 /_\sim$ with $\tilde{\phi} \circ \pi_3 = \pi_4 \circ \phi$, and the map $\pi_3 \circ \psi$ induces a continuous map $\tilde{\psi} : D^2 /_\sim \to H^2 /_\sim$ with $\tilde{\psi} \circ \pi_4 = \pi_3 \circ \psi$. The maps $\tilde{\phi}$ and $\tilde{\psi}$ are continuous inverses of each other (which can be seen using just these given compositions), which shows that we have a homeomorphism $H^2 /_\sim \xrightarrow{\sim} D^2 /_\sim$. 
+
+If we accept on faith that there is a homeomorphism $S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim$, then we have a sequence of homeomorphisms
+\[
+\R P^2 \xrightarrow{\sim} S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim \xrightarrow{\sim} D^2 /_\sim.
+\]
+Therefore we can visualize the real projective plane $\R P^2$ as a disk with the antipodal boundary points identified. Such a homeomorphism $S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim$ can be shown by a proof similar to the previous quotient space homeomorphisms that we did, by considering the inclusion map $i : H^2 \to S^2$ and its obvious inverse, and working through steps similar to the proofs of the previous homeomorphisms.
+
+\newpage
+
+\section{Smooth Maps and Differentiable Structures (May 19)}
+
+\subsection{Smooth Maps on a Manifold}
+The notion of the pullback of a function on a manifold (which by MAT257 we know is a $0$-form on a manifold - not that that's important right now) is the following:
+\begin{definition}
+Let $F : M \to N$ and $f : N \to \R$ be functions. The pullback of $f$ by $F$ is the function $F^*f:M \to \R$ defined by $F^*f = f \circ F$. That is, the pullback of $f$ by $F$ is the unique function for which the following diagram commutes:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+M \arrow[rd, "F^*f"] \arrow[d, "F"] \\
+N \arrow[r, "f"] & \R
+\end{tikzcd} 
+\]
+\end{definition}
+Now for the main definitions.
+\begin{definition}
+Fix a smooth manifold $M$. A function $f : M \to \R$ is $C^\infty$ at $p \in M$ if there is a chart $(U, \phi)$ about $p$ such that $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$ at $\phi(p)$, in the usual sense. Alternatively, $f$ is $C^\infty$ at $p$ if the pullback $(\phi^{-1})^*f$ of $f$ by the inverse of some coordinate system $\phi$ about $p$ is $C^\infty$ at $\phi(p)$.
+\end{definition}
+We'd like to show that this does not depend on the choice of chart about $p$. If $(V, \psi)$ is another chart about $p$, then
+\[
+f \circ \psi^{-1} = (f \circ \phi^{-1}) \circ (\phi \circ \psi^{-1}),
+\]
+is $C^\infty$ at $\psi(p)$ on the open set $\psi(U \cap V)$, since $\phi \circ \psi^{-1}$ is $C^\infty$ at $\psi(p)$ and $f \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$. Therefore smoothness of a function on a manifold at a point doesn't depend on the choice of chart about that point. We will say that $f$ is $C^\infty$ on $M$ if it is $C^\infty$ at every point of $M$. Note that if $f : M \to \R$ is $C^\infty$ at $p$, then $f = (f \circ \phi^{-1}) \circ \phi$ is continuous at $p$.
+
+These considerations give us a
+\begin{proposition}
+Let $f : M \to \R$ be a continuous function on a smooth manifold $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $f : M \to \R$ is $C^\infty$.
+\item There is an atlas $\mathcal{A}$ of $M$ such that for any $(U, \phi) \in \mathcal{A}$, the function $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+Note that we implicitly assume $\mathcal{A}$ in the above is a subset of our choice of maximal atlas for $M$. When we say $M$ is a smooth manifold, we also assume a choice of maximal atlas has been made.
+
+What about maps between manifolds? The definition is a natural extension of the one we just made.
+\begin{definition}
+Let $N$ and $M$ be smooth manifolds and let $F : N \to M$ be continuous. We say $F$ is $C^\infty$ at $p \in N$ if there is a chart $(V, \psi)$ about $F(p)$ and a chart $(U, \phi)$ about $p$ such that 
+\[
+\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m
+\]
+is $C^\infty$ at $\phi(p)$.
+\end{definition}
+Note that continuity of $F$ was essential, for if that were not the case, the set $\phi(U \cap F^{-1}(V))$ may not be open, in which case we may not be able to talk about smoothness at $p$. 
+
+As before, we check that this is independent of the charts. Choose charts $(\tilde{U}, \tilde{\phi})$ about $p$ and $(\tilde{V}, \tilde{\psi})$ about $F(p)$. Then
+\[
+\tilde{\psi} \circ F \circ \tilde{\phi}^{-1} = (\tilde{\psi} \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1}) \circ (\phi \circ \tilde{\phi}^{-1})
+\]
+is $C^\infty$ at $\tilde{\phi}(p)$ by similar reasoning as before. We say that $F : N \to M$ is $C^\infty$ if it is so at every point of $N$.
+
+We have a similar proposition coming from the independence of charts:
+\begin{proposition}
+Let $F : N \to M$ be a continuous function of smooth manifolds $N$ and $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$ on $N$.
+\item There are atlases $\mathcal{A}$ of $N$ and $\mathcal{B}$ of $M$ such that for every $(U, \phi) \in \mathcal{A}$ and $(V, \psi) \in \mathcal{B}$, the map $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+
+% everything after this needs checking
+
+We need to make sure this is actually a generalization of the notion of smoothness we know from calculus. We will make sure that our definition is the usual notion of smoothness when the manifolds are Euclidean spaces, and we will make sure that smoothness is preserved by compositions.
+\begin{proposition}
+If $N = \R^n$ and $M = \R^m$ are given their usual smooth structures, then $F : N \to M$ is smooth as defined above if and only if it is smooth as a function of Euclidean spaces.
+\end{proposition}
+\begin{proof}
+Choose the atlases $\{(\R^n, \mathrm{Id}_{\R^n})\}$ on $\R^n$ and $\{(\R^m, \mathrm{Id}_{\R^m})\}$ on $\R^m$. Then $F : N \to M$ is smooth as defined above if and only if
+\[
+\mathrm{Id}_{\R^m} \circ F \circ \mathrm{Id}_{\R^n}^{-1} : N \to M
+\]
+is smooth. But this function is just $F : \R^n \to \R^m$.
+\end{proof}
+Note that this holds if $N$ and $M$ had merely been open sets of Euclidean spaces, for the usual smooth structure on them (i.e. the one we do ordinary calculus with) is the maximal atlas corresponding to the restrictions of the charts given above to those open sets.
+
+\begin{proposition}
+If $F : N \to M$ and $G : M \to P$ are $C^\infty$ maps of manifolds, then $G \circ F : N \to P$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+Suppose $p \in N$. Choose charts $(U, \phi)$ about $p$, $(V, \psi)$ about $F(p)$, and $(W, \sigma)$ about $G(F(p))$. Then 
+\[
+\sigma \circ (G \circ F) \circ \phi^{-1} = (\sigma \circ G \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1})
+\]
+is $C^\infty$ at $\phi(p)$, since $\sigma \circ G \circ \psi^{-1}$ is $C^\infty$ at $\psi(F(p))$ and $\psi \circ F \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$.
+\end{proof}
+
+We have one last property: vector-valued functions behave how we want them to.
+\begin{proposition}
+Let $N$ be a smooth manifold and $F : N \to \R^m$ be a continuous function. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$.
+\item Each component function $F^i : N \to \R$ is smooth.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+The proof was left as an exercise, so here's a solution. We have
+\begin{align*}
+F \text{ is } C^\infty &\iff \text{ for every chart } (U, \phi) \text{ on } N \text{, the map } F \circ \phi^{-1} : \phi(U) \to \R^m \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{ and for every chart } (U, \phi) \text{ on } N \text{, the map } F^i \circ \phi^{-1} : \phi(U) \to \R \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{, the map } F^i : N \to \R \text{ is } C^\infty.
+\end{align*}
+\end{proof}
+
+Just as two vector spaces or groups are equivalent if they are isomorphic, or two topological spaces are equivalent if they are homeomorphic, or two sets are equivalent if they are in bijection with eachother, we have a notion of "isomorphism" or equivalence of smooth manifolds.
+\begin{definition}
+A function $F : N \to M$ of smooth manifolds is said to be a diffeomorphism if it is smooth and has a smooth inverse.
+\end{definition}
+Then we can state: \emph{differential topology is the study of properties of smooth manifolds invariant under diffeomorphism}.
+
+\subsection{Differentiable Structures}
+
+We can exhibit two diffeomorphic but unequal smooth structures on $\R$. Define two atlases
+\begin{alignat*}{2}
+\mathcal{A}_1 &= \{(\R, \mathrm{Id})\} \qquad &&\text{(call this one $\R$)}\\
+\mathcal{A}_2 &= \{ (\R, \psi(x) := x^3) \} \qquad &&\text{(call this one $\R'$)}
+\end{alignat*}
+These charts are not $C^\infty$ compatible, since $\mathrm{Id} \circ \psi^{-1}$ sends $x$ to $\sqrt[3]{x}$; not a diffeomorphism. Therefore the smooth structures corresponding to $\mathcal{A}_1$ and $\mathcal{A}_2$ are different.
+
+Nevertheless, define $f : \R \to \R'$ by $f(x) = \sqrt[3]{x}$. Then 
+\[
+\psi \circ f \circ \mathrm{Id}^{-1} : \R \to \R' \qquad x \mapsto x
+\]
+is a diffeomorphism!
+
+We can exhibit non-diffeomorphic smooth structures on manifolds; see the exotic sphere $S^7$. Even better, $\R^4$ has uncountably many smooth structures \emph{up to diffeomorphism}. It is known that every topological manifold of dimension $<4$ admits a unique smooth structure, up to diffeomorphism.
+
+\end{document}
