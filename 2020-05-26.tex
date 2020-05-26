@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Tangent Spaces and the Differential (May 26)}
+
+\subsection{Derivatives and the Chain Rule on Manifolds}
+
+Having defined the smooth functions on a manifold, in order to proceed with generalizing calculus to manifolds, we must now differentiate them. The notion of the derivative comes from the \emph{differential} or \emph{pushforward} of a smooth map $F : \R^n \to \R^m$ of standard calculus; it is the derivative $DF(p) : T_p \R^n \to T_{F(p)} \R^m$. As we are now working with derivations as our tangent vectors, the definition must be adjusted accordingly.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map of smooth manifolds. We define the differential of $F$ at $p$ by the linear map
+\[
+F_* : T_p N \to T_{F(p)}M, \qquad F_*(X_p)(f) = X_p(f \circ F),
+\]
+where $X_p \in T_p N$ and $f \in C_{F(p)}^\infty(M)$. The map $F_*$ is sometimes denoted $F_{*, p}$, and is not to be confused with the pullback operation $F^* : C(M) \to C(N)$ on continuous functions. 
+\end{definition}
+Let's make sure this makes sense; i.e. that $F_*(X_p)$ is actually a derivation at $F(p)$. Linearity follows immediately from linearity of $X_p$ on $C_p^\infty(N)$. If $f, g \in C_{F(p)}^\infty(M)$, then
+\begin{alignat*}{2}
+F_*(X_p)(fg) &= X_p((fg) \circ F)  &&\text{by definition}\\
+&= X_p((f \circ F)(g \circ F)) \\
+&= (f \circ F)(p) X_p(g \circ F) + X_p(f \circ F) (g \circ F)(p) \qquad &&\text{$X_p$ a derivation at $p$} \\
+&= f(F(p)) F_*(X_p)(g) + F_*(X_p)(f) g(F(p)).
+\end{alignat*}
+Therefore $F_*$ is indeed a map $T_p N \to T_{F(p)}M$. That it is also linear is obvious.
+
+We need to make sure this properly generalizes the derivative of a $C^\infty$ map $F : \R^n \to \R^m$. Thinking of a tangent vector $v \in T_p \R^n$ as its directional derivative $D_v : C_p^\infty(\R^n) \to \R$, we have, for $f \in C_{F(p)}^\infty(\R^m)$,
+\[
+F_*(D_v)(f) = D_v(f \circ F) = \nabla f(F(p))( DF(p) \cdot v ) = D_{DF(p)v}(f),
+\]
+where the latter directional derivative is at $F(p)$. Therefore $F_*(D_v) = D_{DF(p)v}$. If we again identify derivations of germs at $F(p)$ with tangent vectors in $T_{F(p)} \R^m$, we conclude that the differential between manifolds generalizes the derivative from calculus. 
+
+The differential is the same as the derivative, definition wise. Does it hold the same properties. The answer is "yes".
+\begin{theorem}
+(Chain Rule) Let $F : N \to M$ and $G : M \to P$ be $C^\infty$ maps of smooth manifolds. Then $(G \circ F)_{*, p} = G_{*, F(p)} \circ F_{*, p}$.
+\end{theorem}
+\begin{proof}
+If $X_p \in T_p N$ and $f \in C_{G(F(p))}^\infty P$, then
+\[
+(G_{*, F(p)} \circ F_{*, p})(X_p)(f) = G_{*, F(p)}(F_{*,p}(X_p))(f) = F_{*,p}(X_p)(f \circ G) = X_p(f \circ G \circ F) = (G \circ F)_{*, p}(X_p)(f)
+\]
+\end{proof}
+If the "base point" is understood, then we will often omit it and simply write $F_*$ and $G_*$, in which case the chain rule reads as $(G \circ F)_* =G^* \circ F_*$.
+
+\subsection{Dimension of Tangent Spaces}
+
+We present some very useful corollaries of the chain rule.
+\begin{corollary}
+The differential of the identity map $\mathrm{Id} : M \to M$ is the identity map $\mathrm{Id}_* : T_p M \to T_p M$.
+\end{corollary}
+\begin{proof}
+If $X_p \in T_p M$ and $f \in C_p^\infty(M)$ then
+\[
+\mathrm{Id}_*(X_p)(f) = X_p(f \circ \mathrm{Id}) = X_p(f),
+\] 
+so $\mathrm{Id}_*(X_p) = X_p$.
+\end{proof}
+\begin{corollary}
+If $F : N \to M$ is a diffeomorphism of smooth manifolds and $p \in N$, then $F_* : T_p N \to T_{F(p)} M$ is an isomorphism of vector spaces.
+\end{corollary}
+\begin{proof}
+By the previous corollary and the chain rule we have
+\begin{align*}
+F_* \circ (F^{-1})_* = (F \circ F^{-1})_*  &= \mathrm{Id}_{T_{F(p)} M}, \\
+(F^{-1})_* \circ F_* = (F^{-1} \circ F)_* &= \mathrm{Id}_{T_p N},
+\end{align*}
+so $F_* : T_p N \to T_{F(p)}M$ is a bijective linear map.
+\end{proof}
+\begin{corollary}
+(Invariance of dimension) Let $U \subseteq \R^n$ and $V \subseteq \R^m$ be diffeomorphic open sets. Then $n =m$.
+\end{corollary}
+\begin{proof}
+If $F : U \to V$ is a diffeomorphism then by the previous corollary it induces an isomorphism $F_* : T_p U \to T_{F(p)} V$ of vector spaces. Therefore
+\[
+n = \dim(T_p \R^n) = \dim(T_p U) = \dim(T_{F(p)} V) = \dim(T_{F(p)} \R^m) = m
+\]
+\end{proof}
+The above theorem holds in the case where the sets are merely homeomorphic, but that requires algebraic topology to prove and is decidedly non-trivial.
+
+\begin{proposition}
+If $M$ is a smooth manifold of dimension $m$, then for each $p \in M$, the tangent space $T_p M$ has dimension $m$.
+\end{proposition}
+\begin{proof}
+Choose a coordinate chart $(U, \phi)$ around $p$. Then we have a diffeomorphism $\phi : U \to \phi(U)$, so $\phi_* : T_p U \to T_{\phi(p)} \phi(U)$ is an isomorphism. Then
+\[
+\dim(T_p M) = \dim(T_{\phi(p)} \phi(U)) = m.
+\]
+\end{proof}
+
+\subsection{A Basis for the Tangent Space}
+
+Knowing the dimension of the tangent space brings us to the following question: what is a basis of the tangent space? We have a main result.
+\begin{theorem}
+Let $M$ be a smooth manifold and let $p \in M$. Choose a coordinate chart $(U, \phi) = (U, x^1, \dots, x^m)$ around $p$. Then
+\[
+\left\{ \left. \frac{\pd }{\pd x^1} \right|_p, \dots, \left. \frac{\pd }{\pd x^m} \right|_p \right\}
+\]
+is a basis of $T_p M$.
+\end{theorem}
+\begin{proof}
+We have, for $f \in C_{\phi(p)}^\infty (\R^n)$,
+\[
+\phi_* \left( \left. \frac{\pd }{\pd x^i} \right|_p \right)(f) = \left. \frac{\pd }{\pd x^i} \right|_p f \circ \phi = \left. \frac{\pd (f \circ \phi \circ \phi^{-1})}{\pd r^i} \right|_{\phi(p)} = \left( \left. \frac{\pd }{\pd r^i} \right|_{\phi(p)} \right)(f).
+\]
+Since $\phi_*$ is an isomorphism and isomorphisms send bases to bases, the fact that 
+\[
+\left\{ \left. \frac{\pd }{\pd r^1} \right|_{\phi(p)}, \dots, \left. \frac{\pd }{\pd r^m} \right|_{\phi(p)} \right\}
+\]
+is a basis of $T_{\phi(p)} \phi(U)$ implies that the proposed basis of $T_p M$ is indeed a basis.
+\end{proof}
+We will sometimes write $\frac{\pd}{\pd x^i}$ instead of $\left. \frac{\pd }{\pd x^i} \right|_{p}$ if the base point of the tangent vector is understood.
+
+Of course, the basis of the tangent space depends on the choice of coordinate chart. What are the changes of coordinates? 
+\begin{proposition}
+Suppose $(U, x^1, \dots, x^m)$ and $(V, y^1, \dots, y^m)$ are two coordinate charts on a manifold $M$. Then on $U \cap V$,
+\[
+\frac{\pd}{\pd x^j} = \sum_i \frac{\pd y^i}{\pd x^j} \frac{\pd}{\pd y^i}.
+\]
+(One can remember this by thinking of the $\pd y^i$'s as cancelling.)
+\end{proposition}
+\begin{proof}
+Since $\{ \pd / \pd x^i|_p \}$ and $\{ \pd / \pd y^i|_p \}$ are both bases of the tangent space $T_p M$, for each $p \in U \cap V$, there is an $m \times m$ matrix $[a^i_j]$ (depending on $p$) such that
+\[
+\frac{\pd}{\pd x^j} = \sum_k a^k_j \frac{\pd}{\pd y^k}
+\]
+on $U \cap V$. Evaluating both sides at $y^i$ gives
+\begin{align*}
+\frac{\pd y^i}{\pd x^j} =  \sum_k a^k_j \frac{\pd y^i}{\pd y^k} = \sum_k a^k_j \delta^i_k = a^i_j.
+\end{align*}
+\end{proof}
+ 
+\end{document}
+  
