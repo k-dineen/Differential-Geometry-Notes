@@ -1,0 +1,280 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Curves, Submanifolds (May 28)}
+
+\subsection{A Local Expression for the Differential}
+
+Let $N, M$ be smooth manifolds and $F : N \to M$ a $C^\infty$ map. For $p \in N$, the differential $F_{*,p} : T_p N \to T_{F(p)}M$ is linear, so if we fix coordinate charts $(U, x^1, \dots, x^n)$ near $p$ and $(V, y^1, \dots, y^m)$ near $F(p)$, then we can speak about the matrix of $F_{*,p}$ relative to the bases $\{ \left. \frac{\pd}{\pd x^i} \right|_p \}$ and  $\{ \left. \frac{\pd}{\pd y^i} \right|_{F(p)} \}$. It turns out that this matrix is precisely the Jacobian of $F$ relative to these two coordinate systems.
+
+Let $A = [a^i_j]$ be the matrix of $F_{*,p}$ relative to the above bases. That is, for $j = 1, \dots, n$,
+\[
+F_{*,p} \left( \left. \frac{\pd}{\pd x^j} \right|_p \right) = \sum_{i=1}^m a^i_j \left. \frac{\pd}{\pd y^i} \right|_{f(p)}.
+\]
+Applying $y^i$ to both sides of the above equation gives
+\[
+a^i_j = \sum_{k=1}^m a^k_j \left. \frac{\pd y^i}{\pd y^k} \right|_{F(p)} = F_{*,p} \left( \left. \frac{\pd}{\pd x^j} \right|_p \right)(y^i) = \left. \frac{\pd F^i}{\pd x^j} \right|_p.
+\]
+Therefore $A = [\left. \frac{\pd F^i}{\pd x^j} \right|_p]$. We state this fact formally as a proposition.
+\begin{proposition}
+Let $F : N \to M$ be a $C^\infty$ map and let $p \in N$. Choose coordinate charts $(U, x^1, \dots, x^n)$ near $p$ and $(V, y^1, \dots, y^m)$ near $F(p)$. Then the matrix representation of the linear transformation $F_{*,p} : T_pN \to T_{F(p)}M$ in the bases given by these coordinate charts is the Jacobian $[\left. \frac{\pd F^i}{\pd x^j} \right|_p]$ relative to these coordinate systems.
+\end{proposition}
+Recall that the inverse function theorem stated that, assuming the hypotheses of the above proposition, $F$ is a local diffeomorphism at $p$ if and only if its Jacobian was nonsingular. The above proposition therefore gives us a "coordinate-free" inverse function theorem.
+\begin{theorem}
+(Inverse function theorem) Let $F : N \to M$ be a $C^\infty$ map of manifolds of the same dimension and suppose $p \in N$. Then $F$ is a local diffeomorphism at $p$ if and only if its differential $F_{*,p}$ is an isomorphism.
+\end{theorem}
+
+\subsection{Curves on Manifolds}
+
+We'd like to be able to relate the abstract tangent space $T_p M$, a set of derivations, to "tangent vectors" of curves in $M$ at $p$.
+\begin{definition}
+A $C^\infty$ curve in a manifold $M$ is a smooth map $\gamma : (a, b) \to M$. We will usually assume that $0 \in (a, b)$ and that $\gamma(0) = p$.
+\end{definition}
+How can we discuss that tangent vector? First, consider the case $M = \R^n$. Let $\beta : (a, b) \to \R^n$ be a $C^\infty$ curve with $\beta(0) = p$. Then
+\[
+\beta'(0) = \left. \frac{d}{dt} \right|_0 \beta,
+\]
+and so we can think of $\beta'$ as a map $c \mapsto \beta' \cdot c$. 
+\begin{definition}
+The velocity vector of $\gamma$ at $t_0$ is the differential 
+\[
+\gamma'(t_0) := \gamma_*\left( \left. \frac{d}{dt} \right|_{t_0} \right).
+\]
+\end{definition}
+Suppose $X_p = \gamma'(0)$ and that $f \in C_p^\infty(M)$. Then
+\[
+X_p(f) = \gamma'(0)(f) = \gamma_*\left( \left. \frac{d}{dt} \right|_{t_0} \right)(f) = \left. \frac{d}{dt} \right|_0 (f \circ \gamma).
+\]
+If $M = \R^n$, this is the directional derivative of $f$ at $p$ in the direction $\gamma'(0)$ (this means the standard derivative). Note that the right side of the above equation is independent of the curve $\gamma$.
+
+The following proposition says that every tangent vector is the velocity vector of some curve. Morally, manifolds are locally like $\R^n$, and since velocity vectors of curves are "local things", we can transfer them over to manifolds easily.
+\begin{proposition}
+For any $X_p \in T_p M$, there is a smooth curve $\gamma : (a,b) \to M$ with $\gamma(0) = p$ and $\gamma'(0) = X_p$.
+\end{proposition}
+\begin{proof}
+Choose a coordinate chart $(U, \phi) = (U, x^1, \dots, x^n)$ near $p$. There are scalars $a^1, \dots, a^n$ such that $X_p = \sum a^i \left. \frac{\pd}{\pd x^i} \right|_p$. Then $\phi_*(X_p) = \sum a^i \left. \frac{\pd}{\pd r^i} \right|_{\phi(p)}$. Define $\beta : (-\epsilon, \epsilon) \to \R^n$ by
+\[
+\beta(t) = \phi(p) + t(a^1, \dots, a^n),
+\]
+where $\epsilon > 0$ is small enough so that the entire curve lies in $\phi(U)$. Then $\beta$ is a smooth curve satisfying $\beta(0) = \phi(p)$. There are scalars $b^1, \dots, b^n$ such that $\beta'(0) = \sum b^k \left. \frac{\pd}{\pd r^k} \right|_{\phi(p)}$. Applying $r^i$ to both sides gives
+\[
+b^i = \sum b^k \left. \frac{\pd r^i}{\pd r^k} \right|_{\phi(p)} = \beta_* \left( \left. \frac{d}{dt} \right|_0 \right) = \left. \frac{d}{dt} \right|_0 (r^i \circ \beta) = a^i,
+\]
+which implies that $\beta'(0) = \phi_*(X_p) = \sum a^i \left. \frac{\pd}{\pd r^i} \right|_{\phi(p)}$. If $\gamma = \phi^{-1} \circ \beta$, then $\gamma$ is a $C^\infty$ curve in $M$ with $\gamma(0) = p$ and
+\[
+\gamma'(0) = (\phi^{-1} \circ \beta_*) \left( \left. \frac{d}{dt} \right|_0 \right) = \phi_*^{-1} \left( \beta_* \left( \left. \frac{d}{dt} \right|_0 \right) \right) = X_p.
+\]
+\end{proof}
+Of course, we could have chosen any curve in $\phi(U)$ whose tangent vector is $\phi_*(X_p)$. However, there's no loss in taking the simplest possible one: the line through $\phi(p)$ in the direction $(a^1, \dots, a^n)$ (which is, after some identifications, just the tangent vector $\phi_*(X_p)$).
+
+Consider a smooth map $F : N \to M$. If $X_p \in T_pN$ is equal to $\gamma'(0)$ for some smooth curve $\gamma$ (the previous proposition ensures this is always the case), then
+\begin{align*}
+F_{*, p}(X_p) &= F_{*, p}(\gamma'(0)) = F_{*, p}\left( \gamma_{*, 0}\left( \left. \frac{d}{dt} \right|_0 \right) \right) = (F \circ \gamma)_{*, 0} \left( \left. \frac{d}{dt} \right|_0 \right) = (F \circ \gamma)'(0).
+\end{align*} 
+This gives us a way to compute the differential of a smooth map using curves. If we go back to $\R^n$ and $\R^m$, then this is just the directional derivative of $F$ at $\gamma(0) = p$ in the direction $\gamma'(0)$ (identifying tangent vectors with arrows).
+
+\subsection{Immersions and Submersions}
+
+We want a submanifold to be a subset of a smooth manifold that is also a smooth manifold which, in some sense, inherits the smooth structure from the larger manifold. We will make a few definitions.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map. We define the rank of $F$ at $p$ to be the rank of the linear map $F_{*, p}$. Equivalently, it is the dimension of $F_{*,p}(T_pN)$, or the rank of the Jacobian of $F$ at $p$ relative to any two charts. (Recall that we showed that this quantity is independent of the charts used.)
+\end{definition}
+
+We will mostly be concerned with smooth maps of constant rank. Studying the rank of a smooth map allows us to study smooth manifolds using linear algebra, something we already know very well and that is often very easy to work with.
+
+\begin{definition}
+$F$ is an immersion at $p$ if $F_{*,p}$ is injective, and is an immersion if this is the case for all $p \in N$. This definition implies that $n \leq m$, and that if $F$ is an immersion, it has constant rank $n$.
+\end{definition}
+\begin{definition}
+$F$ is a submersion at $p$ if $F_{*, p}$ is surjective, and is a submersion if this is the case for all $p \in N$. This definition implies that $n \geq m$, and that if $F$ is a submersion, it has constant rank $m$.
+\end{definition}
+The following two examples are the "canonical" immersions and submersions, in the sense that every immersion is locally the canonical immersion, and every submersion is locally the canonical submersion. 
+
+The "canonical immersion" is the map $i : \R^n \to \R^m$, $n < m$, defined by $i(x^1, \dots, x^n) = (x^1, \dots, x^n, 0, \dots, 0)$. This map is clearly $C^\infty$, and its Jacobian relative to the standard coordinates is the matrix
+\[
+\begin{pmatrix}
+I_{n \times n} \\ 0
+\end{pmatrix},
+\]
+which clearly shows $i_{*, p}$ is injective for all $p \in \R^n$. Therefore $i$ is an immersion.
+
+The "canonical submersion" is the map $\pi : \R^n \to \R^m$, $n > m$, defined by $\pi(x^1, \dots, x^n) = (x^1, \dots, x^m)$. This map is clearly $C^\infty$, and its Jacobian relative to the standard coordinates is the matrix
+\[
+\begin{pmatrix}
+I_{m \times m} & 0
+\end{pmatrix},
+\]
+which clearly shows $\pi_{*, p}$ is surjective for all $p \in \R^n$. Therefore $\pi$ is a submersion.
+
+We now state the theorems which say that these are indeed the "canonical" examples of their kind.
+
+\begin{theorem}
+(Immersion theorem) Let $F : N \to M$ be an immersion and $p \in N$. There are coordinate charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^n, 0, \dots, 0).
+\]
+\end{theorem}
+\begin{theorem}
+(Submersion theorem) Let $F : N \to M$ be an immersion and $p \in N$. There are coordinate charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^m).
+\]
+\end{theorem}
+We will prove both of these later as a corollary of the following theorem, whose proof will be given later.
+\begin{theorem}
+(Constant rank theorem) Let $F : N \to M$ have constant rank $r$ and $p \in N$. Then there are charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^r, 0, \dots, 0).
+\]
+\end{theorem}
+
+\begin{definition}
+A smooth map $F : N \to M$ is said to be an embedding if it is an immersion and a topological embedding (i.e. a homeomorphism onto its image).
+\end{definition}
+We have a few properties of immersions and submersions.
+
+\begin{proposition}
+\begin{enumerate}
+\item $F : N \to M$ is a local diffeomorphism if and only if it is an immersion and a submersion
+
+\item An immersion is locally injective, and $F$ is an immersion if and only if it is locally an embedding.
+
+\item Submersions are open.
+\end{enumerate}
+\end{proposition}
+
+%check these
+\begin{proof}
+Was left as an exercise in class, so here's a solution.
+\begin{enumerate}
+\item
+$F$ is a local diffeomorphism if and only if $F_{*,p}$ is an isomorphism, if and only if $F_{*,p}$ is injective and surjective, if and only if $F$ is an immersion and a submersion at $p$.
+
+\item
+Suppose that $F$ is an immersion and that $p \in N$. By the immersion theorem there are charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ takes on the form 
+\[
+(\psi \circ F \circ \phi^{-1})(x^1, \dots, x^n) = (x^1, \dots, x^n, 0, \dots, 0).
+\]
+We claim that $F|_{U \cap F^{-1}(V)}$ is injective. Suppose $F(a) = F(b)$ for some $a,b \in U$. Then $(\psi \circ F \circ \phi^{-1})(\phi(a)) = (\psi \circ F \circ \phi^{-1})(\phi(b))$, and so the above equation implies that $\phi(a) = \phi(b)$. Since $\phi$ is bijective, $a = b$. Therefore $F$ is locally injective. Moreover, the above equation implies that on $U \cap F^{-1}(V)$, $F$ is composition of embeddings. Therefore $F$ is a local embedding.
+
+If $F$ is a local embedding, then for each $p \in N$ there is an open neighbourhood $U$ of $p$ such that $F|_U$ is an embedding. Therefore $F|_U$ is an immersion, which implies that $(F|_U)_{*,p}$, and therefore $F_{*,p}$, is injective, so $F$ is an immersion at $p$. This holds for all $p \in N$, so $F$ is an immersion. 
+ 
+\item
+Suppose $F$ is a submersion. Let $O \subseteq N$ be open and suppose $F(p) \in F(O)$. Since $p \in O \subseteq N$, there are, by the submersion theorem, coordinate charts $(U, \phi)$ at $p$ and $(V, \psi)$ at $F(p)$ such that $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ takes on the form 
+\[
+(\psi \circ F \circ \phi^{-1})(x^1, \dots, x^n) = (x^1, \dots, x^m),
+\]
+where $n \geq m$. This implies that on $U \cap F^{-1}(V)$, $F$ is a composition of open mappings (the "canonical submersion" $\pi$ is certainly open). Moreover, $U \cap F^{-1}(V) \cap O$ is an open neighbourhood of $p$, and so we can find an open neighbourhood $W$ of $p$ contained in $U \cap F^{-1}(V) \cap O$. Then $F(W)$ is an open neighbourhood of $F(p)$ contained in $F(O)$, which implies that $F(O)$ is open. 
+\end{enumerate}
+\end{proof}
+
+\subsection{Submanifolds}
+
+\begin{proposition}
+Let $M$ be a $k$-dimensional manifold in $\R^n$, in the MAT257 sense. Then the inclusion map $i : M \to \R^n$ is an embedding.
+\end{proposition}
+\begin{proof}
+That the inclusion map is a topological embedding is obvious. Given a coordinate map $\phi : U \to V \cap M$, the pair $(V \cap M, \phi^{-1})$ is a coordinate chart on $M$. Then $i \circ \phi$ is simply $\phi$, which is injective since $D\phi(q)$ is injective. Therefore $i$ is an immersion.
+\end{proof}
+Therefore the smooth structure on $M$ is, in some sense, "inherited" from the ambient space $\R^n$. That is, if $F : \R^n \to \R$ is $C^\infty$, then $F|_M$ is a $C^\infty$ map of smooth manifolds. (The local converse is true.)
+
+\begin{definition}
+$S \subseteq M$ is a(n embedded) submanifold of the smooth manifold $M$ if it is a smooth manifold such that the inclusion map $i : S \to M$ is an embedding.
+\end{definition}
+The following proposition is immediate.
+\begin{proposition}
+If $F : N \to M$ is a $C^\infty$ map between manifolds and $S \subseteq N$ is a submanifold as we just defined it, then $F|_S : S \to M$ is $C^\infty$.
+\end{proposition}
+We list some examples of submanifolds.
+\begin{enumerate}
+\item
+Every "MAT257 manifold" in $\R^n$ is a submanifold of $\R^n$.
+
+\item
+Every open subset $U \subseteq M$ of a smooth manifold is a submanifold, since the inclusion $i : U \to M$ is an embedding. 
+
+In fact, the only submanifolds of $M$ with the same dimension as $M$ are the open sets. This was left as an exercise in class, so here's a solution. Suppose $S \subseteq M$ is a submanifold of $M$ with $\dim S = \dim M$. Then the inclusion map $i : S \to M$ is an embedding. For $p \in S$, the differential $i_{*,p} : T_pS \to T_pM$ is an injective linear map between two vector spaces of the same dimension, so it is invertible. By the inverse function theorem, $i$ is a local diffeomorphism at $p$, which implies that $p$ is contained in some open subset of $M$ contained in $S$. Therefore $S$ is open.
+
+\item
+The graph $\Gamma_f$ of $f(x) = |x|$ defined on $\R$ is a smooth manifold, but it is not a submanifold of $\R^2$. Consider the atlas $\{(\Gamma_f, \pi)\}$, where $\pi : (x,f(x)) \mapsto x$. The inclusion map $i : \Gamma_f \to \R^2$ is not $C^\infty$, since $(i \circ \pi^{-1})(x) = (x, |x|)$.
+
+\item Embeddings give rise to submanifolds in the following sense.
+\begin{proposition}
+Let $F : N \to M$ be an embedding. Then there is a unique smooth structure on $F(N)$ such that $F(N)$ is a submanifold of $M$ and that $F : N \to F(N)$ a diffeomorphism.
+\end{proposition}
+\begin{proof}
+Let $\mathcal{A}$ be an atlas on $N$. Define $\mathcal{A}' = \{ (F(U), \phi \circ F^{-1}) : (U, \phi) \in \mathcal{A} \}$. Each set $F(U)$ is open in $F(N)$, and each $\phi \circ F^{-1} : F(U) \to \phi(U)$ is a homeomorphism, because $F$ is a homeomorphism onto its image. If $(U_1, \phi_1 \circ F^{-1}), (U_2, \phi_2 \circ F^{-1}) \in \mathcal{A}'$, then
+\[
+(\phi_1 \circ F^{-1}) \circ (\phi_2 \circ F^{-1})^{-1} = \phi_1 \circ \phi_2^{-1}
+\]
+is $C^\infty$. Therefore $\mathcal{A}'$ is a $C^\infty$ atlas on $F(N)$, making it a smooth manifold of the same dimension as $N$. 
+
+Consider the inclusion map $i : F(N) \to M$. It is obviously a topological embedding. Given $p \in F(N)$, choose a coordinate chart $(F(U), \phi \circ F^{-1})$ for $F(N)$ at $p$ and $(V, \psi)$ for $M$ at $i(p)=p$. If $q = (\phi \circ F^{-1})(p)$, then
+\[
+\mathrm{rk}(i_{*,p}) = \mathrm{rk}(D( \psi \circ i \circ (\phi \circ F^{-1})^{-1} )(q)) = \mathrm{rk}( D(\psi \circ F \circ \phi^{-1} )(q)) = \mathrm{rk}(F_{*,q}),
+\]
+which implies that $i_{*,p}$ is injective, so that $i$ is an immersion. Therefore $F(N)$ is a submanifold of $M$. 
+
+Consider a chart $(W, \sigma)$ on $N$ and a chart $(F(U), \phi \circ F^{-1})$ on $F(N)$. Then
+\[
+(\phi \circ F^{-1}) \circ F \circ \sigma^{-1} = \phi \circ \sigma^{-1}
+\]
+is $C^\infty$ because $\phi$ and $\sigma$ are both coordinate systems on $N$, and
+\[
+\sigma \circ F^{-1} \circ (\phi \circ F^{-1})^{-1} = \sigma \circ F^{-1} \circ F \circ \phi^{-1} = \sigma \circ \phi^{-1}
+\]
+is $C^\infty$ for the same reason. Therefore $F : N \to F(N)$ is a diffeomorphism. That the smooth structure corresponding to $\mathcal{A}'$ is the unique one on $F(N)$ with respect to which $F : N \to F(N)$ is a diffeomorphism is clear.
+\end{proof}
+
+\item
+Let $U \subseteq N$ be an open subset of a smooth manifold and $F : U \to M$ be a $C^\infty$ map into a smooth manifold $M$. Then $\Gamma_f = \{ (x, f(x)) : x \in U \}$ is a submanifold of $N \times M$. This can be proved by defining $F : U \to N \times M$ by $F(x) = (x, f(x))$ and showing that this is an embedding.
+\end{enumerate}
+
+\subsection{Regular Submanifolds}
+
+\begin{definition}
+Suppose $M$ is an $n$-dimensional manifold. $S \subseteq M$ is a regular submanifold of dimension $k$ if for each $p \in S$, there exists a chart $(U, x^1, \dots, x^n)$ of $M$ near $p$ such that $U \cap S$ is defined by the vanishing of $n - k$ of the coordinate functions; we may as well assume it is defined by the vanishing of the last $n-k$ coordinates. That is,
+\[
+U \cap S = \{ q \in S : x^{k+1}(q) = \cdots = x^n(q) = 0 \}.
+\]
+Such a coordinate chart is called an adapted chart relative to $S$.
+\end{definition}
+If $(U, \phi) = (U, x^1, \dots, x^n)$ is an adapted chart relative to $S$, define $\phi_S : U \cap S \to \R^k$ by $\phi_S(q) = (x^1(q), \dots, x^k(q))$. The pair $(U \cap S, \phi_S)$ is a coordinate chart on $S$ in the subspace topology. (That is, $\phi_S = \pi \circ \phi|_S$.)
+
+If $\{ (U \cap S, \phi_S) \}$ is a collection of adapted charts relative to $S$ covering $S$, it is not hard to see that they form a $C^\infty$ atlas on $S$, making $S$ a manifold of dimension $k$. $S$ is said to have \emph{codimension $n-k$ in $M$}.
+
+Note that the definition of a submanifold we gave in which the inclusion was required to be a smooth embedding (an "embedded submanifold") is equivalent to the definition of a regular manifold. We state this as a theorem - without proof for now.
+\begin{theorem}
+$S \subseteq M$ is a regular submanifold if and only if it is an embedded submanifold.
+\end{theorem}
+\begin{theorem}
+(Whitney embedding theorem) Any smooth manifold of dimension $n$ can be embedded in $\R^{2n}$.
+\end{theorem}
+The Klein bottle is an example of a manifold of dimension $2$ which cannot be embedded in $\R^3$, but can be embedded in $\R^4$.
+\end{document}
+  
+
+  
