@@ -1,0 +1,233 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Level Sets, Tangent Bundles (June 4)}
+
+\subsection{Regular and Critical Values}
+
+Recall that we showed that if $g : \R^{n+1} \to \R$ was a $C^\infty$ function such that $\nabla g(x) \neq 0$ for each $x \in g^{-1}(0)$, then $g^{-1}(0)$ was a manifold in $\R^{n+1}$ of dimension $n$. In our new terminology, $g^{-1}(0)$ is a regular submanifold of $\R^{n+1}$ of co-dimension $1$. We are going to generalize this example.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map between smooth manifolds and suppose $c \in M$. We call the set $F^{-1}(c)$ the level set of $F$ with level $c$. We say that $c$ is a critical value of $F$ if there is a $p \in F^{-1}(c)$ such that $F_{*,p}$ is not surjective, and we call $p$ a critical point of $F$. Otherwise, $c$ is a regular value of $F$ and the level set is said to be regular. 
+\end{definition}
+
+Suppose that $F : M \to \R^k$ has $0$ as a regular value, and that $M$ is a smooth manifold of dimension $n$. In generalizing the first example, we'd like to show that $F^{-1}(0)$ is a regular submanifold of $M$ of co-dimension $k$. Let's first informally discuss why this should be true.
+
+If we choose $p \in F^{-1}(0)$, then $F_{*,p}$ is surjective. By linear algebra, this implies that there are $n-k$ linearly independent directions $v \in T_pM$ such that $F_{*,p}(v) = 0$, corresponding to "how many directions we can move around at $p$ and stay in $F^{-1}(0)$". Similarly, there are $k$ linearly independent directions $v \in T_pM$ such that $F_{*,p}(v) \neq 0$, corresponding to "how many directions we can move around at $p$ to exit $F^{-1}(0)$".
+
+\begin{theorem}
+If $F : M \to \R^k$ has $0$ as a regular value, then $F^{-1}(0)$ is a regular submanifold of $M$ of co-dimension $k$.
+\end{theorem}
+\begin{proof}
+Given $p \in F^{-1}(0)$, let $(U, \phi) = (U, x^1, \dots, x^n)$ be a coordinate chart for $M$ at $p$. Since $F_{*,p}$ is surjective, assume without loss of generality that the first $k\times k$ submatrix of the Jacobian of $F$ relative to this coordinate chart is non-singular. The Jacobian of the $C^\infty$ map $(F^1, \dots, F^k, x^{k+1}, \dots, x^n)$ is, relative to this coordinate chart,
+\[
+\begin{pmatrix}
+\frac{\pd (F^1, \dots, F^k)}{\pd (x^1, \dots, x^k)} & * \\
+0 & I_{n-k},
+\end{pmatrix}
+\]
+so by the inverse function theorem there is an open set $\tilde{U} \subseteq U$ such that $(\tilde{U}, F^1, \dots, F^k, x^{k+1}, \dots, x^n)$ is a coordinate chart on $M$ at $p$. The set $\tilde{U} \cap F^{-1}(0)$ is defined by setting the first $k$ coordinates of this chart to be $0$, which proves that $F^{-1}(0)$ is a regular submanifold of co-dimension $k$.
+\end{proof}
+\begin{corollary}
+(Regular level set theorem) Let $F : N \to M$ be a $C^\infty$ map and suppose $c \in M$ is a regular value of $F$. Then $F^{-1}(c)$ is a regular submanifold of $N$ of co-dimension $m$.
+\end{corollary}
+This is a special case of a more general theorem.
+\begin{theorem}
+(Constant rank level set theorem) Let $F : N \to M$ be a $C^\infty$ map and suppose $c \in M$ is such that $F$ has constant rank $k$ in some neighbourhood of $F^{-1}(c)$ in $N$. Then $F^{-1}(c)$ is a regular submanifold of $N$ of co-dimension $k$.
+\end{theorem}
+We also have the following equivalent characterization of submanifolds.
+\begin{theorem}
+$S \subseteq M$ is a submanifold of co-dimension $k$ if and only if for each $p \in S$ there exists a $C^\infty$ map $F : U \to \R^k$ defined on a neighbourhood $U$ of $p$ such that $0$ is a regular value of $F$ and $U \cap S = F^{-1}(0)$.
+\end{theorem}
+
+\subsection{Motivating the Tangent Bundle}
+
+We want to define vector fields, differential forms, tensor fields, Riemannian metrics, etc. In order to talk about them and to say that they are smooth, we need the concept of the tangent bundle.
+
+For example, what is a "smooth choice" of tangent vectors $X_p \in T_pM$, for $p \in M$? We also want to make the dual choice; what is a "smooth choice" of \emph{covectors} $\omega_p$, for $p \in M$. (This will be a differential $1$-form).
+
+We also want to make a "smooth choice" of $k$-dimensional subspaces $E_p$ of $T_pM$, for $T_pM$. This will bring up the question "Does there exist a submanifold $S \subseteq M$ such that for each $p \in S$, $i_{*,p}(T_pS) = E_p$?". This will be answered by the \emph{Frobenius theorem}.
+
+We'd like to talk about $(k,l)$-tensors: multilinear maps
+\[
+T_{p(k,l)} : \underbrace{T_p^*M \times \cdots \times T_p^*M}_{\text{$k$ times}} \times \underbrace{T_pM \times \cdots \times T_pM}_{\text{$l$ times}} \to \R,
+\]
+where $T_p^*M$ is the dual space to $T_pM$. We want to make a "smooth choice" of $T_{p(k,l)}$ for $p \in M$. Such a $T$ will be called a \emph{smooth $(k,l)$-tensor field}. In particular, a differential $k$-form will be an alternating $(0,k)$-tensor.
+
+Everything is easy in $\R^n$ because the tangent spaces are just copies of $\R^n$. On abstract manifolds, things are more difficult, and so we must develop the notion of a \emph{tangent bundle}.
+
+\subsection{The Tangent Bundle is a Smooth Manifold}
+
+\begin{definition}
+Let $M$ be a smooth manifold. The tangent bundle $TM$ is defined to be the set
+\[
+TM = \bigcup_{p \in M} T_pM = \bigsqcup_{p \in M} T_pM,
+\]
+where the disjoint union is the set
+\[
+\bigsqcup_{p \in M} T_pM = \bigcup_{p \in M} (\{p\} \times T_pM).
+\]
+\end{definition}
+Up to notation these are the same thing, since any two $T_pM$, $T_qM$ for $p \neq q$ are already disjoint. The tangent bundle $TM$ comes with a natural projection map $\pi : TM \to M$ defined by $\pi(p, v) = v$, or alternatively, $\pi(v) = p$ if $v \in T_pM$. 
+
+How should we topologize $TM$? We do \emph{not} want to choose the coarsest topology with respect to which $\pi$ is continuous, since the open sets would then be $\pi^{-1}(U) = TU$, which is too large.
+
+Let $(U, \psi) = (U, x^1, \dots, x^n)$ be a coordinate chart on $M$. Then $TU = \bigcup_{p\in U}T_pM$. For $p \in U$, we have a basis $\{ \left. \frac{\pd}{\pd x^i}\right|_p \}$ of $T_pM$. Define $\tilde{\phi} : TU \to \phi(U) \times \R^n$ by
+\[
+\tilde{\phi}\left( \sum c^i \left. \frac{\pd}{\pd x^i}\right|_p \right) := (x^1(p), \dots, x^n(p), c^1, \dots, c^n) = (\phi(p), c^1, \dots, c^n).
+\]
+Note that the $c^i$'s are functions of $v \in T_pU$. The map $\tilde{\phi}$ is bijective with inverse
+\[
+\tilde{\phi}^{-1}(\phi(p), c^1, \dots, c^n).
+\]
+Equip $TU$ with the unique topology with respect to which $\tilde{\phi}$ is a homeomorphism. That is, declare $V \subseteq TU$ to be open if and only of $\tilde{\phi}(V)$ is open in $\phi(U) \times \R^n \subseteq \R^{2n}$.
+
+Having topologized the tangent bundle of every coordinate neighbourhood in $M$, how do we topologize $TM$? Define
+\[
+\mathcal{T} = \{ A \subseteq TM : \text{$A$ is open in $TU_\alpha$ for every coordinate open set $U_\alpha$}\}.
+\]
+It is not hard to see that $\mathcal{T}$ is a topology on $TM$. We have the following proposition:
+\begin{proposition}
+For a smooth manifold $M$, the projection $\pi : TM \to M$ is a continuous open mapping.
+\end{proposition}
+Note that by construction $TM$ is locally Euclidean of dimension $2n$. In addition, we have the following proposition, making $TM$ into a topological $2n$-manifold.
+
+\begin{proposition}
+$TM$ is second-countable and Hausdorff.
+\end{proposition}
+\begin{proof}
+Since $M$ is second-countable we may choose a countable set of coordinate neighbourhoods $U_\alpha$. Each $TU_\alpha$ is homeomorphic to $\phi_\alpha(U_\alpha) \times \R^n \subseteq \R^{2n}$, so we may choose a countable basis $\mathcal{B}_\alpha$ of $TU_\alpha$. Let $\mathcal{B} = \bigcup_\alpha \mathcal{B}_\alpha$. The set $\mathcal{B}$ is a countable collection of open sets of $TM$; we show it's a basis.
+
+Given $A \subseteq TM$ open and $(p, v) \in A$, choose one of the coordinate neighbourhoods $U_\alpha$ at $p$. Since $A$ is open in $TU_\alpha$ and $(p, v) \in TU_\alpha$, we can find an element $V \in \mathcal{B}_\alpha$ such that $(p,v) \in V \subseteq A \subseteq TU_\alpha$. This proves that $\mathcal{B}$ is a countable basis of $TM$.
+
+Now suppose $(p, v), (q, w) \in TM$. If $p = q$, then choosing a coordinate chart $(U, \phi)$ at $p = q$ shows that $v, w$ are distinct points of $TU \cong \phi(U) \times \R^n$. This set is Hausdorff as it is a subspace of $\R^{2n}$, so we're done. Otherwise, $p \neq q$, so by Hausdorffness of $M$ we can find disjoint open neighbourhoods $U$ of $p$ and $V$ of $q$ in $M$. Then $\pi^{-1}(U)$ and $\pi^{-1}(V)$ are disjoint open neighourboods of $(p, v)$ and $(q, w)$ in $M$, respectively, which proves that $TM$ is Hausdorff.
+\end{proof}
+In short, if $M$ is a topological $n$-manifold, then $TM$ is a topological $2n$-manifold.
+
+Having given $TM$ a topology and a topological manifold structure, how do we give it a smooth structure? This is easy.
+\begin{proposition}
+Suppose $M$ is a smooth manifold of dimension $n$. If $\{(U_\alpha, \phi_\alpha)\}$ is a smooth atlas on $M$, then $\{(TU_\alpha, \tilde{\phi_\alpha})\}$ is a smooth atlas on $TM$. Therefore $TM$ is a smooth manifold of dimension $2n$.
+\end{proposition}
+\begin{proof}
+Clearly $TM = \bigcup_\alpha TU_\alpha$. All we have to show is that on $(TU_\alpha) \cap (TU_\beta)$ the maps $\tilde{\phi_\alpha}$ and $\tilde{\phi_\beta}$ are $C^\infty$ compatible.
+
+To make the notation nicer, suppose $(TU, \tilde{\phi})$ and $(TV, \tilde{\psi})$ are charts on $TM$, where $(U, \phi) = (U, x^1, \dots, x^n)$ and $(V, \psi) = (V, y^1, \dots, y^n)$ are coordinate charts on $M$. If $p \in U \cap V$, then
+\begin{align*}
+(\tilde{\psi} \circ \tilde{\phi}^{-1})(\phi(p), c^1, \dots, c^n) &= \tilde{\psi} \left( \sum_j c^j \left. \frac{\pd}{\pd x^j}\right|_p \right) \\
+&= \tilde{\psi} \left( \sum_j c^j \sum_i \frac{\pd y^i}{\pd x^j}(p) \left. \frac{\pd}{\pd y^i}\right|_p \right)  \qquad \text{coord. change } \frac{\pd}{\pd x^j} = \sum_i \frac{\pd y^i}{\pd x^j}\frac{\pd}{\pd y^i} \\
+&= \tilde{\psi} \left( \sum_i \left( \sum_j c^j \frac{\pd y^i}{\pd x^j}(p) \right) \left. \frac{\pd}{\pd y^i}\right|_p \right) \\
+&= \left( (\psi \circ \phi^{-1})(\phi(p)), b^1, \dots, b^n \right),
+\end{align*}
+where 
+\[
+b^i = \sum_j c^j \frac{\pd y^i}{\pd x^j}(p) = \sum_j c^j \frac{\pd (\psi \circ \phi^{-1})^i}{\pd r^j}(\phi(p)).
+\]
+So $\tilde{\psi} \circ \tilde{\phi}^{-1}$ is $C^\infty$ because $\psi \circ \phi^{-1}$ is. It follows that the atlas we gave $TM$ is smooth, making $TM$ a smooth manifold of dimension $2n$.
+\end{proof}
+\begin{corollary}
+The projection $\pi : TM \to M$ is $C^\infty$.
+\end{corollary}
+\begin{proof}
+For any coordinate map $\phi$ on $M$,
+\[
+\phi \circ \pi \circ \tilde{\phi}^{-1} : (x^1, \dots, x^n, c^1, \dots, c^n) \mapsto (x^1, \dots, x^n),
+\]
+which is clearly $C^\infty$.
+\end{proof}
+\begin{corollary}
+If $M$ is a smooth $n$-manifold covered by a single coordinate chart $(M, \phi)$, then $TM$ is diffeomorphic to $M \times \R^n$.
+\end{corollary}
+We want to use the tangent bundle to work with "global" objects on a manifold. Here's one example.
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map. Define the global differential $F_* : TN \to TM$ by $F_*((p, v)) = F_{*,p}(v)$. (Note the abuse of notation.)
+\end{definition}
+\begin{proposition}
+The global differential $F_* : TN \to TM$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+Given $(p, v) \in TN$, let $(TU, \tilde{\phi})$ be a chart at $(p,v)$ and $(TV, \tilde{\psi})$ be a chart at $F_{*,p}(v)$, where $\phi = (x^1, \dots, x^n)$ and $\psi = (y^1, \dots, y^m)$ are local coordinates on $N$ and $M$, respectively. Then
+\begin{align*}
+(\tilde{\psi} \circ F_* \circ \tilde{\phi}^{-1})(\phi(p), c^1, \dots, c^n) &= (\tilde{\psi} \circ F_*)\left( \sum_j c^j \left. \frac{\pd}{\pd x^j} \right|_p\right) \\
+&= \tilde{\psi} \left( \sum_j c^j F_{*,p}\left( \left. \frac{\pd}{\pd x^j} \right|_p \right) \right) \\
+&= \tilde{\psi}\left( \sum_j c^j \sum_i \frac{\pd F^i}{\pd x^j}(p) \left. \frac{\pd}{\pd y^i}\right|_{F(p)} \right) \\
+&= \tilde{\psi}\left( \sum_i \left( \sum_j c^j \frac{\pd F^i}{\pd x^j}(p) \right) \left. \frac{\pd }{\pd y^i}\right|_{F(p)} \right) \\
+&= \left((\psi \circ F \circ \phi^{-1})(\phi(p)), b^1, \dots, b^n \right),
+\end{align*}
+where
+\[
+b^i = \sum_j c^i \frac{\pd F^i}{\pd x^j}(p) = \sum_j c^i \frac{\pd (\psi \circ F \circ \phi^{-1})^i}{\pd r^j}(\phi(p)).
+\]
+Since $\psi \circ F \circ \phi^{-1}$ is $C^\infty$ at $p$, we conclude that the global differential is $C^\infty$ at $(p,v)$.
+\end{proof}
+
+\subsection{Sections, Algebraic Structures}
+
+We'd like to describe vector fields on manifolds as functions that take each point $p$ to a tangent vector $X(p) = X_p \in T_pM$. We can easily describe such functions with the following definition.
+\begin{definition}
+A section of the tangent bundle $TM$ is a right inverse of the projection $\pi : TM \to M$. We say that a section is smooth if it is smooth relative to the smooth structures on $M$ and $TM$.
+\end{definition}
+So if $X : M \to TM$ is a section of $TM$, then $\pi(X(p)) = p$, implying that $X(p) \in T_pM$ for each $p \in M$. This is the property we want. With this language, a \emph{smooth vector field} on $M$ is a smooth section of the tangent bundle.
+
+\begin{proposition}
+Let $X, Y$ be smooth sections of $TM$. Then
+\begin{enumerate}[(i)]
+\item
+Define $X + Y : M \to TM$ by $(X+Y)(p) := X(p) + Y(p)$. Then $X+Y$ is another smooth section on $TM$.
+\item
+For $f \in C^\infty(M)$, define $fX : M \to TM$ by $(fX)(p) = f(p) \cdot X(p)$. Then $fX$ is another smooth section on $TM$.
+\end{enumerate}
+\end{proposition}
+The above proposition states that if $\Gamma(M)$ denotes the set of all smooth sections on $TM$, then $\Gamma(M)$ is both a real vector space and a module over the ring $C^\infty(M)$ of smooth functions on $M$. (A module can be thought of as taking a vector space and replacing the base field with a commutative ring with unity, but here's a precise definition anyway.)
+\begin{definition}
+Let $R$ be a ring with unity. A left-R module consists of an abelian group $(M,+)$ and an operation $\cdot : R \times M \to M$ such that
+\begin{enumerate}
+\item $r \cdot (x+y) = r\cdot x + r\cdot y$ 
+\item $(r+s) \cdot x = r \cdot x + r \cdot y$
+\item $(rs) \cdot x = r \cdot(s \cdot x)$ 
+\item $1 \cdot x = x$
+\end{enumerate}
+(Long story short, we swap the scalars in a vector space with the elements of a ring, which obey the same laws as those scalars. We lose out on being able to invert those scalars.)
+\end{definition}
+\begin{definition}
+A derivation $D$ on an algebra $A$ over $\R$ is a linear map $D : A \to A$ satisfying the Leibnitz rule.
+\end{definition}
+\begin{proposition}
+Let $M$ be a smooth manifold. The set
+\[
+\mathrm{Der} = \{ X : C^\infty(M) \to C^\infty(M) : \text{X is a derivation }\}
+\]
+is a module over $C^\infty(M)$. Moreover, the map $\Phi : \Gamma(M) \to \mathrm{Der}$ defined by $\Phi(X)(f) = X(f)$ is a module isomorphism.
+\end{proposition}
+The map $\Phi$ in the above proposition is similar to the old map $T_p\R^n \to \mathcal{D}_p$, $v \mapsto D_v$, which was also an isomorphism. 
+
+Suppose $X$ is a smooth section of $TM$. Then we can define, by abuse of notation, a map $X : C^\infty(M) \to C^\infty(M)$ by $X(f)(p) = X(p)(f)$. One of the problems on Homework 3 gives the following proposition (whose proof, for obvious reasons, shall not be given).
+\begin{proposition}
+Let $X$ be a section of $TM$. Then $X$ is smooth if and only if for each $f \in C^\infty(M)$, $X(f) \in C^\infty(M)$ as defined above.
+\end{proposition}
+
+\end{document}
+  
+
+  
