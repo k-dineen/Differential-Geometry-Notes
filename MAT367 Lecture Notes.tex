@@ -1,0 +1,1653 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[hidelinks]{hyperref}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\hypersetup{linktoc=all}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\newcommand{\supp}{\mathrm{supp}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\hat}{\widehat}
+
+% HOW TO READ THESE
+% (definiton/theory/corollary/lemma) a.b.c is the cth respective object of section a, subsection b
+
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{corollary}{Corollary}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+\newtheorem{proposition}{Proposition}[subsection]
+
+\pagestyle{myheadings}
+\title{MAT367 Course Notes}
+\author{Kain Dineen}
+
+\begin{document}
+\maketitle
+
+The following are course notes for the course MAT367 (Differential Geometry) offered in the Summer of 2020, taught by Ahmed Ellithy. The course notes are based off of handwritten notes created during lectures. They may contain errors or other false statements. The dates for each lecture are included, and any additional sections are supplementary material. (Exercises to very important/relevant problems, etc.)
+
+\tableofcontents
+
+\newpage
+\section{Introduction (May 5)}
+
+\subsection{Trying to Define Things}
+
+The straightforward approach is
+\begin{definition}
+A set $S \subseteq \R^3$ is a surface if there is an open set $U \subseteq \R^2$ and a smooth function $f : U \to \R$ for which $S = \Gamma_f$ is the graph of $f$.
+\end{definition}
+This isn't a great definition though. Its problem is that it's way too specific. The sphere $S^2 = \{x^2 + y^2 + z^2 = 1\}$ fails to be a surface under this definition, as it's not the graph of a function. We can remedy this by thinking about the following question:
+\[
+\textit{If we were standing on a surface, what should our surroundings look like?}
+\]
+Here's another attempt at defining a surface, albeit in an imprecise way.
+\begin{definition}
+A set $S \subseteq \R^3$ is a surface if for every $p \in S$ there is a neighbourhood of $p$ in $S$ that "looks like a piece of the plane".
+\end{definition}
+In more precise (but still not formal) wording, we are "locally diffeomorphic to pieces of $\R^2$". It turns out that this condition is equivalent to $S$ being locally a graph; that follows from the implicit function theorem.
+
+We'd like to generalize the above notions to define a $k$-dimensional "surface" in $\R^n$. Following in the footsteps of the previous definition, we obtain a new
+\begin{definition}
+A set $S \subseteq \R^n$ is a $k$-dimensional manifold if it "locally looks like $\R^n$".
+\end{definition}
+Equivalently, if for each $p \in S$ there is an open $U \subseteq \R^n$ containing $p$ such that $S \cap U$ is the graph of a smooth function from an open subset of $\R^k$ to $\R^{n-k}$.
+
+The key idea with the last two definitions is that they are \textit{local} - they are concerned with describing "pieces" of the surface or manifold, as opposed to the first definition being "global" by describing the entire surface.
+
+\subsection{Leaving $\R^n$ for the Intrinsic View}
+Almost all of the geometry that is done on manifolds depends only on the manifold itself, and not on the space in which the manifold lies. (An example of Riemannian geometry is curvature.) Moreover, there are many sets we'd like to call manifolds whose points do not lie in Euclidean space. An example is \textit{real projective space} $\R P^n$, which is defined as the quotient $(\R^{n+1} \setminus \{0\})/(x \sim \lambda x)$, where $\lambda \neq 0$. The real projective space contains equivalence classes of points of Euclidean space, so it is not a subset of Euclidean space. Therefore we'd like to define manifolds so that $\R P^n$ is an $n$-dimensional manifold. 
+
+Concisely, we would like to study manifolds \textit{intrinsically}: we would like to drop all of the unnecessary data around our manifold and consider only the key properties of what a manifold should be.
+
+\newpage
+\section{Defining Manifolds (May 7)}
+
+\subsection{Submanifolds of $\R^n$}
+
+We'll formally write out the definition of a $k$-manifold $M$ in $\R^n$ now.
+\begin{definition}
+A subset $M \subseteq \R^n$ is a $k$-dimensional manifold if for every $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subseteq \R^k$, and a function $f : V \to U \cap M$ such that
+\begin{enumerate}
+\item $f$ is a homeomorphism,
+\item $f$ is smooth,
+\item $Df(x)$ has rank $k$ at every $x \in V$.
+\end{enumerate}
+\end{definition}
+The first two conditions are natural. Why the third? We'd like the \textit{tangent space to $M$ at $p$} to be a $k$-dimensional subspace of $\R^n$. If $Df(x)$ has rank $k$, then $Df(x)(\R^k)$ is a $k$-dimensional subspace of $\R^n$, which is what we would like $T_p M$ to be (roughly).
+
+We have an equivalent definition, stated here as a theorem:
+\begin{theorem}
+$M \subseteq \R^n$ is a $k$-manifold if and only if for each $p \in M$ there is an open neighbourhood $U$ of $p$ in $\R^n$, an open $V \subseteq \R^k$, and a smooth $f : V \to \R^{n-k}$ such that $U \cap M = \Gamma_f$ (up to a permutation of the coordinates in $U$).
+\end{theorem}
+That last condition is a little odd, but what it means is that we can consider graphs of the form $(x, f(x))$ and $(f(y), y)$. This is essential in ensuring that, say, $S^1 = \{x^2 + y^2 = 1\}$ is a manifold. The definition may be shown to be equivalent to the old one using the implicit function theorem.
+
+\subsection{Topological Manifolds}
+
+By way of the subspace topology, every manifold in $\R^n$ is Hausdorff and second countable. It turns out that these are the conditions we would like our abstract manifolds to have in order to exclude some pathological cases.
+
+\begin{definition}
+A topological space $M$ is locally Euclidean of dimension $m$ if for each $p \in U$ there is an open neighbourhood $U$ of $p$ in $M$ and a map $\phi : U \to \R^m$ which is a homeomorphism onto its image. The pair $(U, \phi)$ is called a coordinate chart, $U$ is called a coordinate neighbourhood, and $\phi$ is called a coordinate system. 
+\end{definition}
+
+\begin{definition}
+$M$ is a topological manifold of dimension $m$ if it is Hausdorff, second countable, and locally Euclidean of dimension $m$.
+\end{definition}
+Is the dimension of a topological manifold well-defined? That is, if $(U, \phi)$ and $(V, \psi)$ are two coordinate charts with $U \cap V \neq \emptyset$ and $\phi(U) \subseteq \R^n$, $\psi(V) \subseteq \R^m$, is $n = m$? Consider the \textit{transition mapping}
+\[
+\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V).
+\]
+This is a homeomorphism from an open subset of $\R^n$ to an open subset of $\R^m$. If $n \neq m$, this contradicts a non-trivial theorem called \textit{Invariance of Domain}. We will not prove it here.
+
+If we drop the Hausdorff condition, then the "line with two origins" becomes a topological manifold. If we drop the countable basis condition, then the "long line" becomes a topological manifold. These are both topological spaces that intuitively should not be manifolds - the extra conditions excludes them from being so.
+
+\subsection{Defining a Smooth Manifold}
+
+How should we define a smooth function on a manifold, say, $f : M \to \R$? The reasonable thing to do is to say that $f$ is smooth if $f \circ \phi^{-1}$ is smooth, for some coordinate system $\phi$. Then we run into a problem - this isn't independent of the choice of coordinate system, so long as $M$ is only a topological manifold. We will define a \textit{smooth structure} on $M$ which allows us to make this natural definition.
+
+\begin{definition}
+Two coordinate charts $(U, \phi)$ and $(V, \psi)$ are said to be smoothly compatible (or $C^\infty$-compatible) if the transition mappings are diffeomorphisms, i.e.
+\begin{align*}
+&\psi \circ \phi^{-1} : \phi(U \cap V) \to \psi(U \cap V) \\
+&\phi \circ \psi^{-1} : \psi(U \cap V) \to \phi(U \cap V)
+\end{align*}
+are $C^\infty$ maps of open subsets of Euclidean space.
+\end{definition}
+
+Smooth compatability is clearly a reflexive and symmetric relation. Is it transitive? Unfortunately, the answer is no. Suppose $(U_1, \phi_1)$ is smoothly compatible with $(U_2, \phi_2)$ and similarly for $(U_2, \phi_2)$ with $(U_3, \phi_3)$. The natural thing to do is write
+\[
+\phi_3 \circ \phi_1^{-1} = (\phi_3 \circ \phi_2^{-1}) \circ (\phi_2 \circ \phi_1^{-1}).
+\]
+But this only makes sense on $\phi_1(U_1 \cap U_2 \cap U_3)$, which may be empty!
+
+\begin{definition}
+A smooth atlas (or $C^\infty$ atlas) on $M$ is a collection of pairwise smoothly compatible coordinate charts covering $M$.
+\end{definition}
+
+We can now properly define a smooth function on a manifold. For unsaid technical reasons, however, it's beneficial to consider a little more structure. (Unfortunately the rest of the lecture went a little fast, as we ran out of time.)
+
+\begin{definition}
+A smooth maximal atlas is a smooth atlas not contained in any other smooth atlas.
+\end{definition}
+
+\begin{definition}
+A smooth manifold of dimension $n$ is a Hausdorff, second countable topological manifold of dimension $n$ equipped with a smooth maximal atlas $\mathcal{A}$. The smooth maximal atlas $\mathcal{A}$ is called a smooth structure on $M$.
+\end{definition}
+
+\begin{lemma}
+Any smooth atlas for $M$ is contained in a unique maximal smooth atlas.
+\end{lemma}
+The proof for this lemma proceeds roughly as follows: first one proves that if a two coordinate charts are smoothly compatible with a given atlas (meaning they are compatible with every chart in the atlas), then they are themselves compatible. Then one picks a smooth atlas and adjoins (by union) all of the charts with which the smooth atlas is compatible. It is then shown that this larger atlas is the desired unique maximal atlas.
+
+Because of this lemma, we have a simple "test" for a smooth manifold.
+\begin{corollary}
+A topological space $M$ is a smooth manifold if and only if
+\begin{enumerate}
+\item It is Hausdorff and second countable,
+\item It admits a smooth atlas.
+\end{enumerate}
+\end{corollary}
+
+\newpage
+\section{Smooth Structures, Examples (May 12)}
+
+\subsection{More on Maximal Atlases}
+
+Consider the two atlases $\mathcal{A}_1 = \{(\R^n, Id)\}$ and $\mathcal{A}_2 = \{(B_1(x), Id) : x \in \R^n\}$ on $\R^n$. These two atlases determine the same maximal atlas, or the same smooth structure. Why? We have three equivalent reasons
+\begin{itemize}
+\item for any $(U, \phi) \in \mathcal{A}_1$ and $(V, \psi) \in \mathcal{A}_2$, the charts $(U, \phi)$ and $(V, \psi)$ are $C^\infty$ compatible.
+\item $\mathcal{A}_1 \cup \mathcal{A}_2$ is a $C^\infty$ atlas.
+\item $\mathcal{A}_1$ and $\mathcal{A}_2$ belong to the same maximal atlas.
+\end{itemize}
+Define a relation $\sim$ on the atlases by $\mathcal{A}_1 \sim \mathcal{A}_2$ if and only if $\mathcal{A}_1 \cup \mathcal{A}_2$ is another $C^\infty$ atlas. Symmetry and reflexivity are immediate. For transitivity, suppose $\mathcal{A}_1 \cup \mathcal{A}_2$ and $\mathcal{A}_2 \cup \mathcal{A}_3$ are $C^\infty$ atlases. Choose $(U_1, \phi_1) \in \mathcal{A}_1$ and $(U_3, \phi_3) \in \mathcal{A}_3$. We obtain a diffeomorphism
+\[
+\phi_1 \circ \phi_3^{-1} = \phi_1 \circ \phi_2^{-1} \circ \phi_2 \circ \phi_3^{1} 
+\]
+defined on $\phi_3(U_{13} \cap U_2)$. Since $\{U_2 : (U_2, \phi_2) \in \mathcal{A}_2$ covers $M$, the map $\phi_1 \circ \phi_3^{-1}$ is smooth at every point of $\phi_3(U_{13})$. Therefore $\sim$ is an equivalence relation.
+
+Now given an atlas $\mathcal{A}$ on $M$, we can talk about the equivalence class $[\mathcal{A}]$. Define 
+\[
+\mathcal{M} = \bigcup_{\mathcal{A}^\prime \in [\mathcal{A}]} \mathcal{A}^\prime.
+\]
+Then $\mathcal{M}$ is a new atlas on $M$; it is the unique maximal atlas containing $\mathcal{A}$. (Exercise.)
+
+So we can make the
+\begin{definition}
+A smooth $n$-manifold $M$ is a topological $n$-manifold with a maximal atlas. The choice of maximal atlas is called a smooth structure on $M$.
+\end{definition}
+
+Considering the previous remarks, we arrive at a sufficient condition for a space to be a smooth manifold: If $M$ is a topological space for which
+\begin{enumerate}
+\item $M$ is Hausdorff, second-countable, and
+\item $M$ admits a $C^\infty$ atlas $\mathcal{A}$
+\end{enumerate}
+then $M$ is a smooth manifold with smooth structure $\mathcal{M} = \bigcup_{\mathcal{A}^\prime \in [\mathcal{A}]} \mathcal{A}^\prime$.
+
+\subsection{Examples}
+
+\begin{enumerate}
+\item (Open subsets) Let $M$ be a smooth $n$-manifold with a smooth atlas $\mathcal{A} = \{ (U_\alpha, \phi_\alpha) \}$. Let $A \subseteq M$ be an open set. Then $\mathcal{A}_A = \{ (U_\alpha \cap A, \phi_\alpha |_{U_\alpha \cap A}) \}$ is a smooth atlas on $A$, so $A$ is a smooth $n$-manifold.
+
+\item (Finite dimensional vector spaces) Let $V$ be a finite dimensional real vector space. Choose a basis $\beta = \{v_1, \dots, v_n\}$ of $V$, and consider the isomorphism $\Phi : V \to \R^n$ given by $\Phi(v_i) = e_i$. 
+
+Define a norm on $V$ by $\|\sum a_i v_i\| := \|\sum a_i e_i \|$, where the norm on the left is the standard Euclidean norm. With this norm we may define an open ball in $V$ as $B_r(v_0) = \{ v \in V : \| v - v_0 \| < r\}$. This gives a topology on $V$. Since all norms on finite dimensional vector spaces are equivalent, this topology does not depend on our choice of basis.
+
+Then $\Phi$ is an isometry (it does not change distances), so it takes balls to balls and so does its inverse. That is, $\Phi$ is a homeomorphism, so we have a $C^\infty$ atlas $\{(V, \Phi)\}$ on $V$, making $V$ a smooth $n$-manifold.
+
+This atlas determines a maximal atlas on $V$. Does this maximal atlas depend on the choice of basis? No. Choose another basis $\beta^\prime$ of $V$ and define $\Phi^\prime : V \to \R^n$ similarly. Then we'll get another $C^\infty$ atlas $\{(V, \Phi^\prime)\}$ on $V$. The charts $(U, \Phi)$ and $(V, \Phi^\prime)$ are $C^\infty$-compatible, for the transition map $\Phi^\prime \circ \Phi^{-1}$ is a linear isomorphism of $\R^n$ with itself (certainly $C^\infty$). 
+
+\textbf{Remark:} We also could have talked about complex vector spaces, since $\mathbb{C} \cong \R^2$.
+
+\item (Matrices, general linear group) $\mathrm{Mat}_{m \times n}(\R) \cong \R^{mn}$, so $\mathrm{Mat}_{m \times n}(\R)$ is a smooth manifold of dimension $mn$. 
+
+The general linear group is $GL(n, \R) = \{A \in \mathrm{Mat}_{m \times n}(\R) : \det(A) \neq 0\}$. By continuity of $\det$ it is an open subset of $\mathrm{Mat}_{m \times n}(\R)$, so by the first example we know it's a smooth $n^2$-dimensional manifold.
+\end{enumerate}
+
+\newpage
+
+\section{More Examples, Quotients (May 14)}
+
+\subsection{More Examples}
+\begin{enumerate}
+\item (The circle) Define $S^1 = \{x^2 + y^2 = 1\} \subseteq \R^2$. We can define four functions on open sets of $\R$, the collection of which form a set of functions of which $S^1$ is locally the graph. Define an open cover $\{V_1, V_2, V_3, V_4\}$ of $S^1$ by
+\begin{alignat*}{2}
+V_1 &= S^1 \cap ((0, \infty) \times (-1,1)) \qquad &&\text{"open right half"}\\
+V_2 &= S^1 \cap ((\infty, 0) \times (-1,1)) \qquad &&\text{"open left half"} \\
+V_3 &= S^1 \cap ((-1, 1) \times (0, \infty)) \qquad &&\text{"open top half"}\\
+V_4 &= S^1 \cap ((-1, 1) \times (-\infty, 0))\qquad &&\text{"open bottom half"}
+\end{alignat*}
+Define $f_1, f_2, f_3, f_4 : (-1, 1) \to \R$ by
+\begin{alignat*}{2}
+f_1 (y) &= \sqrt{1-y^2} \qquad &&\text{so that } \Gamma_{f_1} = V_1 \\
+f_2 (y) &= -\sqrt{1-y^2} \qquad &&\text{so that } \Gamma_{f_2} = V_2  \\
+f_3 (x) &= \sqrt{1-x^2} \qquad &&\text{so that } \Gamma_{f_3} = V_3  \\
+f_4 (x) &= -\sqrt{1-x^2} \qquad &&\text{so that } \Gamma_{f_4} = V_4 
+\end{alignat*}
+What are the charts? Define $\phi_1 : V_1 \to (-1,1)$ by $\phi_1(x,y) = y$. This is continuous with continuous inverse $\phi_1^{-1}(y) = (\sqrt{1-y^2}, y)$. The other coordinate systems $\phi_2, \phi_3, \phi_4$ are defined similarly. Consider 
+\[
+\mathcal{A} = \{ (V_1, \phi_1),(V_2, \phi_2),(V_3, \phi_3),(V_4, \phi_4) \}.
+\]
+We claim that $\mathcal{A}$ is a smooth atlas on $S^1$. For example, one transition map is $\phi_1 \circ \phi_3^{-1} : \phi_3(V_{13}) \to \phi_1(V_{13})$, which is a map from $(0, 1)$ to itself. It is given by
+\[
+(\phi_1 \circ \phi_3^{-1})(t) = \phi_1(t, \sqrt{1-t^2}) = \sqrt{1-t^2},
+\]
+which is a diffeomorphism of $(0, 1)$ with itself. As a similar proposition holds for the other transition maps, we conclude that $(S^1, \mathcal{A})$ is a smooth manifold of dimension $1$.
+
+Let $f : \R^2 \to \R$ be $f(x,y) = x^2+y^2$. Then $S^1 = f^{-1}(1)$ (preimage). We get a collection of $1$-dimensional manifolds covering $\R^2 \setminus \{0\}$; we say that $\{f^{-1}(r) : r > 0\}$ is a \textit{one-dimensional foliation} of $\R^2 \setminus \{0\}$. (More on that in a later lecture.)
+
+\item (Level sets) Consider a smooth map $F : \R^{n+1} \to \R$. Let $c \in \R$ be such that $F^{-1}(c) \neq \emptyset$ and $\nabla F(a) \neq 0$ for each $a \in F^{-1}(c)$. 
+
+For example, if $F(x) = \|x\|^2$, then $S^n = F^{-1}(1)$ and $\left. \nabla F \right|_{F^{-1}(c)} \neq 0$. (We say $\{F^{-1}(r) : r > 0$ is an \textit{$n$-dimensional foliation} of $\R^{n+1} \setminus \{0\}$.)
+
+Choose $a \in F^{-1}(c)$. Then $DF(a) \neq 0$, so there is an $i$ such that $\frac{\pd F}{\pd x_i}(a) \neq 0$. Then the equation $F(x_1, \dots, x_i, \dots, x_{n+1}) = c$ can be solved locally for $x_i$ in terms of the other coordinates, i.e. $F^{-1}(c)$ is the graph of a smooth function near $a$.
+
+Making this precise, the implicit function theorem provides us with a neighbourhood $U$ of $(a_1, \dots, \hat{a_i}, \dots, a_{n+1})$ in $\R^n$ and a smooth function $g : U \to \R$ satisfying
+\begin{itemize}
+\item $g(a_1, \dots, \hat{a_i}, \dots, a_{n+1}) = a_i$,
+\item $F(x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1}) = c$ for all $(x_1, \dots, \hat{x_i}, \dots, x_{n+1}) \in U$,
+\end{itemize}
+i.e.
+\[
+\Gamma_g = \{(x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1}) \in \R^{n+1} : (x_1, \dots, \hat{x_i}, \dots, x_{n+1}) \in U\} = V \cap F^{-1}(c)
+\]
+for some neighbourhood $V$ of $a$ in $\R^{n+1}$.
+
+So we conclude that if $\nabla F(a) \neq 0$ for all $a \in F^{-1}(c) \neq \emptyset$, then $F^{-1}(c)$ is locally the graph of a function. What are the charts? $(V \cap F^{-1}(c), \phi)$, where $\phi : V \cap F^{-1}(c) \to U$ is given by $\phi(x_1, \dots, x_{n+1}) = (x_1, \dots, \hat{x_i}, \dots, x_{n+1})$ with the inverse $\phi^{-1}(x_1, \dots, \hat{x_i}, \dots, x_{n+1}) = (x_1, \dots, g(x_1, \dots, \hat{x_i}, \dots, x_{n+1}), \dots, x_{n+1})$. This is clearly a chart.
+
+Now consider the collection of such charts $\mathcal{A} = \{ (V_a \cap F^{-1}(c), \phi_a) \}$. Consider a transition mapping $\phi_a \circ \phi_b^{-1} : \phi_b(V_{ab}) \to \phi_a(V_{ab})$. This is
+\begin{align*}
+(\phi_a \circ \phi_b^{-1})(x_1, \dots, x_i, \dots, \hat{x_j}, \dots, x_{n+1}) &= \phi_a(x_1, \dots, x_i, \dots, g_b(x_1, \dots, \hat{x_j}, \dots, x_{n+1}), \dots, x_{n+1}) \\
+&= (x_1, \dots, \hat{x_i}, \dots, g_b(x_1, \dots, \hat{x_j}, \dots, x_{n+1}), \dots, x_{n+1})
+\end{align*}
+which is $C^\infty$, and similarly for its inverse. So $\mathcal{A}$ is a $C^\infty$ atlas on $F^{-1}(c)$, making $F^{-1}(c)$ a smooth manifold of dimension $n$.
+
+\item (Products) Consider two smooth manifolds $M$ and $N$ of dimensions $m$ and $n$, respectively. Equip them with smooth atlases $\mathcal{A}_M$ and $\mathcal{A}_N$, respectively. Define
+\[
+\mathcal{A}_{M \times N} = \{ (U \times V, \phi \times \psi) : (U, \phi) \in \mathcal{A}_M \text{ and } (V, \psi) \in \mathcal{A}_N \}.
+\]
+$\mathcal{A}_{M \times N}$ is a smooth atlas on $M \times N$, making $M \times N$ a smooth manifold of dimension $m + n$. To see this, note that the sets $U \times V$ certainly cover $M \times N$, and that the products of homeomorphisms are homeomorphisms. If $(U_1 \times V_1, \phi_1 \times \psi_1), (U_2 \times V_2, \phi_2 \times \psi_2) \in \mathcal{A}_{M \times N}$, then the transition map
+\[ 
+(\phi_1 \times \psi_1) \circ (\phi_2 \times \psi_2)^{-1} : (\phi_2 \times \psi_2)((U_1 \times V_1) \cap (U_2 \times V_2)) \to (\phi_1 \times \psi_1)((U_1 \times V_1) \cap (U_2 \times V_2))
+\]
+is, by set theory, equal to
+\[
+(\phi_1 \circ \phi_2^{-1}) \times (\psi_1 \times \psi_2^{-1}) : \phi_2(U_{12}) \times \psi_2({V_{12}}) \to \phi_1(U_{12}) \times \psi_1(V_{12}),
+\]
+which is clearly a diffeomorphism.
+
+For example, the cylinder $S^1 \times \R$ is a smooth manifold of dimension $2$, and the torus $S^1 \times S^1$ is a smooth manifold of dimension $2$. We also have the higher tori $T^n = S^1 \times \dots \times S^n$, a smooth manifold of dimension $n$. 
+
+(Algebraic topology remark: $T^n \not\cong S^n$, as the former has first fundamental group $\Z^n$, whereas the latter is simply connected for $n \geq 2$.)
+\end{enumerate}
+
+\subsection{Gluing Manifolds}
+Due to the informal visual nature of this part of the lecture, the examples can only be described in words.
+
+\begin{enumerate}
+\item Glue the endpoints of $[0, 1]$ to get the circle. They aren't homeomorphic however, since removing an interior point from $[0, 1]$ disconnects it, whereas the circle will remain connected if a point is removed.
+
+\item
+Glue the two vertical sides of $[0,1]^2$ to get a cylinder. (Note: in order to visualize this, we need to go up one dimension.)
+
+\item Glue the two vertical sides of $[0, 1]^2$, but with points identified "by reflecting through the centre $(1/2,1/2)$". This produces a Mobius strip.
+
+\item Glue the opposite sides of $[0,1]^2$ together as in example 2, but with each opposite side glued. This produces a torus.
+
+\item Glue the opposite vertical sides of $[0,1]^2$ together as in example 2, and the opposite horizontal sides together as in example 3. This produces a "Klein bottle", an example of a manifold which cannot be embedded in $\R^3$.
+\end{enumerate}
+
+\subsection{The Quotient Topology}
+
+Let $S$ be a topological space and $\sim$ an equivalence relation on $S$. Let $\pi : S \to S /_\sim$ be the projection map $\pi(x) = [x]$. Topologize $S /_\sim$ by declaring $U \subseteq S /_\sim$ to be open if and only if $\pi^{-1}(U)$ is open in $S$. This topology on $S /_\sim$ is called the \emph{quotient topology} - it is the finest topology on $S /_\sim$ with respect to which $\pi$ is continuous, as is easily seen.
+
+Now consider a function $f : S \to Y$, where $Y$ is a set. Suppose $f$ is constant on the fibres of $\pi$ (i.e. $f$ is constant on every equivalence class of $\sim$). Then $f$ induces a map $\tilde{f} : S /_\sim \to Y$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+S \arrow[rd, "f"] \arrow[d, "\pi"] \\
+S /_\sim \arrow[r, dashed, "\tilde{f}"] & Y
+\end{tikzcd} 
+\]
+The function $\tilde{f}$ is defined in the obvious way: $\tilde{f}([x]) = f(x)$. The new function $\tilde{f}$ is well-defined since we assumed $f$ was constant on equivalence classes. We say that $f$ \emph{descends to the quotient}. If $Y$ is a topological space, we have a very useful lemma.
+\begin{lemma}
+Suppose $f : S \to Y$ is a function of topological spaces, and that $\sim$ is an equivalence relation on $S$ on whose equivalence classes $f$ is constant. Then the induced map $\tilde{f} : S /_\sim \to Y$ is continuous if and only if $f$ is continuous.
+\end{lemma}
+\begin{proof}
+If $\tilde{f}$ is continuous, then $f = \tilde{f} \circ \pi$ is continuous as a composition of continuous maps. If $f$ is continuous, then given $U$ open in $Y$, $f^{-1}(U)$ is open in $S$. But $f^{-1}(U) = \pi^{-1}(\tilde{f}^{-1}(U))$, so by the definition of the quotient topology, $\tilde{f}^{-1}(U)$ is open in $S /_\sim$, proving continuity of $\tilde{f}$.
+\end{proof}
+
+Let's discuss the example of gluing the endpoints of the interval. Define $\sim$ on $I = [0,1]$ by $x \sim x$ for $x \in (0, 1)$ and $x \sim y$ for $x,y \in \{0,1\}$. We claim that $I /_\sim \cong S^1$. An explicit homeomorphism can be found by descending to the quotient.
+
+Define $f : I \to S^1$ by $f(t) = (\cos 2\pi t, \sin 2\pi t)$. Then $f(0) = f(1) = (1,0)$, so $f$ is constant on the equivalence classes of $\sim$. Then $f$ descends to a continuous map $\tilde{f} : I /_\sim \to S^1$, given by
+\[
+\tilde{f}([t]) = \begin{cases} 
+(\cos 2\pi t, \sin 2 \pi t), & [t] \neq [0] \\
+(1,0), & t = [0] = [1]
+\end{cases}
+\]
+which is bijective. Since $I /_\sim = \pi(I)$ is compact and $S^1$ is Hausdorff, the map $\tilde{f}$ is a homeomorphism of topological spaces. So indeed, $I /_\sim \cong S^1$.
+
+In order to tackle the question of "when is a quotient a manifold", we need to derive some conditions for when the quotient of a space is Hausdorff or second countable. Here's a simple necessary condition.
+\begin{lemma}
+If $S /_\sim$ is Hausdorff, then equivalence classes are closed in $S$.
+\end{lemma}
+\begin{proof}
+Each $\{[x]\} = \{\pi(x)\}$ is closed in $S /_\sim$ by Hausdorffness, so by continuity $\pi^{-1}(\{\pi(x)\}) = [x]$ is closed in $S$.
+\end{proof}
+For a simple application of this necessary condition, consider $\R / (0, \infty)$ - the quotient space obtained by identifying all points of $(0, \infty)$. The lemma dictates that $\R / (0, \infty)$ is not Hausdorff because the equivalence class $(0, \infty)$ is not closed in $\R$.
+
+\subsection{Open Equivalence Relations}
+
+\begin{definition}
+An equivalence relation $\sim$ on a space $S$ is said to be open if the projection $\pi : S \to S /_\sim$ is an open mapping. Equivalently, $\sim$ is open if and only if 
+\[
+\pi^{-1}(\pi(U)) = \bigcup_{x \in U}[x]
+\]
+is open in $S$, for each $U$ open in $S$.
+\end{definition}
+
+This definition is worth making, as the projections need not be open in general. Consider $\R / \{-1, 1\}$. The interval $(-2, 0)$ is open, but
+\[
+\pi^{-1}(\pi((-2, 0))) = \bigcup_{-2 < x < 0}[x] = (-2, 0) \cup \{1\}
+\]
+is not open in $\R$. Therefore $\sim$ identifying $-1$ and $1$ on $\R$ is not an open equivalence relation. (Note that $\R / \{-1,1\}$ is not a topological manifold, as it is homeomorphic to the symbol $\propto$ with the ends extending infinitely.)
+
+\begin{definition}
+The graph of an equivalence relation $\sim$ on $S$ is the set $R = \{(x, y) \in S \times S : x \sim y\}$.
+\end{definition}
+\begin{theorem}
+Suppose $\sim$ is an open equivalence relation on $S$. Then $S /_\sim$ is Hausdorff if and only if the graph $R$ of $\sim$ is closed in $S \times S$.
+\end{theorem}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. We have a sequence of equivalent statements
+\begin{align*}
+R \text{ is closed} &\iff S \times S \setminus R \text{ is open} \\
+&\iff \text{for all } (x, y) \in S \times S \setminus R \text{ there are open sets } U, V \text{ such that } (x,y) \in U \times V \subseteq S \times S \setminus R \\
+&\iff \text{for all } x \not\sim y \text{ in } S \text{ there are open sets } U \ni x, V \ni Y \text{ such that } (U \times V) \cap R = \emptyset \\
+&\iff \text{for all } [x] \neq [y] \text{ in } S /_\sim \text{there are open sets } U \ni x, V \ni y \text{ such that } \pi(U) \cap \pi(V) = \emptyset
+\end{align*}
+This last statement is equivalent to $S /_\sim$ being Hausdorff, which we now prove. If this statement is true, then $\pi(U)$ and $\pi(V)$ are disjoint open (because $\sim$ is open) sets of $S /_\sim$ separating $[x]$ and $[y]$, which shows that $S /_\sim$ is Hausdorff. Conversely, suppose $S /_\sim$ is Hausdorff. Given $[x] \neq [y]$ in $S /_\sim$, we can find disjoint open sets $U \ni [x]$, $V \ni [y]$ of $S /_\sim$. By surjectivity, $U = \pi(\pi^{-1}(U))$ and $V = \pi(\pi^{-1}(V))$, so $\pi^{-1}(U)$ and $\pi^{-1}(V)$ are open sets of $S$ containing $x$ and $y$, respectively, satisfying the condition of the last statement. So the last statement is equivalent to $S /_\sim$ being Hausdorff.
+\end{proof}
+With it is a corollary - a classic exercise in point-set topology.
+\begin{corollary}
+$S$ is Hausdorff if and only if $\Delta = \{(x, x) \in S \times S : x \in S\}$ is closed.
+\end{corollary}
+\begin{proof}
+Let $\sim$ be the equivalence relation identifying every point only with itself. Then $\sim$ is an open equivalence relation and $R = \Delta$. The spaces $S$ and $S /_\sim$ are homeomorphic, so the statement follows from the theorem immediately.
+\end{proof}
+It turns out that the above theorem and its corollary are equivalent. It's not too hard to see that the corollary implies the theorem by using the fact that $\pi$ is continuous and open.
+
+What about second countability?
+\begin{theorem}
+If $\sim$ is an open equivalence relation on $S$ and $\{B_n\}$ is a countable basis of $S$, then $\{\pi(B_n)\}$ is a countable basis of $S /_\sim$.
+\end{theorem}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. Note that the collection $\{\pi(B_n))\}$ is a collection of open sets because $\pi$ is an open mapping. Let $U \subseteq S /_\sim$ be open and consider $[x] \in U$. Then $x \in \pi^{-1}(U)$, so we can find a $B_n$ with $x \in B_n \subseteq \pi^{-1}(U)$. Then $[x] = \pi(x) \subseteq \pi(B_n) \subseteq \pi(\pi^{-1}(U)) = U$, proving that $\{B_n\}$ is a basis of $S /_\sim$.
+\end{proof}
+To summarize,
+\begin{itemize}
+\item quotient spaces of Hausdorff spaces under open equivalence relations are Hausdorff if and only if the graph of the relation is closed
+\item quotient spaces of second-countable spaces under open equivalence relations are second-countable, and bases for the quotient are obtained in the obvious way.
+\end{itemize}
+
+\subsection{Real Projective Space}
+
+Define $\sim$ on $\R^{n+1} \setminus \{0\}$ by $x \sim \lambda x$ for $\lambda \neq 0$. The quotient space $(\R^{n+1} \setminus \{0\}) /_\sim$ is denoted $\R P^n$ and is called \emph{real projective space}. It may be thought of as the set of lines passing through the origin.
+
+Each element of $\R P^n$ can be thought of as a pair of antipodal points on $S^n$, which motivates the following
+\begin{theorem}
+Define $\sim$ on $S^n$ by identifying antipodal points, i.e. $x \sim \pm x$. Define $f : \R^{n+1} \setminus \{0\} \to S^n$ by $f(x) = \frac{x}{\|x\|}$. Then $f$ induces a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$.
+\end{theorem}
+The proof will be essentially the proof given in class, but much more complete and explicit about how maps induce other maps.
+\begin{proof}
+Consider the following diagram:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{r}{f} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \\
+\R P^n & S^n /_\sim
+\end{tikzcd}
+\]
+where $\pi_1$ and $\pi_2$ are the projections to each quotient space as shown in the diagram. The map $\pi_2 \circ f : \R^{n+1} \setminus \{0\} \to S^n /_\sim$ is given by
+\[
+(\pi_2 \circ f)(x) = \pi_2\left( \frac{x}{\|x\|} \right) = \left\{ -\frac{x}{\|x\|}, \frac{x}{\|x\|} \right\} ,
+\]
+which is continuous and constant on the fibres of $\pi_1$; the lines through the origin. It thus induces a continuous map $\tilde{f} : \R P^n \to S^n /_\sim$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{r}{f} \arrow{d}{\pi_1} \arrow{rd}{\pi_2 \circ f} & S^n \arrow{d}{\pi_2} \\
+\R P^n \arrow[dashed]{r}{\tilde{f}} & S^n /_\sim
+\end{tikzcd}
+\]
+We define a continuous inverse of $\tilde{f}$. Consider $g : S^n \to \R^{n+1} \setminus \{0\}$ given by $g(x) = x$. As before, consider the diagram
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \arrow{l}{g} \\
+\R P^n & S^n /_\sim
+\end{tikzcd}
+\]
+The map $\pi_1 \circ g : S^n \to \R P^n$ is given by
+\[
+(\pi_1 \circ g)(x) = \pi_1(x) = \{ \lambda x : \lambda \neq 0 \} = [x]_1,
+\]
+which is continuous and constant on the fibres of $\pi_2$; antipodal points on the $n$-sphere. It thus induces a continuous map $\tilde{g} : S^n /_\sim \to \R P^n$ for which the following diagram is commutative:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+\R^{n+1} \setminus \{0\} \arrow{d}{\pi_1} & S^n \arrow{d}{\pi_2} \arrow{l}{g} \arrow{ld}{\pi_1 \circ g}\\
+\R P^n & S^n /_\sim \arrow[dashed]{l}{\tilde{g}}
+\end{tikzcd}
+\]
+We claim that $\tilde{f}$ and $\tilde{g}$ are inverses to each other, which will show that $\tilde{f}$ is a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$. We have
+\begin{align*}
+(\tilde{g} \circ \tilde{f})([x]_1) &= (\tilde{g} \circ \tilde{f} \circ \pi_1)(x) = (\tilde{g} \circ \pi_2 \circ f)(x) = (\pi_1 \circ g \circ f)(x) = \pi_1\left(g\left( \frac{x}{\|x\|} \right)\right) = \pi_1\left(\frac{x}{\|x\|}\right) = [x]_1 \\
+(\tilde{f} \circ \tilde{g})([x]_2) &= (\tilde{f} \circ \tilde{g} \circ \pi_2)(x) = (\tilde{f} \circ \pi_1 \circ g)(x) = (\pi_2 \circ f \circ g)(x) = \pi_2(f(x)) = \pi_2 \left( \frac{x}{\|x\|} \right) = [x]_2 
+\end{align*}
+So $\tilde{f}$ is a homeomorphism $\R P^n \xrightarrow{\sim} S^n /_\sim$.
+\end{proof}
+In particular, $\R P^n$ is compact! Note that we could have just explicitly defined
+\begin{alignat*}{2}
+&\tilde{f} : \R P^n \to S^n /_\sim \qquad &&\tilde{f}([x]_1) := \pi_2(f(x)) = \left[ \frac{x}{\|x\|} \right]_2 \\
+&\tilde{g} : S^n /_\sim \to \R P^n \qquad &&\tilde{g}([x]_2) := \pi_1(g(x)) = [x]_1
+\end{alignat*}
+checked for well-definedness and continuity, and then we'd have been done. That's how the proof on page 362 of Tu goes. However, the abuse of tikz diagrams makes it very clear where the homeomorphism and its inverse come from, and that they're continuous (which is basically what Tu is doing anyway).
+
+% may need work
+\subsection{Visualizing $\R P^2$}
+In order to visualize $\R P^2$ we will consider some homeomorphisms. Define
+\begin{align*}
+H^2 &= \{(x,y,z) \in \R^3 : x^2 + y^2 + z^2 = 1, z \geq 0\} \\
+D^2 &= \{(x,y) \in \R^2 : x^2 + y^2 \leq 1\}.
+\end{align*}
+Consider the maps
+\begin{alignat*}{2}
+&\phi : H^2 \to D^2 \qquad &&\phi(x,y,z) = (x,y) \\
+&\psi : D^2 \to H^2 \qquad &&\psi(x,y) = (x,y,\sqrt{1-x^2-y^2})
+\end{alignat*}
+which are continuous inverses of each other. Define equivalence relations on $H^2$ and $D^2$ as follows:
+\begin{itemize}
+\item On $H^2$: identify antipodal points on the equator, call the projection $\pi_3$
+\item On $D^2$: identify antipodal points on the boundary, call the projection $\pi_4$
+\end{itemize}
+Considering diagrams similar to those in the previous proof, the map $\pi_4 \circ \phi$ induces a continuous map $\tilde{\phi} : H^2 /_\sim \to D^2 /_\sim$ with $\tilde{\phi} \circ \pi_3 = \pi_4 \circ \phi$, and the map $\pi_3 \circ \psi$ induces a continuous map $\tilde{\psi} : D^2 /_\sim \to H^2 /_\sim$ with $\tilde{\psi} \circ \pi_4 = \pi_3 \circ \psi$. The maps $\tilde{\phi}$ and $\tilde{\psi}$ are continuous inverses of each other (which can be seen using just these given compositions), which shows that we have a homeomorphism $H^2 /_\sim \xrightarrow{\sim} D^2 /_\sim$. 
+
+If we accept on faith that there is a homeomorphism $S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim$, then we have a sequence of homeomorphisms
+\[
+\R P^2 \xrightarrow{\sim} S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim \xrightarrow{\sim} D^2 /_\sim.
+\]
+Therefore we can visualize the real projective plane $\R P^2$ as a disk with the antipodal boundary points identified. Such a homeomorphism $S^2 /_\sim \xrightarrow{\sim} H^2 /_\sim$ can be shown by a proof similar to the previous quotient space homeomorphisms that we did, by considering the inclusion map $i : H^2 \to S^2$ and its obvious inverse, and working through steps similar to the proofs of the previous homeomorphisms.
+
+\newpage
+
+\section{Smooth Maps and Differentiable Structures (May 19)}
+
+\subsection{Smooth Maps on a Manifold}
+The notion of the pullback of a function on a manifold (which by MAT257 we know is a $0$-form on a manifold - not that that's important right now) is the following:
+\begin{definition}
+Let $F : M \to N$ and $f : N \to \R$ be functions. The pullback of $f$ by $F$ is the function $F^*f:M \to \R$ defined by $F^*f = f \circ F$. That is, the pullback of $f$ by $F$ is the unique function for which the following diagram commutes:
+\[
+\begin{tikzcd}[column sep = large, row sep = large]
+M \arrow[rd, "F^*f"] \arrow[d, "F"] \\
+N \arrow[r, "f"] & \R
+\end{tikzcd} 
+\]
+\end{definition}
+Now for the main definitions.
+\begin{definition}
+Fix a smooth manifold $M$. A function $f : M \to \R$ is $C^\infty$ at $p \in M$ if there is a chart $(U, \phi)$ about $p$ such that $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$ at $\phi(p)$, in the usual sense. Alternatively, $f$ is $C^\infty$ at $p$ if the pullback $(\phi^{-1})^*f$ of $f$ by the inverse of some coordinate system $\phi$ about $p$ is $C^\infty$ at $\phi(p)$.
+\end{definition}
+We'd like to show that this does not depend on the choice of chart about $p$. If $(V, \psi)$ is another chart about $p$, then
+\[
+f \circ \psi^{-1} = (f \circ \phi^{-1}) \circ (\phi \circ \psi^{-1}),
+\]
+is $C^\infty$ at $\psi(p)$ on the open set $\psi(U \cap V)$, since $\phi \circ \psi^{-1}$ is $C^\infty$ at $\psi(p)$ and $f \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$. Therefore smoothness of a function on a manifold at a point doesn't depend on the choice of chart about that point. We will say that $f$ is $C^\infty$ on $M$ if it is $C^\infty$ at every point of $M$. Note that if $f : M \to \R$ is $C^\infty$ at $p$, then $f = (f \circ \phi^{-1}) \circ \phi$ is continuous at $p$.
+
+These considerations give us a
+\begin{proposition}
+Let $f : M \to \R$ be a continuous function on a smooth manifold $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $f : M \to \R$ is $C^\infty$.
+\item There is an atlas $\mathcal{A}$ of $M$ such that for any $(U, \phi) \in \mathcal{A}$, the function $f \circ \phi^{-1} : \phi(U) \to \R$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+Note that we implicitly assume $\mathcal{A}$ in the above is a subset of our choice of maximal atlas for $M$. When we say $M$ is a smooth manifold, we also assume a choice of maximal atlas has been made.
+
+What about maps between manifolds? The definition is a natural extension of the one we just made.
+\begin{definition}
+Let $N$ and $M$ be smooth manifolds and let $F : N \to M$ be continuous. We say $F$ is $C^\infty$ at $p \in N$ if there is a chart $(V, \psi)$ about $F(p)$ and a chart $(U, \phi)$ about $p$ such that 
+\[
+\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m
+\]
+is $C^\infty$ at $\phi(p)$.
+\end{definition}
+Note that continuity of $F$ was essential, for if that were not the case, the set $\phi(U \cap F^{-1}(V))$ may not be open, in which case we may not be able to talk about smoothness at $p$. 
+
+As before, we check that this is independent of the charts. Choose charts $(\tilde{U}, \tilde{\phi})$ about $p$ and $(\tilde{V}, \tilde{\psi})$ about $F(p)$. Then
+\[
+\tilde{\psi} \circ F \circ \tilde{\phi}^{-1} = (\tilde{\psi} \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1}) \circ (\phi \circ \tilde{\phi}^{-1})
+\]
+is $C^\infty$ at $\tilde{\phi}(p)$ by similar reasoning as before. We say that $F : N \to M$ is $C^\infty$ if it is so at every point of $N$.
+
+We have a similar proposition coming from the independence of charts:
+\begin{proposition}
+Let $F : N \to M$ be a continuous function of smooth manifolds $N$ and $M$. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$ on $N$.
+\item There are atlases $\mathcal{A}$ of $N$ and $\mathcal{B}$ of $M$ such that for every $(U, \phi) \in \mathcal{A}$ and $(V, \psi) \in \mathcal{B}$, the map $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ is $C^\infty$.
+\end{enumerate}
+\end{proposition}
+
+% everything after this needs checking
+
+We need to make sure this is actually a generalization of the notion of smoothness we know from calculus. We will make sure that our definition is the usual notion of smoothness when the manifolds are Euclidean spaces, and we will make sure that smoothness is preserved by compositions.
+\begin{proposition}
+If $N = \R^n$ and $M = \R^m$ are given their usual smooth structures, then $F : N \to M$ is smooth as defined above if and only if it is smooth as a function of Euclidean spaces.
+\end{proposition}
+\begin{proof}
+Choose the atlases $\{(\R^n, \mathrm{Id}_{\R^n})\}$ on $\R^n$ and $\{(\R^m, \mathrm{Id}_{\R^m})\}$ on $\R^m$. Then $F : N \to M$ is smooth as defined above if and only if
+\[
+\mathrm{Id}_{\R^m} \circ F \circ \mathrm{Id}_{\R^n}^{-1} : N \to M
+\]
+is smooth. But this function is just $F : \R^n \to \R^m$.
+\end{proof}
+Note that this holds if $N$ and $M$ had merely been open sets of Euclidean spaces, for the usual smooth structure on them (i.e. the one we do ordinary calculus with) is the maximal atlas corresponding to the restrictions of the charts given above to those open sets.
+
+\begin{proposition}
+If $F : N \to M$ and $G : M \to P$ are $C^\infty$ maps of manifolds, then $G \circ F : N \to P$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+Suppose $p \in N$. Choose charts $(U, \phi)$ about $p$, $(V, \psi)$ about $F(p)$, and $(W, \sigma)$ about $G(F(p))$. Then 
+\[
+\sigma \circ (G \circ F) \circ \phi^{-1} = (\sigma \circ G \circ \psi^{-1}) \circ (\psi \circ F \circ \phi^{-1})
+\]
+is $C^\infty$ at $\phi(p)$, since $\sigma \circ G \circ \psi^{-1}$ is $C^\infty$ at $\psi(F(p))$ and $\psi \circ F \circ \phi^{-1}$ is $C^\infty$ at $\phi(p)$.
+\end{proof}
+
+We have one last property: vector-valued functions behave how we want them to.
+\begin{proposition}
+Let $N$ be a smooth manifold and $F : N \to \R^m$ be a continuous function. The following are equivalent:
+\begin{enumerate}[(i)]
+\item $F$ is $C^\infty$.
+\item Each component function $F^i : N \to \R$ is smooth.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+The proof was left as an exercise, so here's a solution. We have
+\begin{align*}
+F \text{ is } C^\infty &\iff \text{ for every chart } (U, \phi) \text{ on } N \text{, the map } F \circ \phi^{-1} : \phi(U) \to \R^m \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{ and for every chart } (U, \phi) \text{ on } N \text{, the map } F^i \circ \phi^{-1} : \phi(U) \to \R \text{ is } C^\infty \\
+&\iff \text{ for each } i \text{, the map } F^i : N \to \R \text{ is } C^\infty.
+\end{align*}
+\end{proof}
+
+Just as two vector spaces or groups are equivalent if they are isomorphic, or two topological spaces are equivalent if they are homeomorphic, or two sets are equivalent if they are in bijection with eachother, we have a notion of "isomorphism" or equivalence of smooth manifolds.
+\begin{definition}
+A function $F : N \to M$ of smooth manifolds is said to be a diffeomorphism if it is smooth and has a smooth inverse.
+\end{definition}
+Then we can state: \emph{differential topology is the study of properties of smooth manifolds invariant under diffeomorphism}.
+
+\subsection{Differentiable Structures}
+
+We can exhibit two diffeomorphic but unequal smooth structures on $\R$. Define two atlases
+\begin{alignat*}{2}
+\mathcal{A}_1 &= \{(\R, \mathrm{Id})\} \qquad &&\text{(call this one $\R$)}\\
+\mathcal{A}_2 &= \{ (\R, \psi(x) := x^3) \} \qquad &&\text{(call this one $\R'$)}
+\end{alignat*}
+These charts are not $C^\infty$ compatible, since $\mathrm{Id} \circ \psi^{-1}$ sends $x$ to $\sqrt[3]{x}$; not a diffeomorphism. Therefore the smooth structures corresponding to $\mathcal{A}_1$ and $\mathcal{A}_2$ are different.
+
+Nevertheless, define $f : \R \to \R'$ by $f(x) = \sqrt[3]{x}$. Then 
+\[
+\psi \circ f \circ \mathrm{Id}^{-1} : \R \to \R' \qquad x \mapsto x
+\]
+is a diffeomorphism!
+
+We can exhibit non-diffeomorphic smooth structures on manifolds; see the exotic sphere $S^7$. Even better, $\R^4$ has uncountably many smooth structures \emph{up to diffeomorphism}. It is known that every topological manifold of dimension $<4$ admits a unique smooth structure, up to diffeomorphism.
+
+\newpage
+
+\section{Inverse Function Theorem, Tangent Spaces (May 21)}
+
+\subsection{Diffeomorphisms and Coordinate Systems}
+By convention, any manifold labelled $N$ will have dimension $n$ and any labelled $M$ will have dimension $m$.
+\begin{definition}
+A diffeomorphism $F : N \to M$ of smooth manifolds is a bijective smooth map with smooth inverse.
+\end{definition}
+\begin{proposition}
+Coordinate systems are diffeomorphisms.
+\end{proposition}
+\begin{proof}
+Let $M$ be a smooth manifold and $(U, \phi)$ a coordinate chart on $M$. Choose the atlases
+\begin{align*}
+&\{(U, \phi)\} \text{ on $U$} \\
+&\{\phi(U), \mathrm{Id}\} \text{ on $\phi(U)$}.
+\end{align*}
+Then 
+\begin{align*}
+&\mathrm{Id} \circ \phi \circ \phi^{-1} : \phi(U) \to \phi(U) \\
+&\phi \circ \phi^{-1} \circ \mathrm{Id}^{-1} : \phi(U) \to \phi(U)
+\end{align*}
+are both smooth, implying that $\phi$ and $\phi^{-1}$ are smooth, respectively.
+\end{proof}
+The converse is true; it uses maximality of the smooth structure.
+\begin{proposition}
+Diffeomorphisms from open subsets of manifolds to open subsets of Euclidean space are coordinate systems belonging to the manifold's smooth structure.
+\end{proposition}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. Let $F : U \to F(U)$ be a diffeomorphism of the open subset $U$ of the smooth manifold $M$ with an open subset $F(U) \subseteq \R^m$. Then $(U, F)$ is a coordinate chart on $M$. Choose a coordinate chart $(V, \psi)$ for $M$. If $U \cap V = \emptyset$ we are done, and otherwise, the transition maps are $F \circ \phi^{-1}$ and $\phi \circ F^{-1}$, both of which are clearly smooth. So the transition map is a diffeomorphism, and so $(U, F)$ is a coordinate chart belonging to the smooth structure by maximality.
+\end{proof}
+
+\subsection{Coordinate Derivatives, Inverse Function Theorem}
+
+In calculus, we take derivatives. How can we take derivatives of functions on manifolds? The first thing we can try is differentiating with respect to local coordinates. If $(U, \phi)$ is a coordinate system on a manifold, we will write $(U, \phi) = (U, x^1, \dots, x^m)$ to mean that $x^i$ is the $i$th component of $\phi$. More specifically, if $r^1, \dots, r^m$ are the coordinates on $\R^m$, then $x^i = r^i \circ \phi$.
+
+\begin{definition}
+Let $f : M \to \R$ be a smooth function on the smooth $M$. Let $p \in M$ and let $(U, \phi) = (U, x^1, \dots, x^m)$ be a coordinate chart around $p$. Define
+\[
+\left. \frac{\pd f}{\pd x^i} \right|_p := \left. \frac{\pd (f \circ \phi^{-1})}{\pd r^i} \right|_{\phi(p)}
+\]
+as the $i$th partial derivative of $f$ at $p$ with respect to the coordinates $(U, x^1, \dots, x^m)$.
+\end{definition}
+What about maps between manifolds? We can do something similar. Let $F : N \to M$ be a smooth map between smooth manifolds. Let $(U, \phi) = (U, x^1, \dots, x^n)$ and $(V, \psi) = (V, y^1, \dots, y^m)$ be coordinate charts on $N$ and $M$, respectively. Define \emph{the $i$th component of $F$ with respect to the coordinates $(V, y^1, \dots, y^m)$} by $F^i := y^i \circ F = r^i \circ \psi \circ F$. Then $F^i : N \to \R$, so by our previous definition we can look at
+\[
+\left. \frac{\pd F^i}{\pd x^j} \right|_{p} = \left. \frac{\pd (F^i \circ \phi^{-1})}{\pd r^j} \right|_{\phi(p)} = \left. \frac{\pd (r^i \circ \psi \circ F \circ \phi^{-1})}{\pd r^j} \right|_{\phi(p)} = \left. \frac{\pd (\psi \circ F \circ \phi^{-1})^i}{\pd r^j} \right|_{\phi(p)}.
+\]
+We will call the $m \times n$ matrix $\begin{bmatrix}
+\left. \frac{\pd F^i}{\pd x^j} \right|_p
+\end{bmatrix}$ the \emph{Jacobian of $F$ at $p$ (relative to the coordinates $(U, x^1, \dots, x^n)$ and $(V, y^1, \dots, y^m)$)}. 
+
+The Jacobian itself is not independent of the coordinate systems, but since transition maps are diffeomorphisms, its rank is independent of the coordinate systems chosen. Precisely, if $(\tilde{U}, \tilde{\phi})$ and $(\tilde{V}, \tilde{\psi})$ are alternate coordinate charts around $p$ and $F(p)$, respectively, then we have
+\[
+\tilde{\psi} \circ F \circ \tilde{\phi}^{-1} = (\tilde{\psi} \circ \psi^{-1} ) \circ (\psi \circ F \circ \phi^{-1}) \circ (\phi \circ \tilde{\phi}^{-1}),
+\]
+implying
+\[
+D(\tilde{\psi} \circ F \circ \tilde{\phi}^{-1})(\tilde{\phi}(p)) = \underbrace{D(\tilde{\psi} \circ \psi^{-1})(\psi(F(p)))}_{\in GL(m, \R)} \cdot D(\psi \circ F \circ \phi^{-1})(\phi(p)) \cdot \underbrace{D(\phi \circ \tilde{\phi}^{-1})(\tilde{\phi}(p))}_{\in GL(n, \R)},
+\]
+and so linear algebra tells us that
+\[
+\mathrm{rank}(D(\psi \circ F \circ \phi^{-1})(\phi(p))) = \mathrm{rank}(D(\tilde{\psi} \circ F \circ \tilde{\phi}^{-1})(\tilde{\phi}(p))).
+\]
+Therefore "the rank of the Jacobian of $F$ at $p$" is a well-defined quantity, independent of the coordinate charts. We state this as a proposition.
+\begin{proposition}
+If $F : N \to M$ is $C^\infty$ at $p$, then the rank of the Jacobian of $F$ at $p$ is the same no matter what coordinate charts around $p$ and $F(p)$ are used to calculate it.
+\end{proposition}
+In particular, if $m = n$, then we are led to a generalization of the inverse function theorem, as we can then speak of invertibility of the Jacobian.
+
+\begin{theorem}
+(Inverse function theorem for manifolds) Let $F : N \to M$ be a smooth map of smooth manifolds of the same dimension. If the Jacobian of $F$ at $p \in N$ is invertible, then there is an open neighbourhood $U$ of $p$ in $N$ and an open neighbourhood $V$ of $F(p)$ in $M$ such that $\left. F \right|_U : U \to V$ is a diffeomorphism.
+\end{theorem}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. Choose coordinate charts $(U, \phi) = (U, x^1, \dots, x^n)$ at $p$ and $(V, \psi) = (V, y^1, \dots, y^n)$ at $F(p)$. Then $\begin{bmatrix}
+\left. \frac{\pd F^i}{\pd x^j} \right|_p
+\end{bmatrix}$ is invertible, but as we saw above, this is equivalent to saying $\begin{bmatrix}
+\left. \frac{\pd (\psi \circ F \circ \phi^{-1})^i}{\pd r^j} \right|_{\phi(p)}
+\end{bmatrix}$ is invertible. By the inverse function theorem in $\R^n$, the map $\psi \circ F \circ \phi^{-1}$ is a diffeomorphism on a small neighbourhood of $\phi(p)$ in $\phi(U \cap F^{-1}(V))$. Since coordinate systems are diffeomorphisms, $F$ is a diffeomorphism on a small neighbourhood of $p$.
+\end{proof}
+(The following was not part of the lecture.) Note that the converse of the above theorem is true; if $F$ restricts to a diffeomorphism in a neighbourhood of $p$, then the Jacobian with respect to any choices of coordinates is invertible. This can be seen by taking two coordinate charts $(U, \phi)$ around $p$ and $(V, \psi)$ around $F(p)$ and noting that since $\psi \circ F \circ \phi^{-1}$ is then a diffeomorphism of open sets of $\R^n$, the Jacobian of $F$ with respect to these coordinate systems is invertible (and hence with respect to any coordinate systems). Therefore we have the following slightly stronger theorem:
+\begin{theorem}
+(Stronger inverse function theorem for manifolds) Let $F : N \to M$ be a smooth map of smooth manifolds of the same dimension. Then $F$ is a local diffeomorphism at $p \in N$ if and only if the Jacobian  of $F$ at $p$ is invertible.
+\end{theorem}
+Of course, \emph{local diffeomorphism at $p$} means that $F$ restricts to a diffeomorphism on an open neighbourhood of $p$.
+
+We would like a "coordinate-free" derivative. In MAT257, the derivative of a map $F : \R^n \to \R^m$ at $p$ was thought of as the map $F_{*} : T_p \R^n \to T_{F(p)}\R^m$ defined by $F_*(v_p) = (DF(p)v)_{F(p)}$, where the subscript indicates the tangent space in which the vector lies. The difficulty in generalizing this to manifolds lies in defining the tangent space of an abstract manifold.
+
+\subsection{Abstracting the Tangent Space}
+
+If $M$ is a submanifold in $\R^n$ in the MAT257 sense, then we can define the tangent space as follows. Suppose $p \in M$. Then there is an open neighbourhood $V$ of $p$ in $\R^n$, an open set $U \subseteq \R^k$, and a $C^\infty$ homeomorphism $\phi : U \to V \cap M$ with $\mathrm{rank}( D\phi(q) ) = k$ for each $q \in U$. If $q = \phi^{-1}(p)$, then let $T_p U$ be the "set of all vectors in $\R^k$ thought of as pointing from $q$". Then we define $T_p M := D\phi(q)(T_p U)$. Since the derivative has rank $k$ at $q$, the space $T_p M$ will be a vector subspace of $T_p \R^n$ of dimension $k$. It is not hard to see that this is independent of the "parametrization" chosen near $p$.
+
+The problem with this is that it doesn't generalize to abstract manifolds. We'd like to modify the definition so that it abstracts. 
+
+We will first attempt to do so by using curves. Let $p \in \R^n$ and $v \in T_p \R^n$. If $F : \R^n \to \R^m$ is smooth, then we can speak of its Jacobian at a point $p \in \R^n$. If $\gamma : (-\epsilon, \epsilon) \to \R^n$ is a smooth curve with $\gamma(0) = p$ and $\gamma'(0) = v$, then
+\[
+\left. \frac{d}{dt} \right|_{t=0} F \circ \gamma = DF(p) \cdot v,
+\]
+so we can think of $DF(p)$ as a map sending tangent vectors to tangent vectors. (A picture would really help here.)
+
+Define $A = \{\text{smooth curves with $\gamma(0) = p$}\}$. Define $\sim$ on $A$ by $\gamma \sim \tilde{\gamma}$ if and only if $\gamma'(0) = \tilde{\gamma}'(0)$. Then we can think of a vector $v \in T_p \R^n$ as the equivalence class $[\gamma]$ of a curve $\gamma$ with $\gamma(0) = p$, and we can think of $T_{F(p)} \R^m$ as $A /_\sim$.
+
+This generalizes to manifolds, since we know what a smooth curve is on a manifold. But who wants to work with equivalence classes? We don't.
+
+\subsection{Germs and Derivations}
+
+Introduce a smooth function $f : \R^n \to \R$. We can speak of the directional derivative of $f$. We have
+\[
+D_vf = \left. \frac{d}{dt} \right|_{t=0} f \circ \gamma = \nabla f(p) \cdot v,
+\]
+where the quantity $\nabla f(p) \cdot v$ is independent of $\gamma$. We can therefore choose to identify $v \in T_p \R^n$ with the map $D_v : C^\infty (\R^n) \to \R$. But the value of $D_v f$ only depends on "the local behaviour of $f$ at $p$", and so we would like to consider two inputs of $D_v$ to be equivalent if they are equal on a smaller neighbourhood of $p$. For this, we develop germs.
+
+\begin{definition}
+Let $f : U \to \R$ and $g : V \to \R$ be smooth functions defined on open neighbourhoods of $p$. We will say that $f \sim g$ if and only if $\left. f \right|_W = \left. g \right|_W$ for some open neighbourhood $W \subseteq U \cap V$ of $p$. Denote by $C^\infty_p(\R^n)$ the set of all such equivalence classes. The equivalence class $[f]$ is called the germ of $f$ at $p$. 
+\end{definition}
+
+The map $D_v$ is constant on germs, so it induces a map $D_v : C^\infty_p(\R^n) \to \R$ (note the notational abuse). The set of germs at $p$ has some nice algebraic properties. That it is an "algebra" was not covered in lecture.
+\begin{proposition}
+$C_p^\infty(\R^n)$ is a vector space over $\R$. It can be made into a ring with multiplication of germs, and it can be made into an "algebra over $\R$"; a ring which is also a vector space over $\R$ with the vector space scalar multiplication satisfying the homogeneity condition $a(vw) = (av) \cdot w = v \cdot (aw)$.
+\end{proposition}
+\begin{proof}
+Was left as an exercise in class, so here's a solution. We define three operations on $C_p^\infty(\R^n)$:
+\begin{itemize}
+\item Vector addition: $[f] + [g] := [f + g]$.
+\item Vector scaling: $a[f] := [af]$.
+\item Ring multiplication: $[f] \cdot [g] := [fg]$.
+\end{itemize}
+We must first check that these operations are well defined. If $[f] = [\tilde{f}]$ and $[g] = [\tilde{g}]$, then $f = \tilde{f}$ on a neighbourhood of $p$ and $g = \tilde{g}$ on another neighbourhood of $p$. It then follows that $f + g = \tilde{f} + \tilde{g}$, $af = a\tilde{f}$, and $fg = \tilde{f}\tilde{g}$ on the intersections of these neighbourhoods. By definition we have $[f + g] = [\tilde{f} + \tilde{g}]$, $[af] = [a\tilde{f}]$, and $[fg] = [\tilde{f}\tilde{g}]$, implying that our three operations are well-defined.
+
+$C_p^\infty(\R^n)$ is clearly a vector space over $\R$ under the first two operations, and is also a ring over the first and last operation. Homogeneity of the ring multiplication with respect to vector scaling follows from the corresponding assertion for $C^\infty (\R^n)$. (At this point it is just definition pushing.)
+\end{proof}
+Note that the ring $C_p^\infty (\R^n)$ is commutative and has unity - the identity element of the multiplication is the germ $[x \mapsto 1]$. From now on we will abuse notation (even more) and let $f$ denote its germ $[f] \in C_p^\infty(\R^n)$.
+
+We note two properties of our map $D_v : C^\infty_p(\R^n) \to \R$:
+\begin{enumerate}
+\item $D_v$ is linear.
+\item $D_v$ satisfies the "Leibnitz rule"
+\[
+D_v (fg) = f(p) D_v(g) + D_v(f) g(p).
+\]
+\end{enumerate}
+Any map $D : C^\infty_p(\R^n) \to \R$ satisfying the above properties is called a \emph{derivation at $p$}. The set of all derivations at $p$ is denoted $\mathcal{D}_p$. It turns out that this view of the tangent space is what generalizes to manifolds. Before we prove the "identification theorem", we need two lemmas.
+
+\begin{lemma}
+If $f$ is $C^\infty$ on an open ball $U$ centred at $p$, then there are smooth $g_i \in C^\infty(U)$ such that $g_i(p) = \frac{\pd f}{\pd x_i}(p)$ and
+\[
+f(x) = f(p) + \sum_{i=1}^n (x^i - p^i) g_i(x).
+\]
+\end{lemma}
+\begin{proof}
+Define $\gamma (t) = p + t(x-p)$. Then
+\begin{align*}
+f(x) - f(p) &= \int_0^1 \frac{d}{dt} f(\gamma(t)) \, dt = \int_0^1 \sum_{i=1}^n \left. \frac{\pd f}{\pd x^i} \right|_{\gamma(t)} (x^i - p^i) \, dt = \sum_{i=1}^n (x^i - p^i)\underbrace{\int_0^1 \frac{\pd f}{\pd x^i}(p + t(x-p)) \, dt}_{g_i(x)}.
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+Derivations of constants are zero.
+\end{lemma}
+\begin{proof}
+Let $c \in \R$. Then
+\begin{align*}
+D(c) &= c \cdot D(1) = c \cdot D(1\cdot 1) \\
+&= c \cdot 1 \cdot D(1) + c \cdot D(1) \cdot 1 \\
+&= 2c \cdot D(1) \\
+&= 2 D(c),
+\end{align*}
+implying $D(c) = 0$.
+\end{proof}
+
+\begin{theorem}
+We can identify $T_p \R^n$ with $\mathcal{D}$. More specifically,
+\begin{enumerate}
+\item $\mathcal{D}_p$ is a vector space over $\R$.
+\item The map $\Phi : T_p \R^n \to \mathcal{D}_p$ sending $v$ to $D_v$ is a vector space isomorphism.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+\begin{enumerate}
+\item 
+Was left as an exercise in class, so here's a proof. We must check that if $a \in \R$ and $D_1, D_2 \in \mathcal{D}_p$, then the function $a D_1 + D_2$ is a derivation. It is linear as a sum of linear functions. If $f, g \in C_p^\infty(\R^n)$, then
+\begin{align*}
+(aD_1 + D_2)(fg) &= a D_1(fg) + D_2(fg) \\
+&= a \left[ f(p) D_1(g) + D_1(f)g(p) \right] + f(p)D_2(g) + D_2(f) g(p) \\
+&= f(p) \left[ aD_1(g) + D_2(g) \right] + \left[ aD_1(f) + D_2(f) \right] g(p) \\
+&= f(p)(aD_1 + D_2)(g) + (aD_1 + D_2)(f) g(p),
+\end{align*}
+so $aD_1 + D_2$ satisfies the Leibnitz rule and is thus a derivation a $p$. Therefore $\mathcal{D}_p$ is a vector space over $\R$.
+
+\item 
+We check linearity, injectivity, and surjectivity.
+\begin{itemize}
+\item
+Linearity: if $a \in \R$ and $v_1, v_2 \in T_p\R^n$, then for $f \in C_p^\infty(\R^n)$ we have
+\[
+\Phi(av_1 + v_2)(f) = D_{av_1 + v_2}(f) = Df(p)(av_1 + v_2) = a Df(p)v_1 + Df(p)v_2 = (a \Phi(v_1) + \Phi(v_2))(f).
+\]
+
+\item 
+Injectivity: suppose $D_v(f) = 0$ for all $f \in C_p^\infty(\R^n)$. In particular, $D_v x^i = 0$ for the $i$th coordinate map $x^i \in C_p^\infty(\R^n)$. Expanded, this says
+\[
+0 = D_v x^i = Dx^i(p)v = e_i^Tv = v^i,
+\]
+where $e_i$ is the $i$th standard basis vector of $\R^n$. So $v = 0$ if $\Phi(v) = 0$.
+
+\item 
+Surjectivity: suppose $D \in \mathcal{D}_p$. For any $f \in C_p^\infty(\R^n)$, we have, by the two lemmas,
+\begin{align*}
+Df &= D \left(f(p) + \sum_{i=1}^n (x^i - p^i) g_i \right) \\
+&= \sum_{i=1}^n \left[(p^i - p^i) Dg_i + D(x^i - p^i) g_i(p)\right] \\
+&= \sum_{i=1}^n Dx^i \frac{\pd f}{\pd x^i}(p),
+\end{align*}
+so if we take $v = (Dx^1, \dots, Dx^n)$ then $Df = D_vf$ for all $f \in C_p^\infty(\R^n)$. Therefore $\Phi(v) = D$.
+\end{itemize}
+So $\Phi$ is a vector space isomorphism $T_p \R^n \xrightarrow{\sim} \mathcal{D}_p$.
+\end{enumerate}
+\end{proof}
+
+We can finally define the tangent space to a point on an abstract manifold. The space of germs $C_p^\infty(M)$ for $p \in M$ is defined in the exact same way as in $\R^n$. 
+\begin{definition}
+Let $M$ be a smooth manifold. We say $v : C_p^\infty(M) \to \R$ is a derivation at $p \in M$ if $v$ is linear and satisfies the Leibnitz rule. We define the tangent space $T_p M$ to $M$ at $p$ to be the set of all derivations at $p$.
+\end{definition}
+
+(The following was not part of the lecture and is included for completeness.) Now we can finally define the derivative of a map between manifolds.
+
+\begin{definition}
+Let $F : N \to M$ be a smooth map of smooth manifolds and let $p \in N$. The map $F$ induces a linear map $F_* : T_p N \to T_{F(p)} M$ defined by
+\[
+(F_* X_p)(f) = X_p(f \circ F),
+\]
+where $X_p \in T_p N$ is a derivation at $p$ and $f \in C^\infty_{F(p)}(M)$.
+\end{definition}
+
+\newpage
+
+\section{Tangent Spaces and the Differential (May 26)}
+
+\subsection{Derivatives and the Chain Rule on Manifolds}
+
+Having defined the smooth functions on a manifold, in order to proceed with generalizing calculus to manifolds, we must now differentiate them. The notion of the derivative comes from the \emph{differential} or \emph{pushforward} of a smooth map $F : \R^n \to \R^m$ of standard calculus; it is the derivative $DF(p) : T_p \R^n \to T_{F(p)} \R^m$. As we are now working with derivations as our tangent vectors, the definition must be adjusted accordingly.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map of smooth manifolds. We define the differential of $F$ at $p$ by the linear map
+\[
+F_* : T_p N \to T_{F(p)}M, \qquad F_*(X_p)(f) = X_p(f \circ F),
+\]
+where $X_p \in T_p N$ and $f \in C_{F(p)}^\infty(M)$. The map $F_*$ is sometimes denoted $F_{*, p}$, and is not to be confused with the pullback operation $F^* : C(M) \to C(N)$ on continuous functions. 
+\end{definition}
+Let's make sure this makes sense; i.e. that $F_*(X_p)$ is actually a derivation at $F(p)$. Linearity follows immediately from linearity of $X_p$ on $C_p^\infty(N)$. If $f, g \in C_{F(p)}^\infty(M)$, then
+\begin{alignat*}{2}
+F_*(X_p)(fg) &= X_p((fg) \circ F)  &&\text{by definition}\\
+&= X_p((f \circ F)(g \circ F)) \\
+&= (f \circ F)(p) X_p(g \circ F) + X_p(f \circ F) (g \circ F)(p) \qquad &&\text{$X_p$ a derivation at $p$} \\
+&= f(F(p)) F_*(X_p)(g) + F_*(X_p)(f) g(F(p)).
+\end{alignat*}
+Therefore $F_*$ is indeed a map $T_p N \to T_{F(p)}M$. That it is also linear is obvious.
+
+We need to make sure this properly generalizes the derivative of a $C^\infty$ map $F : \R^n \to \R^m$. Thinking of a tangent vector $v \in T_p \R^n$ as its directional derivative $D_v : C_p^\infty(\R^n) \to \R$, we have, for $f \in C_{F(p)}^\infty(\R^m)$,
+\[
+F_*(D_v)(f) = D_v(f \circ F) = \nabla f(F(p))( DF(p) \cdot v ) = D_{DF(p)v}(f),
+\]
+where the latter directional derivative is at $F(p)$. Therefore $F_*(D_v) = D_{DF(p)v}$. If we again identify derivations of germs at $F(p)$ with tangent vectors in $T_{F(p)} \R^m$, we conclude that the differential between manifolds generalizes the derivative from calculus. 
+
+The differential is the same as the derivative, definition wise. Does it hold the same properties. The answer is "yes".
+\begin{theorem}
+(Chain Rule) Let $F : N \to M$ and $G : M \to P$ be $C^\infty$ maps of smooth manifolds. Then $(G \circ F)_{*, p} = G_{*, F(p)} \circ F_{*, p}$.
+\end{theorem}
+\begin{proof}
+If $X_p \in T_p N$ and $f \in C_{G(F(p))}^\infty P$, then
+\[
+(G_{*, F(p)} \circ F_{*, p})(X_p)(f) = G_{*, F(p)}(F_{*,p}(X_p))(f) = F_{*,p}(X_p)(f \circ G) = X_p(f \circ G \circ F) = (G \circ F)_{*, p}(X_p)(f)
+\]
+\end{proof}
+If the "base point" is understood, then we will often omit it and simply write $F_*$ and $G_*$, in which case the chain rule reads as $(G \circ F)_* =G_* \circ F_*$.
+
+\subsection{Dimension of Tangent Spaces}
+
+We present some very useful corollaries of the chain rule.
+\begin{corollary}
+The differential of the identity map $\mathrm{Id} : M \to M$ is the identity map $\mathrm{Id}_* : T_p M \to T_p M$.
+\end{corollary}
+\begin{proof}
+If $X_p \in T_p M$ and $f \in C_p^\infty(M)$ then
+\[
+\mathrm{Id}_*(X_p)(f) = X_p(f \circ \mathrm{Id}) = X_p(f),
+\] 
+so $\mathrm{Id}_*(X_p) = X_p$.
+\end{proof}
+\begin{corollary}
+If $F : N \to M$ is a diffeomorphism of smooth manifolds and $p \in N$, then $F_* : T_p N \to T_{F(p)} M$ is an isomorphism of vector spaces.
+\end{corollary}
+\begin{proof}
+By the previous corollary and the chain rule we have
+\begin{align*}
+F_* \circ (F^{-1})_* = (F \circ F^{-1})_*  &= \mathrm{Id}_{T_{F(p)} M}, \\
+(F^{-1})_* \circ F_* = (F^{-1} \circ F)_* &= \mathrm{Id}_{T_p N},
+\end{align*}
+so $F_* : T_p N \to T_{F(p)}M$ is a bijective linear map.
+\end{proof}
+\begin{corollary}
+(Invariance of dimension) Let $U \subseteq \R^n$ and $V \subseteq \R^m$ be diffeomorphic open sets. Then $n =m$.
+\end{corollary}
+\begin{proof}
+If $F : U \to V$ is a diffeomorphism then by the previous corollary it induces an isomorphism $F_* : T_p U \to T_{F(p)} V$ of vector spaces. Therefore
+\[
+n = \dim(T_p \R^n) = \dim(T_p U) = \dim(T_{F(p)} V) = \dim(T_{F(p)} \R^m) = m
+\]
+\end{proof}
+The above theorem holds in the case where the sets are merely homeomorphic, but that requires algebraic topology to prove and is decidedly non-trivial.
+
+\begin{proposition}
+If $M$ is a smooth manifold of dimension $m$, then for each $p \in M$, the tangent space $T_p M$ has dimension $m$.
+\end{proposition}
+\begin{proof}
+Choose a coordinate chart $(U, \phi)$ around $p$. Then we have a diffeomorphism $\phi : U \to \phi(U)$, so $\phi_* : T_p U \to T_{\phi(p)} \phi(U)$ is an isomorphism. Then
+\[
+\dim(T_p M) = \dim(T_{\phi(p)} \phi(U)) = m.
+\]
+\end{proof}
+
+\subsection{A Basis for the Tangent Space}
+
+Knowing the dimension of the tangent space brings us to the following question: what is a basis of the tangent space? We have a main result.
+\begin{theorem}
+Let $M$ be a smooth manifold and let $p \in M$. Choose a coordinate chart $(U, \phi) = (U, x^1, \dots, x^m)$ around $p$. Then
+\[
+\left\{ \left. \frac{\pd }{\pd x^1} \right|_p, \dots, \left. \frac{\pd }{\pd x^m} \right|_p \right\}
+\]
+is a basis of $T_p M$.
+\end{theorem}
+\begin{proof}
+We have, for $f \in C_{\phi(p)}^\infty (\R^n)$,
+\[
+\phi_* \left( \left. \frac{\pd }{\pd x^i} \right|_p \right)(f) = \left. \frac{\pd }{\pd x^i} \right|_p f \circ \phi = \left. \frac{\pd (f \circ \phi \circ \phi^{-1})}{\pd r^i} \right|_{\phi(p)} = \left( \left. \frac{\pd }{\pd r^i} \right|_{\phi(p)} \right)(f).
+\]
+Since $\phi_*$ is an isomorphism and isomorphisms send bases to bases, the fact that 
+\[
+\left\{ \left. \frac{\pd }{\pd r^1} \right|_{\phi(p)}, \dots, \left. \frac{\pd }{\pd r^m} \right|_{\phi(p)} \right\}
+\]
+is a basis of $T_{\phi(p)} \phi(U)$ implies that the proposed basis of $T_p M$ is indeed a basis.
+\end{proof}
+We will sometimes write $\frac{\pd}{\pd x^i}$ instead of $\left. \frac{\pd }{\pd x^i} \right|_{p}$ if the base point of the tangent vector is understood.
+
+Of course, the basis of the tangent space depends on the choice of coordinate chart. What are the changes of coordinates? 
+\begin{proposition}
+Suppose $(U, x^1, \dots, x^m)$ and $(V, y^1, \dots, y^m)$ are two coordinate charts on a manifold $M$. Then on $U \cap V$,
+\[
+\frac{\pd}{\pd x^j} = \sum_i \frac{\pd y^i}{\pd x^j} \frac{\pd}{\pd y^i}.
+\]
+(One can remember this by thinking of the $\pd y^i$'s as cancelling.)
+\end{proposition}
+\begin{proof}
+Since $\{ \pd / \pd x^i|_p \}$ and $\{ \pd / \pd y^i|_p \}$ are both bases of the tangent space $T_p M$, for each $p \in U \cap V$, there is an $m \times m$ matrix $[a^i_j]$ (depending on $p$) such that
+\[
+\frac{\pd}{\pd x^j} = \sum_k a^k_j \frac{\pd}{\pd y^k}
+\]
+on $U \cap V$. Evaluating both sides at $y^i$ gives
+\begin{align*}
+\frac{\pd y^i}{\pd x^j} =  \sum_k a^k_j \frac{\pd y^i}{\pd y^k} = \sum_k a^k_j \delta^i_k = a^i_j.
+\end{align*}
+\end{proof}
+
+\newpage
+\section{Curves, Submanifolds (May 28)}
+
+\subsection{A Local Expression for the Differential}
+
+Let $N, M$ be smooth manifolds and $F : N \to M$ a $C^\infty$ map. For $p \in N$, the differential $F_{*,p} : T_p N \to T_{F(p)}M$ is linear, so if we fix coordinate charts $(U, x^1, \dots, x^n)$ near $p$ and $(V, y^1, \dots, y^m)$ near $F(p)$, then we can speak about the matrix of $F_{*,p}$ relative to the bases $\{ \left. \frac{\pd}{\pd x^i} \right|_p \}$ and  $\{ \left. \frac{\pd}{\pd y^i} \right|_{F(p)} \}$. It turns out that this matrix is precisely the Jacobian of $F$ relative to these two coordinate systems.
+
+Let $A = [a^i_j]$ be the matrix of $F_{*,p}$ relative to the above bases. That is, for $j = 1, \dots, n$,
+\[
+F_{*,p} \left( \left. \frac{\pd}{\pd x^j} \right|_p \right) = \sum_{i=1}^m a^i_j \left. \frac{\pd}{\pd y^i} \right|_{f(p)}.
+\]
+Applying $y^i$ to both sides of the above equation gives
+\[
+a^i_j = \sum_{k=1}^m a^k_j \left. \frac{\pd y^i}{\pd y^k} \right|_{F(p)} = F_{*,p} \left( \left. \frac{\pd}{\pd x^j} \right|_p \right)(y^i) = \left. \frac{\pd F^i}{\pd x^j} \right|_p.
+\]
+Therefore $A = [\left. \frac{\pd F^i}{\pd x^j} \right|_p]$. We state this fact formally as a proposition.
+\begin{proposition}
+Let $F : N \to M$ be a $C^\infty$ map and let $p \in N$. Choose coordinate charts $(U, x^1, \dots, x^n)$ near $p$ and $(V, y^1, \dots, y^m)$ near $F(p)$. Then the matrix representation of the linear transformation $F_{*,p} : T_pN \to T_{F(p)}M$ in the bases given by these coordinate charts is the Jacobian $[\left. \frac{\pd F^i}{\pd x^j} \right|_p]$ relative to these coordinate systems.
+\end{proposition}
+Recall that the inverse function theorem stated that, assuming the hypotheses of the above proposition, $F$ is a local diffeomorphism at $p$ if and only if its Jacobian was nonsingular. The above proposition therefore gives us a "coordinate-free" inverse function theorem.
+\begin{theorem}
+(Inverse function theorem) Let $F : N \to M$ be a $C^\infty$ map of manifolds of the same dimension and suppose $p \in N$. Then $F$ is a local diffeomorphism at $p$ if and only if its differential $F_{*,p}$ is an isomorphism.
+\end{theorem}
+
+\subsection{Curves on Manifolds}
+
+We'd like to be able to relate the abstract tangent space $T_p M$, a set of derivations, to "tangent vectors" of curves in $M$ at $p$.
+\begin{definition}
+A $C^\infty$ curve in a manifold $M$ is a smooth map $\gamma : (a, b) \to M$. We will usually assume that $0 \in (a, b)$ and that $\gamma(0) = p$.
+\end{definition}
+How can we discuss that tangent vector? First, consider the case $M = \R^n$. Let $\beta : (a, b) \to \R^n$ be a $C^\infty$ curve with $\beta(0) = p$. Then
+\[
+\beta'(0) = \left. \frac{d}{dt} \right|_0 \beta,
+\]
+and so we can think of $\beta'$ as a map $c \mapsto \beta' \cdot c$. 
+\begin{definition}
+The velocity vector of $\gamma$ at $t_0$ is the differential 
+\[
+\gamma'(t_0) := \gamma_*\left( \left. \frac{d}{dt} \right|_{t_0} \right).
+\]
+\end{definition}
+Suppose $X_p = \gamma'(0)$ and that $f \in C_p^\infty(M)$. Then
+\[
+X_p(f) = \gamma'(0)(f) = \gamma_*\left( \left. \frac{d}{dt} \right|_{t_0} \right)(f) = \left. \frac{d}{dt} \right|_0 (f \circ \gamma).
+\]
+If $M = \R^n$, this is the directional derivative of $f$ at $p$ in the direction $\gamma'(0)$ (this means the standard derivative). Note that the right side of the above equation is independent of the curve $\gamma$.
+
+The following proposition says that every tangent vector is the velocity vector of some curve. Morally, manifolds are locally like $\R^n$, and since velocity vectors of curves are "local things", we can transfer them over to manifolds easily.
+\begin{proposition}
+For any $X_p \in T_p M$, there is a smooth curve $\gamma : (a,b) \to M$ with $\gamma(0) = p$ and $\gamma'(0) = X_p$.
+\end{proposition}
+\begin{proof}
+Choose a coordinate chart $(U, \phi) = (U, x^1, \dots, x^n)$ near $p$. There are scalars $a^1, \dots, a^n$ such that $X_p = \sum a^i \left. \frac{\pd}{\pd x^i} \right|_p$. Then $\phi_*(X_p) = \sum a^i \left. \frac{\pd}{\pd r^i} \right|_{\phi(p)}$. Define $\beta : (-\epsilon, \epsilon) \to \R^n$ by
+\[
+\beta(t) = \phi(p) + t(a^1, \dots, a^n),
+\]
+where $\epsilon > 0$ is small enough so that the entire curve lies in $\phi(U)$. Then $\beta$ is a smooth curve satisfying $\beta(0) = \phi(p)$. There are scalars $b^1, \dots, b^n$ such that $\beta'(0) = \sum b^k \left. \frac{\pd}{\pd r^k} \right|_{\phi(p)}$. Applying $r^i$ to both sides gives
+\[
+b^i = \sum b^k \left. \frac{\pd r^i}{\pd r^k} \right|_{\phi(p)} = \beta_* \left( \left. \frac{d}{dt} \right|_0 \right) = \left. \frac{d}{dt} \right|_0 (r^i \circ \beta) = a^i,
+\]
+which implies that $\beta'(0) = \phi_*(X_p) = \sum a^i \left. \frac{\pd}{\pd r^i} \right|_{\phi(p)}$. If $\gamma = \phi^{-1} \circ \beta$, then $\gamma$ is a $C^\infty$ curve in $M$ with $\gamma(0) = p$ and
+\[
+\gamma'(0) = (\phi^{-1} \circ \beta_*) \left( \left. \frac{d}{dt} \right|_0 \right) = \phi_*^{-1} \left( \beta_* \left( \left. \frac{d}{dt} \right|_0 \right) \right) = X_p.
+\]
+\end{proof}
+Of course, we could have chosen any curve in $\phi(U)$ whose tangent vector is $\phi_*(X_p)$. However, there's no loss in taking the simplest possible one: the line through $\phi(p)$ in the direction $(a^1, \dots, a^n)$ (which is, after some identifications, just the tangent vector $\phi_*(X_p)$).
+
+Consider a smooth map $F : N \to M$. If $X_p \in T_pN$ is equal to $\gamma'(0)$ for some smooth curve $\gamma$ (the previous proposition ensures this is always the case), then
+\begin{align*}
+F_{*, p}(X_p) &= F_{*, p}(\gamma'(0)) = F_{*, p}\left( \gamma_{*, 0}\left( \left. \frac{d}{dt} \right|_0 \right) \right) = (F \circ \gamma)_{*, 0} \left( \left. \frac{d}{dt} \right|_0 \right) = (F \circ \gamma)'(0).
+\end{align*} 
+This gives us a way to compute the differential of a smooth map using curves. If we go back to $\R^n$ and $\R^m$, then this is just the directional derivative of $F$ at $\gamma(0) = p$ in the direction $\gamma'(0)$ (identifying tangent vectors with arrows).
+
+\subsection{Immersions and Submersions}
+
+We want a submanifold to be a subset of a smooth manifold that is also a smooth manifold which, in some sense, inherits the smooth structure from the larger manifold. We will make a few definitions.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map. We define the rank of $F$ at $p$ to be the rank of the linear map $F_{*, p}$. Equivalently, it is the dimension of $F_{*,p}(T_pN)$, or the rank of the Jacobian of $F$ at $p$ relative to any two charts. (Recall that we showed that this quantity is independent of the charts used.)
+\end{definition}
+
+We will mostly be concerned with smooth maps of constant rank. Studying the rank of a smooth map allows us to study smooth manifolds using linear algebra, something we already know very well and that is often very easy to work with.
+
+\begin{definition}
+$F$ is an immersion at $p$ if $F_{*,p}$ is injective, and is an immersion if this is the case for all $p \in N$. This definition implies that $n \leq m$, and that if $F$ is an immersion, it has constant rank $n$.
+\end{definition}
+\begin{definition}
+$F$ is a submersion at $p$ if $F_{*, p}$ is surjective, and is a submersion if this is the case for all $p \in N$. This definition implies that $n \geq m$, and that if $F$ is a submersion, it has constant rank $m$.
+\end{definition}
+The following two examples are the "canonical" immersions and submersions, in the sense that every immersion is locally the canonical immersion, and every submersion is locally the canonical submersion. 
+
+The "canonical immersion" is the map $i : \R^n \to \R^m$, $n < m$, defined by $i(x^1, \dots, x^n) = (x^1, \dots, x^n, 0, \dots, 0)$. This map is clearly $C^\infty$, and its Jacobian relative to the standard coordinates is the matrix
+\[
+\begin{pmatrix}
+I_{n \times n} \\ 0
+\end{pmatrix},
+\]
+which clearly shows $i_{*, p}$ is injective for all $p \in \R^n$. Therefore $i$ is an immersion.
+
+The "canonical submersion" is the map $\pi : \R^n \to \R^m$, $n > m$, defined by $\pi(x^1, \dots, x^n) = (x^1, \dots, x^m)$. This map is clearly $C^\infty$, and its Jacobian relative to the standard coordinates is the matrix
+\[
+\begin{pmatrix}
+I_{m \times m} & 0
+\end{pmatrix},
+\]
+which clearly shows $\pi_{*, p}$ is surjective for all $p \in \R^n$. Therefore $\pi$ is a submersion.
+
+We now state the theorems which say that these are indeed the "canonical" examples of their kind.
+
+\begin{theorem}
+(Immersion theorem) Let $F : N \to M$ be an immersion and $p \in N$. There are coordinate charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^n, 0, \dots, 0).
+\]
+\end{theorem}
+\begin{theorem}
+(Submersion theorem) Let $F : N \to M$ be an immersion and $p \in N$. There are coordinate charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^m).
+\]
+\end{theorem}
+We will prove both of these later as a corollary of the following theorem, whose proof will be given later.
+\begin{theorem}
+(Constant rank theorem) Let $F : N \to M$ have constant rank $r$ and $p \in N$. Then there are charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that
+\[
+\psi \circ F \circ \phi^{-1} : (x^1, \dots, x^n) \mapsto (x^1, \dots, x^r, 0, \dots, 0).
+\]
+\end{theorem}
+
+\begin{definition}
+A smooth map $F : N \to M$ is said to be an embedding if it is an immersion and a topological embedding (i.e. a homeomorphism onto its image).
+\end{definition}
+We have a few properties of immersions and submersions.
+
+\begin{proposition}
+\begin{enumerate}
+\item $F : N \to M$ is a local diffeomorphism if and only if it is an immersion and a submersion
+
+\item An immersion is locally injective, and $F$ is an immersion if and only if it is locally an embedding.
+
+\item Submersions are open.
+\end{enumerate}
+\end{proposition}
+
+%check these
+\begin{proof}
+Was left as an exercise in class, so here's a solution.
+\begin{enumerate}
+\item
+$F$ is a local diffeomorphism if and only if $F_{*,p}$ is an isomorphism, if and only if $F_{*,p}$ is injective and surjective, if and only if $F$ is an immersion and a submersion at $p$.
+
+\item
+Suppose that $F$ is an immersion and that $p \in N$. By the immersion theorem there are charts $(U, \phi)$ near $p$ and $(V, \psi)$ near $F(p)$ such that $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ takes on the form 
+\[
+(\psi \circ F \circ \phi^{-1})(x^1, \dots, x^n) = (x^1, \dots, x^n, 0, \dots, 0).
+\]
+We claim that $F|_{U \cap F^{-1}(V)}$ is injective. Suppose $F(a) = F(b)$ for some $a,b \in U$. Then $(\psi \circ F \circ \phi^{-1})(\phi(a)) = (\psi \circ F \circ \phi^{-1})(\phi(b))$, and so the above equation implies that $\phi(a) = \phi(b)$. Since $\phi$ is bijective, $a = b$. Therefore $F$ is locally injective. Moreover, the above equation implies that on $U \cap F^{-1}(V)$, $F$ is composition of embeddings. Therefore $F$ is a local embedding.
+
+If $F$ is a local embedding, then for each $p \in N$ there is an open neighbourhood $U$ of $p$ such that $F|_U$ is an embedding. Therefore $F|_U$ is an immersion, which implies that $(F|_U)_{*,p}$, and therefore $F_{*,p}$, is injective, so $F$ is an immersion at $p$. This holds for all $p \in N$, so $F$ is an immersion. 
+ 
+\item
+Suppose $F$ is a submersion. Let $O \subseteq N$ be open and suppose $F(p) \in F(O)$. Since $p \in O \subseteq N$, there are, by the submersion theorem, coordinate charts $(U, \phi)$ at $p$ and $(V, \psi)$ at $F(p)$ such that $\psi \circ F \circ \phi^{-1} : \phi(U \cap F^{-1}(V)) \to \R^m$ takes on the form 
+\[
+(\psi \circ F \circ \phi^{-1})(x^1, \dots, x^n) = (x^1, \dots, x^m),
+\]
+where $n \geq m$. This implies that on $U \cap F^{-1}(V)$, $F$ is a composition of open mappings (the "canonical submersion" $\pi$ is certainly open). Moreover, $U \cap F^{-1}(V) \cap O$ is an open neighbourhood of $p$, and so we can find an open neighbourhood $W$ of $p$ contained in $U \cap F^{-1}(V) \cap O$. Then $F(W)$ is an open neighbourhood of $F(p)$ contained in $F(O)$, which implies that $F(O)$ is open. 
+\end{enumerate}
+\end{proof}
+
+\subsection{Submanifolds}
+
+\begin{proposition}
+Let $M$ be a $k$-dimensional manifold in $\R^n$, in the MAT257 sense. Then the inclusion map $i : M \to \R^n$ is an embedding.
+\end{proposition}
+\begin{proof}
+That the inclusion map is a topological embedding is obvious. Given a coordinate map $\phi : U \to V \cap M$, the pair $(V \cap M, \phi^{-1})$ is a coordinate chart on $M$. Then $i \circ \phi$ is simply $\phi$, which is injective since $D\phi(q)$ is injective. Therefore $i$ is an immersion.
+\end{proof}
+Therefore the smooth structure on $M$ is, in some sense, "inherited" from the ambient space $\R^n$. That is, if $F : \R^n \to \R$ is $C^\infty$, then $F|_M$ is a $C^\infty$ map of smooth manifolds. (The local converse is true.)
+
+\begin{definition}
+$S \subseteq M$ is a(n embedded) submanifold of the smooth manifold $M$ if it is a smooth manifold such that the inclusion map $i : S \to M$ is an embedding.
+\end{definition}
+The following proposition is immediate.
+\begin{proposition}
+If $F : N \to M$ is a $C^\infty$ map between manifolds and $S \subseteq N$ is a submanifold as we just defined it, then $F|_S : S \to M$ is $C^\infty$.
+\end{proposition}
+We list some examples of submanifolds.
+\begin{enumerate}
+\item
+Every "MAT257 manifold" in $\R^n$ is a submanifold of $\R^n$.
+
+\item
+Every open subset $U \subseteq M$ of a smooth manifold is a submanifold, since the inclusion $i : U \to M$ is an embedding. 
+
+In fact, the only submanifolds of $M$ with the same dimension as $M$ are the open sets. This was left as an exercise in class, so here's a solution. Suppose $S \subseteq M$ is a submanifold of $M$ with $\dim S = \dim M$. Then the inclusion map $i : S \to M$ is an embedding. For $p \in S$, the differential $i_{*,p} : T_pS \to T_pM$ is an injective linear map between two vector spaces of the same dimension, so it is invertible. By the inverse function theorem, $i$ is a local diffeomorphism at $p$, which implies that $p$ is contained in some open subset of $M$ contained in $S$. Therefore $S$ is open.
+
+\item
+The graph $\Gamma_f$ of $f(x) = |x|$ defined on $\R$ is a smooth manifold, but it is not a submanifold of $\R^2$. Consider the atlas $\{(\Gamma_f, \pi)\}$, where $\pi : (x,f(x)) \mapsto x$. The inclusion map $i : \Gamma_f \to \R^2$ is not $C^\infty$, since $(i \circ \pi^{-1})(x) = (x, |x|)$.
+
+\item Embeddings give rise to submanifolds in the following sense.
+\begin{proposition}
+Let $F : N \to M$ be an embedding. Then there is a unique smooth structure on $F(N)$ such that $F(N)$ is a submanifold of $M$ and that $F : N \to F(N)$ a diffeomorphism.
+\end{proposition}
+\begin{proof}
+Let $\mathcal{A}$ be an atlas on $N$. Define $\mathcal{A}' = \{ (F(U), \phi \circ F^{-1}) : (U, \phi) \in \mathcal{A} \}$. Each set $F(U)$ is open in $F(N)$, and each $\phi \circ F^{-1} : F(U) \to \phi(U)$ is a homeomorphism, because $F$ is a homeomorphism onto its image. If $(U_1, \phi_1 \circ F^{-1}), (U_2, \phi_2 \circ F^{-1}) \in \mathcal{A}'$, then
+\[
+(\phi_1 \circ F^{-1}) \circ (\phi_2 \circ F^{-1})^{-1} = \phi_1 \circ \phi_2^{-1}
+\]
+is $C^\infty$. Therefore $\mathcal{A}'$ is a $C^\infty$ atlas on $F(N)$, making it a smooth manifold of the same dimension as $N$. 
+
+Consider a chart $(W, \sigma)$ on $N$ and a chart $(F(U), \phi \circ F^{-1})$ on $F(N)$. Then
+\[
+(\phi \circ F^{-1}) \circ F \circ \sigma^{-1} = \phi \circ \sigma^{-1}
+\]
+is $C^\infty$ because $\phi$ and $\sigma$ are both coordinate systems on $N$, and
+\[
+\sigma \circ F^{-1} \circ (\phi \circ F^{-1})^{-1} = \sigma \circ F^{-1} \circ F \circ \phi^{-1} = \sigma \circ \phi^{-1}
+\]
+is $C^\infty$ for the same reason. Therefore $F : N \to F(N)$ is a diffeomorphism. That the smooth structure corresponding to $\mathcal{A}'$ is the unique one on $F(N)$ with respect to which $F : N \to F(N)$ is a diffeomorphism is clear.
+
+The inclusion map $i : S \hookrightarrow M$ is the composition of a diffeomorphism and an embedding: $S \xrightarrow{F^{-1}} N \xrightarrow{F} M$, and so it is an embedding itself. Therefore $F(N)$ is an embedded submanifold.
+\end{proof}
+
+\item
+Let $U \subseteq N$ be an open subset of a smooth manifold and $F : U \to M$ be a $C^\infty$ map into a smooth manifold $M$. Then $\Gamma_f = \{ (x, f(x)) : x \in U \}$ is a submanifold of $N \times M$. This can be proved by defining $F : U \to N \times M$ by $F(x) = (x, f(x))$ and showing that this is an embedding.
+\end{enumerate}
+
+\subsection{Regular Submanifolds}
+
+\begin{definition}
+Suppose $M$ is an $n$-dimensional manifold. $S \subseteq M$ is a regular submanifold of dimension $k$ if for each $p \in S$, there exists a chart $(U, x^1, \dots, x^n)$ of $M$ near $p$ such that $U \cap S$ is defined by the vanishing of $n - k$ of the coordinate functions; we may as well assume it is defined by the vanishing of the last $n-k$ coordinates. That is,
+\[
+U \cap S = \{ q \in S : x^{k+1}(q) = \cdots = x^n(q) = 0 \}.
+\]
+Such a coordinate chart is called an adapted chart relative to $S$.
+\end{definition}
+If $(U, \phi) = (U, x^1, \dots, x^n)$ is an adapted chart relative to $S$, define $\phi_S : U \cap S \to \R^k$ by $\phi_S(q) = (x^1(q), \dots, x^k(q))$. The pair $(U \cap S, \phi_S)$ is a coordinate chart on $S$ in the subspace topology. (That is, $\phi_S = \pi \circ \phi|_S$.)
+
+If $\{ (U \cap S, \phi_S) \}$ is a collection of adapted charts relative to $S$ covering $S$, it is not hard to see that they form a $C^\infty$ atlas on $S$, making $S$ a manifold of dimension $k$. $S$ is said to have \emph{codimension $n-k$ in $M$}.
+
+Note that the definition of a submanifold we gave in which the inclusion was required to be a smooth embedding (an "embedded submanifold") is equivalent to the definition of a regular manifold. We state this as a theorem - without proof for now.
+\begin{theorem}
+$S \subseteq M$ is a regular submanifold if and only if it is an embedded submanifold.
+\end{theorem}
+\begin{theorem}
+(Whitney embedding theorem) Any smooth manifold of dimension $n$ can be embedded in $\R^{2n}$.
+\end{theorem}
+The Klein bottle is an example of a manifold of dimension $2$ which cannot be embedded in $\R^3$, but can be embedded in $\R^4$.
+
+\newpage
+\section{Equivalence of Regular and Embedded Submanifolds (June 2)}
+
+\subsection{Regular Submanifolds}
+
+Recall the definition of a regular submanifold.
+\begin{definition}
+Let $M$ be a smooth manifold. $S \subseteq M$ is a regular submanifold of dimension $k$ if for each $p \in S$ there is a chart $(U, \phi) = (U, x^1, \dots, x^n)$ for $M$ at $p$ such that $U \cap S$ is defined by the vanishing of exactly $n-k$ of the coordinates (we will usually take these to be the last such coordinates). Such a chart is called an adapted chart relative to $S$.
+\end{definition}
+If $\{(U, \phi)\}$ is an atlas for $M$ of adapted charts relative to $S$, then it is not hard to see that $\{(U \cap S, \phi_S)\}$ is an atlas for $S$ in the subspace topology, where $\phi_S := \pi \circ \phi|_S$. Therefore $S$ is a smooth manifold of dimension $k$.
+
+A regular submanifold "inherits" the smooth structure from $M$ in the following sense:
+\begin{proposition}
+If $f : M \to \R$ is $C^\infty$ and $S \subseteq M$ is a regular submanifold, then $f|_S : S \to \R$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+For any adapted chart $(U, \phi)$ relative to $S$, $f \circ \phi^{-1}$ is $C^\infty$. Then $f \circ \phi_S^{-1}$ is $C^\infty$, since it is the composition $f \circ \phi^{-1} \circ g$, where $g : (x^1, \dots, x^k) \mapsto (x^1, \dots, x^k, 0, \dots, 0)$ is the "canonical immersion".
+\end{proof}
+
+For example, consider a $C^\infty$ function $f : \R \to \R$. Then $\Gamma_f$ becomes a smooth manifold with the atlas $\{(\Gamma_f, \pi)\}$, where $\pi : (x,f(x)) \mapsto x$. For an open set $U \subseteq \R^2$ intersecting $\Gamma_f$, define $\psi : U \to \R^2$ by $\psi(x,y) = (x, y-f(x))$. Then $\psi$ is a local diffeomorphism, which implies that, after shrinking $U$, the pair $(U, \psi)$ is a coordinate chart belonging to the standard smooth structure on $\R^2$. Moreover, $\Gamma_f \cap U$ is defined by the vanishing of the last coordinate of $\psi$, so $(U, \psi)$ is an adapted chart relative to $\Gamma_f$. We can do this at any point of $\Gamma_f$, so we can conclude that $\Gamma_f$ is a regular submanifold of $\R^2$ of dimension $1$.
+
+What is the tangent space to a regular submanifold $S \subseteq M$? Note that we cannot write $T_pS \subseteq T_pM$, since the elements are not even the same. However, if $v \in T_pS$, there is a unique $\tilde{v} \in T_pM$ such that for any $f \in C_p^\infty(M)$, $\tilde{v}(f) = v(f|_S)$. (Uniqueness is immediate, and existence follows by defining $\tilde{v}$ by that formula.) Let $\Phi$ be the map $v \mapsto \tilde{v}$. Linearity is obvious, and for injectivity, suppose $\Phi(v) = \tilde{v} = 0$. Fix an adapted chart $(U, x^1, \dots, x^n)$ at $p$, so that if $y^i = x^i|_S$, then $(U \cap S, y^1, \dots, y^k)$ is a chart on $S$ at $p$. Then $\{\left. \frac{\pd}{\pd y^i}\right|_p\}$ is a basis of $T_pS$, so
+\[
+v = \sum v(y^i)\left. \frac{\pd}{\pd y^i}\right|_p = \sum v(x^i|_S)\left. \frac{\pd}{\pd y^i}\right|_p = \sum \tilde{v}(x^i)\left. \frac{\pd}{\pd y^i}\right|_p = 0,
+\]
+so $\Phi$ is injective. Therefore we may think of the $k$-dimensional subspace $\Phi(T_pS) \subseteq T_pM$ as "$T_pS$ living inside $T_pM$".
+
+\subsection{Embedded Submanifolds}
+
+Recall the definition of an embedded submanifold.
+\begin{definition}
+Let $M$ be a smooth manifold. $S \subseteq M$ is an embedded submanifold of dimension $k$ if it is a smooth manifold of dimension $k$ such that the inclusion map $i : S \hookrightarrow M$ is an embedding (topological embedding and an immersion).
+\end{definition}
+
+Let $M$ be a smooth manifold and $S \subseteq M$ a subset which is also a smooth manifold. Is it true that the inclusion $i : S \hookrightarrow M$ is $C^\infty$? Not always. Consider the case $\Gamma_f$ for $f(x) = |x|$. Then $\Gamma_f$ is a smooth manifold and a subset of the smooth manifold $\R^2$, but the inclusion $\Gamma_f \hookrightarrow \R^2$ is not smooth.
+
+Give $S$ the subspace topology, so that $i : S \hookrightarrow M$ is a topological embedding. Suppose $S$ is equipped with a smooth structure such that $i$ is $C^\infty$. We claim that $i$ is then an embedding, in the sense that, in addition to being a topological embedding, it is an immersion. (The proof will be a homework exercise.)
+
+An embedded submanifold "inherits" the smooth structure from $M$ in the following sense:
+\begin{proposition}
+If $f : M \to \R$ is $C^\infty$ and $S \subseteq M$ is an embedded submanifold, then $f|_S : S \to \R$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+$f|_S = f \circ i$.
+\end{proof}
+
+What is the tangent space to an embedded submanifold $S \subseteq M$? The inclusion $i : S \hookrightarrow M$ has injective differential $i_{*,p} : T_pS \to T_pM$, and so we can think of the $k$-dimensional subspace $i_{*,p}(T_pS) \subseteq T_pM$ as "$T_pS$ living inside $T_pM$". Moreover, in reference to the tangent space of a regular submanifold, we have $i_{*,p} = \Phi$, since
+\[
+i_{*,p}(v)(f) = v(f \circ i) = v(f|_S) = \tilde{v}(f)
+\]
+for every $f \in C_p^\infty(M)$ and $v \in T_pS$.
+
+\subsection{Equivalence of the Two}
+
+After noticing the similarities between regular and embedded submanifolds, one might ask whether or not they are the same. The answer is yes.
+\begin{theorem}
+Let $M$ be a smooth manifold and $S \subseteq M$. $S$ is a regular submanifold of dimension $k$ if and only if $S$ is an embedded submanifold of dimension $k$.
+\end{theorem}
+\begin{proof}
+Suppose $S$ is a regular submanifold of dimension $k$. It is given the subspace topology, so $i : S \hookrightarrow M$ is a topological embedding. Let $(U, \phi)$ be an adapted chart relative to $S$. Then $(U \cap S, \phi_S)$ is a coordinate chart on $S$. The coordinate representation of $i$ in these two charts is
+\[
+\phi \circ i \circ \phi_S^{-1} : (x^1, \dots, x^k) \mapsto (x^1, \dots, x^k, 0, \dots, 0),
+\]
+since $U \cap S$ is defined by the vanishing of the last $n-k$ coordinates. In this form it is clear that $i : S \hookrightarrow M$ is an immersion, so $S$ is an embedded submanifold.
+
+The converse follows from the following slightly more general proposition.
+\end{proof}
+\begin{proposition}
+If $f : N \to M$ is an embedding, then $f(N)$ is a regular submanifold of $M$.
+\end{proposition}
+\begin{proof}
+Let $p \in N$. By the immersion theorem, we can find coordinate charts $(U, \phi) = (U, x^1, \dots, x^n)$ at $p$ and $(V, \psi) = (V, y^1, \dots, y^m)$ at $f(p)$ with respect to which $f$, in coordinates, takes on the form
+\[
+\psi \circ f \circ \phi^{-1} : \phi(U \cap f^{-1}(V)) \to \R^m, \qquad(x^1, \dots, x^n) \mapsto (x^1, \dots, x^n, 0, \dots, 0).
+\]
+By possibly shrinking $U$, assume that $f(U) \subseteq V$. We may do this by replacing $U$ with $U \cap f^{-1}(V)$, which is open in $N$; we will still have a coordinate chart at $p$ and the above identity will still hold.
+
+We show that $f(U)$ is defined by the vanishing of $y^{n+1}, \dots, y^m$. More precisely, that
+\[
+f(U) = \{ z \in V : y^{n+1}(z) = \cdots = y^m(z) = 0 \}.
+\]
+Suppose $q \in U$. Then $f(q)$ satisfies $\psi(f(q)) = (\psi \circ f \circ \phi^{-1})(\phi(q))$, of which the last $m-n$ coordinates vanish. This proves the $\subseteq$ inclusion. Conversely, suppose $z \in V$ satisfies $y^{n+1}(z) = \cdots = y^m(z) = 0$. Then $\psi(z)$ is in the image of $\psi \circ f \circ \phi^{-1}$ because of the vanishing of the last $m-n$ coordinates, so there is a $q \in \phi(U)$ such that $(\psi \circ f \circ \phi^{-1})(q) = \psi(z)$, implying $z = f(\phi^{-1}(q)) \in f(U)$. This proves the $\supseteq$ inclusion, and completes the proof that $f(U)$ is defined by the vanishing of $y^{n+1}, \dots, y^m$.
+
+Since $f$ is a homeomorphism onto its image, $f(U)$ is open in the subspace topology on $f(N)$, so we can find an open set $W$ of $M$ such that $f(U) = W \cap f(N)$. Then
+\begin{align*}
+(V \cap W) \cap f(N) &= V \cap f(U) \\
+&= f(U) \qquad \text{(because we made } f(U) \subseteq V)
+\end{align*}
+is defined by the vanishing of $y^{n+1}, \dots, y^m$, which implies that $(V \cap W, y^1, \dots,  y^m)$ is an adapted chart at $f(p)$ relative to $f(N)$. Therefore $f(N)$ is a regular submanifold of $M$, of the same dimension as $N$.
+\end{proof}
+
+Therefore \emph{embedded submanifolds and regular submanifolds are one and the same thing.}
+
+\newpage
+
+\section{Level Sets, Tangent Bundles (June 4)}
+
+\subsection{Regular and Critical Values}
+
+Recall that we showed that if $g : \R^{n+1} \to \R$ was a $C^\infty$ function such that $\nabla g(x) \neq 0$ for each $x \in g^{-1}(0)$, then $g^{-1}(0)$ was a manifold in $\R^{n+1}$ of dimension $n$. In our new terminology, $g^{-1}(0)$ is a regular submanifold of $\R^{n+1}$ of co-dimension $1$. We are going to generalize this example.
+
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map between smooth manifolds and suppose $c \in M$. We call the set $F^{-1}(c)$ the level set of $F$ with level $c$. We say that $c$ is a critical value of $F$ if there is a $p \in F^{-1}(c)$ such that $F_{*,p}$ is not surjective, and we call $p$ a critical point of $F$. Otherwise, $c$ is a regular value of $F$ and the level set is said to be regular. 
+\end{definition}
+
+Suppose that $F : M \to \R^k$ has $0$ as a regular value, and that $M$ is a smooth manifold of dimension $n$. In generalizing the first example, we'd like to show that $F^{-1}(0)$ is a regular submanifold of $M$ of co-dimension $k$. Let's first informally discuss why this should be true.
+
+If we choose $p \in F^{-1}(0)$, then $F_{*,p}$ is surjective. By linear algebra, this implies that there are $n-k$ linearly independent directions $v \in T_pM$ such that $F_{*,p}(v) = 0$, corresponding to "how many directions we can move around at $p$ and stay in $F^{-1}(0)$". Similarly, there are $k$ linearly independent directions $v \in T_pM$ such that $F_{*,p}(v) \neq 0$, corresponding to "how many directions we can move around at $p$ to exit $F^{-1}(0)$".
+
+\begin{theorem}
+If $F : M \to \R^k$ has $0$ as a regular value, then $F^{-1}(0)$ is a regular submanifold of $M$ of co-dimension $k$.
+\end{theorem}
+\begin{proof}
+Given $p \in F^{-1}(0)$, let $(U, \phi) = (U, x^1, \dots, x^n)$ be a coordinate chart for $M$ at $p$. Since $F_{*,p}$ is surjective, assume without loss of generality that the first $k\times k$ submatrix of the Jacobian of $F$ relative to this coordinate chart is non-singular. The Jacobian of the $C^\infty$ map $(F^1, \dots, F^k, x^{k+1}, \dots, x^n)$ is, relative to this coordinate chart,
+\[
+\begin{pmatrix}
+\frac{\pd (F^1, \dots, F^k)}{\pd (x^1, \dots, x^k)} & * \\
+0 & I_{n-k},
+\end{pmatrix}
+\]
+so by the inverse function theorem there is an open set $\tilde{U} \subseteq U$ such that $(\tilde{U}, F^1, \dots, F^k, x^{k+1}, \dots, x^n)$ is a coordinate chart on $M$ at $p$. The set $\tilde{U} \cap F^{-1}(0)$ is defined by setting the first $k$ coordinates of this chart to be $0$, which proves that $F^{-1}(0)$ is a regular submanifold of co-dimension $k$.
+\end{proof}
+\begin{corollary}
+(Regular level set theorem) Let $F : N \to M$ be a $C^\infty$ map and suppose $c \in M$ is a regular value of $F$. Then $F^{-1}(c)$ is a regular submanifold of $N$ of co-dimension $m$.
+\end{corollary}
+This is a special case of a more general theorem.
+\begin{theorem}
+(Constant rank level set theorem) Let $F : N \to M$ be a $C^\infty$ map and suppose $c \in M$ is such that $F$ has constant rank $k$ in some neighbourhood of $F^{-1}(c)$ in $N$. Then $F^{-1}(c)$ is a regular submanifold of $N$ of co-dimension $k$.
+\end{theorem}
+We also have the following equivalent characterization of submanifolds.
+\begin{theorem}
+$S \subseteq M$ is a submanifold of co-dimension $k$ if and only if for each $p \in S$ there exists a $C^\infty$ map $F : U \to \R^k$ defined on a neighbourhood $U$ of $p$ such that $0$ is a regular value of $F$ and $U \cap S = F^{-1}(0)$.
+\end{theorem}
+
+\subsection{Motivating the Tangent Bundle}
+
+We want to define vector fields, differential forms, tensor fields, Riemannian metrics, etc. In order to talk about them and to say that they are smooth, we need the concept of the tangent bundle.
+
+For example, what is a "smooth choice" of tangent vectors $X_p \in T_pM$, for $p \in M$? We also want to make the dual choice; what is a "smooth choice" of \emph{covectors} $\omega_p$, for $p \in M$. (This will be a differential $1$-form).
+
+We also want to make a "smooth choice" of $k$-dimensional subspaces $E_p$ of $T_pM$, for $T_pM$. This will bring up the question "Does there exist a submanifold $S \subseteq M$ such that for each $p \in S$, $i_{*,p}(T_pS) = E_p$?". This will be answered by the \emph{Frobenius theorem}.
+
+We'd like to talk about $(k,l)$-tensors: multilinear maps
+\[
+T_{p(k,l)} : \underbrace{T_p^*M \times \cdots \times T_p^*M}_{\text{$k$ times}} \times \underbrace{T_pM \times \cdots \times T_pM}_{\text{$l$ times}} \to \R,
+\]
+where $T_p^*M$ is the dual space to $T_pM$. We want to make a "smooth choice" of $T_{p(k,l)}$ for $p \in M$. Such a $T$ will be called a \emph{smooth $(k,l)$-tensor field}. In particular, a differential $k$-form will be an alternating $(0,k)$-tensor.
+
+Everything is easy in $\R^n$ because the tangent spaces are just copies of $\R^n$. On abstract manifolds, things are more difficult, and so we must develop the notion of a \emph{tangent bundle}.
+
+\subsection{The Tangent Bundle is a Smooth Manifold}
+
+\begin{definition}
+Let $M$ be a smooth manifold. The tangent bundle $TM$ is defined to be the set
+\[
+TM = \bigcup_{p \in M} T_pM = \bigsqcup_{p \in M} T_pM,
+\]
+where the disjoint union is the set
+\[
+\bigsqcup_{p \in M} T_pM = \bigcup_{p \in M} (\{p\} \times T_pM).
+\]
+\end{definition}
+Up to notation these are the same thing, since any two $T_pM$, $T_qM$ for $p \neq q$ are already disjoint. The tangent bundle $TM$ comes with a natural projection map $\pi : TM \to M$ defined by $\pi(p, v) = v$, or alternatively, $\pi(v) = p$ if $v \in T_pM$. 
+
+How should we topologize $TM$? We do \emph{not} want to choose the coarsest topology with respect to which $\pi$ is continuous, since the open sets would then be $\pi^{-1}(U) = TU$, which is too large.
+
+Let $(U, \psi) = (U, x^1, \dots, x^n)$ be a coordinate chart on $M$. Then $TU = \bigcup_{p\in U}T_pM$. For $p \in U$, we have a basis $\{ \left. \frac{\pd}{\pd x^i}\right|_p \}$ of $T_pM$. Define $\tilde{\phi} : TU \to \phi(U) \times \R^n$ by
+\[
+\tilde{\phi}\left( \sum c^i \left. \frac{\pd}{\pd x^i}\right|_p \right) := (x^1(p), \dots, x^n(p), c^1, \dots, c^n) = (\phi(p), c^1, \dots, c^n).
+\]
+Note that the $c^i$'s are functions of $v \in T_pU$. The map $\tilde{\phi}$ is bijective with inverse
+\[
+\tilde{\phi}^{-1}(\phi(p), c^1, \dots, c^n).
+\]
+Equip $TU$ with the unique topology with respect to which $\tilde{\phi}$ is a homeomorphism. That is, declare $V \subseteq TU$ to be open if and only of $\tilde{\phi}(V)$ is open in $\phi(U) \times \R^n \subseteq \R^{2n}$.
+
+Having topologized the tangent bundle of every coordinate neighbourhood in $M$, how do we topologize $TM$? Define
+\[
+\mathcal{T} = \{ A \subseteq TM : \text{$A$ is open in $TU_\alpha$ for every coordinate open set $U_\alpha$}\}.
+\]
+It is not hard to see that $\mathcal{T}$ is a topology on $TM$. We have the following proposition:
+\begin{proposition}
+For a smooth manifold $M$, the projection $\pi : TM \to M$ is a continuous open mapping.
+\end{proposition}
+Note that by construction $TM$ is locally Euclidean of dimension $2n$. In addition, we have the following proposition, making $TM$ into a topological $2n$-manifold.
+
+\begin{proposition}
+$TM$ is second-countable and Hausdorff.
+\end{proposition}
+\begin{proof}
+Since $M$ is second-countable we may choose a countable set of coordinate neighbourhoods $U_\alpha$. Each $TU_\alpha$ is homeomorphic to $\phi_\alpha(U_\alpha) \times \R^n \subseteq \R^{2n}$, so we may choose a countable basis $\mathcal{B}_\alpha$ of $TU_\alpha$. Let $\mathcal{B} = \bigcup_\alpha \mathcal{B}_\alpha$. The set $\mathcal{B}$ is a countable collection of open sets of $TM$; we show it's a basis.
+
+Given $A \subseteq TM$ open and $(p, v) \in A$, choose one of the coordinate neighbourhoods $U_\alpha$ at $p$. Since $A$ is open in $TU_\alpha$ and $(p, v) \in TU_\alpha$, we can find an element $V \in \mathcal{B}_\alpha$ such that $(p,v) \in V \subseteq A \subseteq TU_\alpha$. This proves that $\mathcal{B}$ is a countable basis of $TM$.
+
+Now suppose $(p, v), (q, w) \in TM$. If $p = q$, then choosing a coordinate chart $(U, \phi)$ at $p = q$ shows that $v, w$ are distinct points of $TU \cong \phi(U) \times \R^n$. This set is Hausdorff as it is a subspace of $\R^{2n}$, so we're done. Otherwise, $p \neq q$, so by Hausdorffness of $M$ we can find disjoint open neighbourhoods $U$ of $p$ and $V$ of $q$ in $M$. Then $\pi^{-1}(U)$ and $\pi^{-1}(V)$ are disjoint open neighourboods of $(p, v)$ and $(q, w)$ in $M$, respectively, which proves that $TM$ is Hausdorff.
+\end{proof}
+In short, if $M$ is a topological $n$-manifold, then $TM$ is a topological $2n$-manifold.
+
+Having given $TM$ a topology and a topological manifold structure, how do we give it a smooth structure? This is easy.
+\begin{proposition}
+Suppose $M$ is a smooth manifold of dimension $n$. If $\{(U_\alpha, \phi_\alpha)\}$ is a smooth atlas on $M$, then $\{(TU_\alpha, \tilde{\phi_\alpha})\}$ is a smooth atlas on $TM$. Therefore $TM$ is a smooth manifold of dimension $2n$.
+\end{proposition}
+\begin{proof}
+Clearly $TM = \bigcup_\alpha TU_\alpha$. All we have to show is that on $(TU_\alpha) \cap (TU_\beta)$ the maps $\tilde{\phi_\alpha}$ and $\tilde{\phi_\beta}$ are $C^\infty$ compatible.
+
+To make the notation nicer, suppose $(TU, \tilde{\phi})$ and $(TV, \tilde{\psi})$ are charts on $TM$, where $(U, \phi) = (U, x^1, \dots, x^n)$ and $(V, \psi) = (V, y^1, \dots, y^n)$ are coordinate charts on $M$. If $p \in U \cap V$, then
+\begin{align*}
+(\tilde{\psi} \circ \tilde{\phi}^{-1})(\phi(p), c^1, \dots, c^n) &= \tilde{\psi} \left( \sum_j c^j \left. \frac{\pd}{\pd x^j}\right|_p \right) \\
+&= \tilde{\psi} \left( \sum_j c^j \sum_i \frac{\pd y^i}{\pd x^j}(p) \left. \frac{\pd}{\pd y^i}\right|_p \right)  \qquad \text{coord. change } \frac{\pd}{\pd x^j} = \sum_i \frac{\pd y^i}{\pd x^j}\frac{\pd}{\pd y^i} \\
+&= \tilde{\psi} \left( \sum_i \left( \sum_j c^j \frac{\pd y^i}{\pd x^j}(p) \right) \left. \frac{\pd}{\pd y^i}\right|_p \right) \\
+&= \left( (\psi \circ \phi^{-1})(\phi(p)), b^1, \dots, b^n \right),
+\end{align*}
+where 
+\[
+b^i = \sum_j c^j \frac{\pd y^i}{\pd x^j}(p) = \sum_j c^j \frac{\pd (\psi \circ \phi^{-1})^i}{\pd r^j}(\phi(p)).
+\]
+So $\tilde{\psi} \circ \tilde{\phi}^{-1}$ is $C^\infty$ because $\psi \circ \phi^{-1}$ is. It follows that the atlas we gave $TM$ is smooth, making $TM$ a smooth manifold of dimension $2n$.
+\end{proof}
+\begin{corollary}
+The projection $\pi : TM \to M$ is $C^\infty$.
+\end{corollary}
+\begin{proof}
+For any coordinate map $\phi$ on $M$,
+\[
+\phi \circ \pi \circ \tilde{\phi}^{-1} : (x^1, \dots, x^n, c^1, \dots, c^n) \mapsto (x^1, \dots, x^n),
+\]
+which is clearly $C^\infty$.
+\end{proof}
+\begin{corollary}
+If $M$ is a smooth $n$-manifold covered by a single coordinate chart $(M, \phi)$, then $TM$ is diffeomorphic to $M \times \R^n$.
+\end{corollary}
+We want to use the tangent bundle to work with "global" objects on a manifold. Here's one example.
+\begin{definition}
+Let $F : N \to M$ be a $C^\infty$ map. Define the global differential $F_* : TN \to TM$ by $F_*((p, v)) = F_{*,p}(v)$. (Note the abuse of notation.)
+\end{definition}
+\begin{proposition}
+The global differential $F_* : TN \to TM$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+Given $(p, v) \in TN$, let $(TU, \tilde{\phi})$ be a chart at $(p,v)$ and $(TV, \tilde{\psi})$ be a chart at $F_{*,p}(v)$, where $\phi = (x^1, \dots, x^n)$ and $\psi = (y^1, \dots, y^m)$ are local coordinates on $N$ and $M$, respectively. Then
+\begin{align*}
+(\tilde{\psi} \circ F_* \circ \tilde{\phi}^{-1})(\phi(p), c^1, \dots, c^n) &= (\tilde{\psi} \circ F_*)\left( \sum_j c^j \left. \frac{\pd}{\pd x^j} \right|_p\right) \\
+&= \tilde{\psi} \left( \sum_j c^j F_{*,p}\left( \left. \frac{\pd}{\pd x^j} \right|_p \right) \right) \\
+&= \tilde{\psi}\left( \sum_j c^j \sum_i \frac{\pd F^i}{\pd x^j}(p) \left. \frac{\pd}{\pd y^i}\right|_{F(p)} \right) \\
+&= \tilde{\psi}\left( \sum_i \left( \sum_j c^j \frac{\pd F^i}{\pd x^j}(p) \right) \left. \frac{\pd }{\pd y^i}\right|_{F(p)} \right) \\
+&= \left((\psi \circ F \circ \phi^{-1})(\phi(p)), b^1, \dots, b^n \right),
+\end{align*}
+where
+\[
+b^i = \sum_j c^i \frac{\pd F^i}{\pd x^j}(p) = \sum_j c^i \frac{\pd (\psi \circ F \circ \phi^{-1})^i}{\pd r^j}(\phi(p)).
+\]
+Since $\psi \circ F \circ \phi^{-1}$ is $C^\infty$ at $p$, we conclude that the global differential is $C^\infty$ at $(p,v)$.
+\end{proof}
+
+\subsection{Sections, Algebraic Structures}
+
+We'd like to describe vector fields on manifolds as functions that take each point $p$ to a tangent vector $X(p) = X_p \in T_pM$. We can easily describe such functions with the following definition.
+\begin{definition}
+A section of the tangent bundle $TM$ is a right inverse of the projection $\pi : TM \to M$. We say that a section is smooth if it is smooth relative to the smooth structures on $M$ and $TM$.
+\end{definition}
+So if $X : M \to TM$ is a section of $TM$, then $\pi(X(p)) = p$, implying that $X(p) \in T_pM$ for each $p \in M$. This is the property we want. With this language, a \emph{smooth vector field} on $M$ is a smooth section of the tangent bundle.
+
+\begin{proposition}
+Let $X, Y$ be smooth sections of $TM$. Then
+\begin{enumerate}[(i)]
+\item
+Define $X + Y : M \to TM$ by $(X+Y)(p) := X(p) + Y(p)$. Then $X+Y$ is another smooth section on $TM$.
+\item
+For $f \in C^\infty(M)$, define $fX : M \to TM$ by $(fX)(p) = f(p) \cdot X(p)$. Then $fX$ is another smooth section on $TM$.
+\end{enumerate}
+\end{proposition}
+The above proposition states that if $\Gamma(M)$ denotes the set of all smooth sections on $TM$, then $\Gamma(M)$ is both a real vector space and a module over the ring $C^\infty(M)$ of smooth functions on $M$. (A module can be thought of as taking a vector space and replacing the base field with a commutative ring with unity, but here's a precise definition anyway.)
+\begin{definition}
+Let $R$ be a ring with unity. A left-R module consists of an abelian group $(M,+)$ and an operation $\cdot : R \times M \to M$ such that
+\begin{enumerate}
+\item $r \cdot (x+y) = r\cdot x + r\cdot y$ 
+\item $(r+s) \cdot x = r \cdot x + r \cdot y$
+\item $(rs) \cdot x = r \cdot(s \cdot x)$ 
+\item $1 \cdot x = x$
+\end{enumerate}
+(Long story short, we swap the scalars in a vector space with the elements of a ring, which obey the same laws as those scalars. We lose out on being able to invert those scalars.)
+\end{definition}
+\begin{definition}
+A derivation $D$ on an algebra $A$ over $\R$ is a linear map $D : A \to A$ satisfying the Leibnitz rule.
+\end{definition}
+\begin{proposition}
+Let $M$ be a smooth manifold. The set
+\[
+\mathrm{Der} = \{ X : C^\infty(M) \to C^\infty(M) : \text{X is a derivation }\}
+\]
+is a module over $C^\infty(M)$. Moreover, the map $\Phi : \Gamma(M) \to \mathrm{Der}$ defined by $\Phi(X)(f) = X(f)$ is a module isomorphism.
+\end{proposition}
+The map $\Phi$ in the above proposition is similar to the old map $T_p\R^n \to \mathcal{D}_p$, $v \mapsto D_v$, which was also an isomorphism. 
+
+Suppose $X$ is a smooth section of $TM$. Then we can define, by abuse of notation, a map $X : C^\infty(M) \to C^\infty(M)$ by $X(f)(p) = X(p)(f)$. One of the problems on Homework 3 gives the following proposition (whose proof, for obvious reasons, shall not be given).
+\begin{proposition}
+Let $X$ be a section of $TM$. Then $X$ is smooth if and only if for each $f \in C^\infty(M)$, $X(f) \in C^\infty(M)$ as defined above.
+\end{proposition}
+
+\newpage
+
+\section{Bump Functions, Partitions of Unity (June 9)}
+
+\subsection{Bump Functions}
+
+Hereafter, $M$ denotes a smooth manifold. We will present two of the fundamental tools in manifold theory: the bump function, and the partition of unity. They allow "local phenomena" to be translated to global phenomena. For example, the integration of a differential form on a manifold is first defined locally, and then extended to the entire manifold using a partition of unity.
+
+Bump functions allow us to, in particular, extend functions to an entire manifold. We will not (in lecture) cover the details of the construction of bump functions or of partitions of unity.
+
+\begin{theorem}
+(Existence of bump functions) Let $q \in M$ and let $U$ be an open neighbourhood of $q$. There exists a $\rho \in C^\infty(M)$ such that $\supp(\rho) \subseteq U$ and $\rho|_{\tilde{U}} \equiv 1$ on a neighbourhood $\tilde{U} \subseteq U$ of $q$. 
+\end{theorem}
+
+\begin{corollary}
+($C^\infty$ extension lemma for a point) Let $U$ be an open neighbourhood of a point $p \in M$ and suppose $f \in C^\infty(U)$. Then there exists an $\tilde{f} \in C^\infty(M)$ and an open neighbourhood $\tilde{U} \subseteq U$ of $p$ such that $\tilde{f}|_{\tilde{U}} = f |_{\tilde{U}}$. 
+\end{corollary}
+\begin{proof}
+Choose a $\rho \in C^\infty(M)$ such that $\supp(\rho) \subseteq U$ and $\rho|_{\tilde{U}} \equiv 1$ on a neighbourhood $\tilde{U} \subseteq U$ of $q$. Define
+\[
+\tilde{f}(x) = \begin{cases} 
+\rho(x)f(x), & x \in U \\
+0, & x \not\in U
+\end{cases}.
+\]
+The function $\tilde{f}$ is $C^\infty$ on $U$ because it is a product of $C^\infty$ functions on $U$. If $x \not\in U$, then in particular $x \not\in \supp(\rho)$, so we can find a neighbourhood $V$ of $p$ such that $\tilde{f}|_V \equiv 0$. That is, $\tilde{f}$ is also $C^\infty$ on $M \setminus U$, and clearly it is an extension since $\rho|_{\tilde{U}} \equiv 1$. Therefore the function $\tilde{f}$ is the desired extension.
+\end{proof}
+
+\begin{corollary}
+Let $F : N \to M$ be a continuous map of manifolds. Then $F$ is $C^\infty$ if and only if $F^*(C^\infty(M)) \subseteq C^\infty(N)$. (That is, if and only if $F$ pulls back $C^\infty$ functions to $C^\infty$ functions.)
+\end{corollary}
+\begin{proof}
+Suppose that $F^*(C^\infty(M)) \subseteq C^\infty(N)$. Let $(V, \psi) = (V, y^1, \dots, y^m)$ be a coordinate chart for $M$ intersecting the image of $F$. We wish to show that $y^i \circ F = F^*(y^i) \in C^\infty(V)$. While the coordinate function $y^i$ is $C^\infty$, it is merely a member of $C^\infty(V)$ and not $C^\infty(M)$. This is where extensions come in. There is, given $F(p) \in V$, a $\tilde{y^i} \in C^\infty(M)$ agreeing with $y^i$ on some open neighbourhood $\tilde{V} \subseteq V$ of $F(p)$. Since $\tilde{y^i} \in C^\infty(M)$, we have $\tilde{y^i} \circ F \in C^\infty(M)$. Since this function agrees with $y^i \circ F$ on $F^{-1}(\tilde{V})$, we have that $F$ is $C^\infty$ at $p$. Since $p \in N$ was arbitrary, $F$ is $C^\infty$. The other direction is obvious.
+\end{proof}
+
+\subsection{Partitions of Unity}
+
+\begin{definition}
+A $C^\infty$ partition of unity is a collection of nonnegative $C^\infty$ functions $\{\rho_\alpha\}_{\alpha \in A}$ such that
+\begin{enumerate}[(i)]
+\item The collection $\{\supp(\rho_\alpha)\}_{\alpha \in A}$ is locally finite.
+\item $\sum \rho_\alpha \equiv 1$. (Hence the name.)
+\end{enumerate}
+Note that the second condition makes sense because at each point, the sum is finite. If $\{U_\alpha\}_{\alpha \in A}$ is an open cover of $M$, we say that $\{\rho_\alpha\}_{\alpha \in A}$ is subordinate to $\{U_\alpha\}_{\alpha \in A}$ if $\supp(\rho_\alpha) \subseteq U_\alpha$ for each $\alpha \in A$.
+\end{definition}
+
+\begin{theorem}
+(Existence of partitions of unity) Let $\{U_\alpha\}_{\alpha \in A}$ be an open cover of $M$. 
+\begin{enumerate}[(i)]
+\item
+There is a $C^\infty$ partition of unity $\{\phi_k\}_{k=1}^\infty$ which is compactly supported such that for each $k$, there is some $\alpha \in A$ such that $\supp(\phi_k) \subseteq U_\alpha$.
+\item 
+There is a $C^\infty$ partition of unity $\{\rho_\alpha\}_{\alpha \in A}$ subordinate to $\{U_\alpha\}_{\alpha \in A}$.
+\end{enumerate}
+\end{theorem}
+
+\subsection{Applications}
+
+\begin{corollary}
+Let $A \subseteq M$ be closed and let $U$ be an open neighbourhood of $A$. Then there exists an $f \in C^\infty(M)$ such that $f|_A \equiv 1$ and $\supp(f) \subseteq U$.
+\end{corollary}
+\begin{proof}
+Consider the open cover $\{ U, M \setminus A \}$ of $M$. By (ii) of the existence theorem of partitions of unity, we can find a partition of unity $\{ \rho_1, \rho_2 \}$ which is subordinate to $\{U,M\setminus A\}$; say, $\supp(\rho_1) \subseteq U$ and $\supp(\rho_2) \subseteq M \setminus A$. Since $\rho_2 \equiv 0$ on $A$. $\rho_1 \equiv 1$ on $A$, so we may take $f = \rho_1$.
+\end{proof}
+
+In the preceding corollary, we call such a function $f$ a \emph{bump function for $A$ supported in $U$}. 
+
+We can use partitions of unity to discuss smooth functions on arbitrary subsets of manifolds. First, we define what it means for a function to be smooth on an arbitrary subset of a manifold. Then we see that, at least on closed sets, such smooth functions can be extended to the entire manifold.
+
+\begin{definition}
+Let $A \subseteq M$ be a subset of a smooth manifold and let $f : A \to \R$ be a function. If $p \in A$, we say that $f$ is $C^\infty$ at $p$ if there is an open neighbourhood $W_p$ of $p$ in $M$ and an $\tilde{f} \in C^\infty(W_p)$ such that $\tilde{f}|_{W_p\cap A} = f|_{W_p\cap A}$. We say that $f$ is $C^\infty$ on $A$ if this condition holds for all $p \in A$.
+\end{definition}
+
+\begin{theorem}
+($C^\infty$ extension lemma for a closed set) Let $A \subseteq M$ be closed and $f : A \to \R$ be a $C^\infty$ function on $A$ as just defined. If $U$ is any open neighbourhood of $A$ in $M$, then $f$ extends to a $C^\infty$ function on $M$ which is supported in $U$.
+\end{theorem}
+
+\begin{proof}
+For each $q \in A$ there is an open neighbourhood $W_q \subseteq U$ such that $f$ admits an extension $f_q \in C^\infty(W_q)$ agreeing with $f$ on $W_q \cap A$. Then the set $\{W_q : q \in A\} \cup \{ M \setminus A \}$ is an open covering of $M$. Choose a partition of unity $\{\rho_q : q \in A\} \cup \{\rho_0\}$ such that $\supp(\rho_q) \subseteq W_q$ and $\supp(\rho_0) \subseteq M \setminus A$. 
+
+The product function $\rho_q \cdot f_q$ is only defined on $W_q$, but we can extend it to all of $M$ smoothly by declaring it to be zero outside of $W_q$. This extension is well-defined because $\rho_q \cdot f_q$ is identically zero on the overlap $W_q \setminus \supp(\rho_q)$. It is $C^\infty$ because on $W_q$ it is a product of smooth functions, and outside $W_q$ it is identically zero in a neighbourhood of each point (by the definition of support). We will abuse notation and hereafter let $\rho_q \cdot f_q$ denote this smooth extension.
+
+Define $\tilde{f} : M \to \R$ by
+\[
+\tilde{f} = \sum_{q \in A} \rho_q \cdot f_q.
+\]
+This sum is well-defined by the local finiteness condition; at each point of $M$ all but finitely many of the $\rho_q$'s are zero, and so the sum is finite in a neighbourhood of every point. It is $C^\infty$ for the same reason. Note that since $\supp(\rho_0) \subseteq M \setminus A$, the function $\rho_0$ is identically $0$ on $A$, and so all of the other functions sum to $1$ on $A$. Therefore, if $x \in A$, then each $f_q(x) = f(x)$, so
+\[
+\tilde{f}(x) = \sum_{q \in A} \rho_q(x) \cdot f(x) = \left(\sum_{q \in A} \rho_q(x)\right)f(x) = 1 \cdot f(x) = f(x).
+\]
+So $\tilde{f}$ is actually an extension of $f$. Finally, 
+\begin{alignat*}{2}
+\supp(\tilde{f}) &= \overline{\bigcup_{q \in A} \supp(\rho_q \cdot f_q)}\\
+&= \bigcup_{q \in A} \overline{\supp(\rho_q \cdot f_q)}  \qquad &&\text{local finiteness} \\
+&= \bigcup_{q \in A}\supp(\rho_q \cdot f_q) \qquad &&\text{supports are closed} \\
+&\subseteq \bigcup_{q \in A}W_q \qquad &&\text{subordinate assumption} \\
+&\subseteq U, \qquad &&\text{each $W_q \subseteq U$ assumption} 
+\end{alignat*}
+where the last inclusion follows from the assumption that each $W_q$ was contained in $U$. Therefore $\tilde{f}$ is a smooth extension of $f$ to the entire manifold supported in $U$.
+\end{proof}
+
+Of course, we can ask the same questions for submanifolds.
+
+% mistake in the statement?
+\begin{theorem}
+\begin{enumerate}
+\item
+Let $S \subseteq M$ be a submanifold. Then $f \in C^\infty(S)$ if and only if $f$ is $C^\infty$ as a function on the subset $S$ of $M$, as defined earlier.
+
+\item
+Let $S \subseteq M$ be a smooth manifold and $f : S \to \R$ a function. If it is true that $f \in C^\infty(S)$ if and only if if $f$ is $C^\infty$ as a function on the subset $S$ of $M$, as defined earlier, then $S$ is a submanifold of $M$.
+\end{enumerate}
+
+\end{theorem}
+\begin{corollary}
+If $S \subseteq M$ is a closed submanifold, then any smooth function $f : S \to \R$ can be extended smoothly to all of $M$.
+\end{corollary}
+\begin{proof}
+$S$ is a closed subset of $M$ on which, by (1) of the preceding theorem, $f$ is $C^\infty$ according to the definition given earlier. By the $C^\infty$ extension lemma on a closed set, we may extend $f$ smoothly to all of $M$.
+\end{proof}
+
+\subsection{Whitney Embedding Theorem, Easy Case (Incomplete)}
+
+We now have the machinery necessary for stating and proving the Whitney Embedding Theorem in the case that the manifold is compact.
+
+\begin{theorem}
+Every smooth compact $n$-manifold may be embedded in $\R^{N}$, for some $N$.
+\end{theorem}
+\begin{proof}
+See Lee's smooth manifolds book, page 134, theorem 6.15.
+\end{proof}
+
+\end{document}

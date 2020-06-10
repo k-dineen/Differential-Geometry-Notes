@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Bump Functions, Partitions of Unity (June 9)}
+
+\subsection{Bump Functions}
+
+Hereafter, $M$ denotes a smooth manifold. We will present two of the fundamental tools in manifold theory: the bump function, and the partition of unity. They allow "local phenomena" to be translated to global phenomena. For example, the integration of a differential form on a manifold is first defined locally, and then extended to the entire manifold using a partition of unity.
+
+Bump functions allow us to, in particular, extend functions to an entire manifold. We will not (in lecture) cover the details of the construction of bump functions or of partitions of unity.
+
+\begin{theorem}
+(Existence of bump functions) Let $q \in M$ and let $U$ be an open neighbourhood of $q$. There exists a $\rho \in C^\infty(M)$ such that $\supp(\rho) \subseteq U$ and $\rho|_{\tilde{U}} \equiv 1$ on a neighbourhood $\tilde{U} \subseteq U$ of $q$. 
+\end{theorem}
+
+\begin{corollary}
+($C^\infty$ extension lemma for a point) Let $U$ be an open neighbourhood of a point $p \in M$ and suppose $f \in C^\infty(U)$. Then there exists an $\tilde{f} \in C^\infty(M)$ and an open neighbourhood $\tilde{U} \subseteq U$ of $p$ such that $\tilde{f}|_{\tilde{U}} = f |_{\tilde{U}}$. 
+\end{corollary}
+\begin{proof}
+Choose a $\rho \in C^\infty(M)$ such that $\supp(\rho) \subseteq U$ and $\rho|_{\tilde{U}} \equiv 1$ on a neighbourhood $\tilde{U} \subseteq U$ of $q$. Define
+\[
+\tilde{f}(x) = \begin{cases} 
+\rho(x)f(x), & x \in U \\
+0, & x \not\in U
+\end{cases}.
+\]
+The function $\tilde{f}$ is $C^\infty$ on $U$ because it is a product of $C^\infty$ functions on $U$. If $x \not\in U$, then in particular $x \not\in \supp(\rho)$, so we can find a neighbourhood $V$ of $p$ such that $\tilde{f}|_V \equiv 0$. That is, $\tilde{f}$ is also $C^\infty$ on $M \setminus U$, and clearly it is an extension since $\rho|_{\tilde{U}} \equiv 1$. Therefore the function $\tilde{f}$ is the desired extension.
+\end{proof}
+
+\begin{corollary}
+Let $F : N \to M$ be a continuous map of manifolds. Then $F$ is $C^\infty$ if and only if $F^*(C^\infty(M)) \subseteq C^\infty(N)$. (That is, if and only if $F$ pulls back $C^\infty$ functions to $C^\infty$ functions.)
+\end{corollary}
+\begin{proof}
+Suppose that $F^*(C^\infty(M)) \subseteq C^\infty(N)$. Let $(V, \psi) = (V, y^1, \dots, y^m)$ be a coordinate chart for $M$ intersecting the image of $F$. We wish to show that $y^i \circ F = F^*(y^i) \in C^\infty(V)$. While the coordinate function $y^i$ is $C^\infty$, it is merely a member of $C^\infty(V)$ and not $C^\infty(M)$. This is where extensions come in. There is, given $F(p) \in V$, a $\tilde{y^i} \in C^\infty(M)$ agreeing with $y^i$ on some open neighbourhood $\tilde{V} \subseteq V$ of $F(p)$. Since $\tilde{y^i} \in C^\infty(M)$, we have $\tilde{y^i} \circ F \in C^\infty(M)$. Since this function agrees with $y^i \circ F$ on $F^{-1}(\tilde{V})$, we have that $F$ is $C^\infty$ at $p$. Since $p \in N$ was arbitrary, $F$ is $C^\infty$. The other direction is obvious.
+\end{proof}
+
+\subsection{Partitions of Unity}
+
+\begin{definition}
+A $C^\infty$ partition of unity is a collection of nonnegative $C^\infty$ functions $\{\rho_\alpha\}_{\alpha \in A}$ such that
+\begin{enumerate}[(i)]
+\item The collection $\{\supp(\rho_\alpha)\}_{\alpha \in A}$ is locally finite.
+\item $\sum \rho_\alpha \equiv 1$. (Hence the name.)
+\end{enumerate}
+Note that the second condition makes sense because at each point, the sum is finite. If $\{U_\alpha\}_{\alpha \in A}$ is an open cover of $M$, we say that $\{\rho_\alpha\}_{\alpha \in A}$ is subordinate to $\{U_\alpha\}_{\alpha \in A}$ if $\supp(\rho_\alpha) \subseteq U_\alpha$ for each $\alpha \in A$.
+\end{definition}
+
+\begin{theorem}
+(Existence of partitions of unity) Let $\{U_\alpha\}_{\alpha \in A}$ be an open cover of $M$. 
+\begin{enumerate}[(i)]
+\item
+There is a $C^\infty$ partition of unity $\{\phi_k\}_{k=1}^\infty$ which is compactly supported such that for each $k$, there is some $\alpha \in A$ such that $\supp(\phi_k) \subseteq U_\alpha$.
+\item 
+There is a $C^\infty$ partition of unity $\{\rho_\alpha\}_{\alpha \in A}$ subordinate to $\{U_\alpha\}_{\alpha \in A}$.
+\end{enumerate}
+\end{theorem}
+
+\subsection{Applications}
+
+\begin{corollary}
+Let $A \subseteq M$ be closed and let $U$ be an open neighbourhood of $A$. Then there exists an $f \in C^\infty(M)$ such that $f|_A \equiv 1$ and $\supp(f) \subseteq U$.
+\end{corollary}
+\begin{proof}
+Consider the open cover $\{ U, M \setminus A \}$ of $M$. By (ii) of the existence theorem of partitions of unity, we can find a partition of unity $\{ \rho_1, \rho_2 \}$ which is subordinate to $\{U,M\setminus A\}$; say, $\supp(\rho_1) \subseteq U$ and $\supp(\rho_2) \subseteq M \setminus A$. Since $\rho_2 \equiv 0$ on $A$. $\rho_1 \equiv 1$ on $A$, so we may take $f = \rho_1$.
+\end{proof}
+
+In the preceding corollary, we call such a function $f$ a \emph{bump function for $A$ supported in $U$}. 
+
+We can use partitions of unity to discuss smooth functions on arbitrary subsets of manifolds. First, we define what it means for a function to be smooth on an arbitrary subset of a manifold. Then we see that, at least on closed sets, such smooth functions can be extended to the entire manifold.
+
+\begin{definition}
+Let $A \subseteq M$ be a subset of a smooth manifold and let $f : A \to \R$ be a function. If $p \in A$, we say that $f$ is $C^\infty$ at $p$ if there is an open neighbourhood $W_p$ of $p$ in $M$ and an $\tilde{f} \in C^\infty(W_p)$ such that $\tilde{f}|_{W_p\cap A} = f|_{W_p\cap A}$. We say that $f$ is $C^\infty$ on $A$ if this condition holds for all $p \in A$.
+\end{definition}
+
+\begin{theorem}
+($C^\infty$ extension lemma for a closed set) Let $A \subseteq M$ be closed and $f : A \to \R$ be a $C^\infty$ function on $A$ as just defined. If $U$ is any open neighbourhood of $A$ in $M$, then $f$ extends to a $C^\infty$ function on $M$ which is supported in $U$.
+\end{theorem}
+
+\begin{proof}
+For each $q \in A$ there is an open neighbourhood $W_q \subseteq U$ such that $f$ admits an extension $f_q \in C^\infty(W_q)$ agreeing with $f$ on $W_q \cap A$. Then the set $\{W_q : q \in A\} \cup \{ M \setminus A \}$ is an open covering of $M$. Choose a partition of unity $\{\rho_q : q \in A\} \cup \{\rho_0\}$ such that $\supp(\rho_q) \subseteq W_q$ and $\supp(\rho_0) \subseteq M \setminus A$. 
+
+The product function $\rho_q \cdot f_q$ is only defined on $W_q$, but we can extend it to all of $M$ smoothly by declaring it to be zero outside of $W_q$. This extension is well-defined because $\rho_q \cdot f_q$ is identically zero on the overlap $W_q \setminus \supp(\rho_q)$. It is $C^\infty$ because on $W_q$ it is a product of smooth functions, and outside $W_q$ it is identically zero in a neighbourhood of each point (by the definition of support). We will abuse notation and hereafter let $\rho_q \cdot f_q$ denote this smooth extension.
+
+Define $\tilde{f} : M \to \R$ by
+\[
+\tilde{f} = \sum_{q \in A} \rho_q \cdot f_q.
+\]
+This sum is well-defined by the local finiteness condition; at each point of $M$ all but finitely many of the $\rho_q$'s are zero, and so the sum is finite in a neighbourhood of every point. It is $C^\infty$ for the same reason. Note that since $\supp(\rho_0) \subseteq M \setminus A$, the function $\rho_0$ is identically $0$ on $A$, and so all of the other functions sum to $1$ on $A$. Therefore, if $x \in A$, then each $f_q(x) = f(x)$, so
+\[
+\tilde{f}(x) = \sum_{q \in A} \rho_q(x) \cdot f(x) = \left(\sum_{q \in A} \rho_q(x)\right)f(x) = 1 \cdot f(x) = f(x).
+\]
+So $\tilde{f}$ is actually an extension of $f$. Finally, 
+\begin{alignat*}{2}
+\supp(\tilde{f}) &= \overline{\bigcup_{q \in A} \supp(\rho_q \cdot f_q)}\\
+&= \bigcup_{q \in A} \overline{\supp(\rho_q \cdot f_q)}  \qquad &&\text{local finiteness} \\
+&= \bigcup_{q \in A}\supp(\rho_q \cdot f_q) \qquad &&\text{supports are closed} \\
+&\subseteq \bigcup_{q \in A}W_q \qquad &&\text{subordinate assumption} \\
+&\subseteq U, \qquad &&\text{each $W_q \subseteq U$ assumption} 
+\end{alignat*}
+where the last inclusion follows from the assumption that each $W_q$ was contained in $U$. Therefore $\tilde{f}$ is a smooth extension of $f$ to the entire manifold supported in $U$.
+\end{proof}
+
+Of course, we can ask the same questions for submanifolds.
+
+% mistake in the statement?
+\begin{theorem}
+\begin{enumerate}
+\item
+Let $S \subseteq M$ be a submanifold. Then $f \in C^\infty(S)$ if and only if $f$ is $C^\infty$ as a function on the subset $S$ of $M$, as defined earlier.
+
+\item
+Let $S \subseteq M$ be a smooth manifold and $f : S \to \R$ a function. If it is true that $f \in C^\infty(S)$ if and only if if $f$ is $C^\infty$ as a function on the subset $S$ of $M$, as defined earlier, then $S$ is a submanifold of $M$.
+\end{enumerate}
+
+\end{theorem}
+\begin{corollary}
+If $S \subseteq M$ is a closed submanifold, then any smooth function $f : S \to \R$ can be extended smoothly to all of $M$.
+\end{corollary}
+\begin{proof}
+$S$ is a closed subset of $M$ on which, by (1) of the preceding theorem, $f$ is $C^\infty$ according to the definition given earlier. By the $C^\infty$ extension lemma on a closed set, we may extend $f$ smoothly to all of $M$.
+\end{proof}
+
+\subsection{Whitney Embedding Theorem, Easy Case (Incomplete)}
+
+We now have the machinery necessary for stating and proving the Whitney Embedding Theorem in the case that the manifold is compact.
+
+\begin{theorem}
+Every smooth compact $n$-manifold may be embedded in $\R^{N}$, for some $N$.
+\end{theorem}
+\begin{proof}
+See Lee's smooth manifolds book, page 134, theorem 6.15.
+\end{proof}
+
+\end{document}
+  
+
+  
