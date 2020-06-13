@@ -1,0 +1,121 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Equivalence of Regular and Embedded Submanifolds (June 2)}
+
+\subsection{Regular Submanifolds}
+
+Recall the definition of a regular submanifold.
+\begin{definition}
+Let $M$ be a smooth manifold. $S \subseteq M$ is a regular submanifold of dimension $k$ if for each $p \in S$ there is a chart $(U, \phi) = (U, x^1, \dots, x^n)$ for $M$ at $p$ such that $U \cap S$ is defined by the vanishing of exactly $n-k$ of the coordinates (we will usually take these to be the last such coordinates). Such a chart is called an adapted chart relative to $S$.
+\end{definition}
+If $\{(U, \phi)\}$ is an atlas for $M$ of adapted charts relative to $S$, then it is not hard to see that $\{(U \cap S, \phi_S)\}$ is an atlas for $S$ in the subspace topology, where $\phi_S := \pi \circ \phi|_S$. Therefore $S$ is a smooth manifold of dimension $k$.
+
+A regular submanifold "inherits" the smooth structure from $M$ in the following sense:
+\begin{proposition}
+If $f : M \to \R$ is $C^\infty$ and $S \subseteq M$ is a regular submanifold, then $f|_S : S \to \R$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+For any adapted chart $(U, \phi)$ relative to $S$, $f \circ \phi^{-1}$ is $C^\infty$. Then $f \circ \phi_S^{-1}$ is $C^\infty$, since it is the composition $f \circ \phi^{-1} \circ g$, where $g : (x^1, \dots, x^k) \mapsto (x^1, \dots, x^k, 0, \dots, 0)$ is the "canonical immersion".
+\end{proof}
+
+For example, consider a $C^\infty$ function $f : \R \to \R$. Then $\Gamma_f$ becomes a smooth manifold with the atlas $\{(\Gamma_f, \pi)\}$, where $\pi : (x,f(x)) \mapsto x$. For an open set $U \subseteq \R^2$ intersecting $\Gamma_f$, define $\psi : U \to \R^2$ by $\psi(x,y) = (x, y-f(x))$. Then $\psi$ is a local diffeomorphism, which implies that, after shrinking $U$, the pair $(U, \psi)$ is a coordinate chart belonging to the standard smooth structure on $\R^2$. Moreover, $\Gamma_f \cap U$ is defined by the vanishing of the last coordinate of $\psi$, so $(U, \psi)$ is an adapted chart relative to $\Gamma_f$. We can do this at any point of $\Gamma_f$, so we can conclude that $\Gamma_f$ is a regular submanifold of $\R^2$ of dimension $1$.
+
+What is the tangent space to a regular submanifold $S \subseteq M$? Note that we cannot write $T_pS \subseteq T_pM$, since the elements are not even the same. However, if $v \in T_pS$, there is a unique $\tilde{v} \in T_pM$ such that for any $f \in C_p^\infty(M)$, $\tilde{v}(f) = v(f|_S)$. (Uniqueness is immediate, and existence follows by defining $\tilde{v}$ by that formula.) Let $\Phi$ be the map $v \mapsto \tilde{v}$. Linearity is obvious, and for injectivity, suppose $\Phi(v) = \tilde{v} = 0$. Fix an adapted chart $(U, x^1, \dots, x^n)$ at $p$, so that if $y^i = x^i|_S$, then $(U \cap S, y^1, \dots, y^k)$ is a chart on $S$ at $p$. Then $\{\left. \frac{\pd}{\pd y^i}\right|_p\}$ is a basis of $T_pS$, so
+\[
+v = \sum v(y^i)\left. \frac{\pd}{\pd y^i}\right|_p = \sum v(x^i|_S)\left. \frac{\pd}{\pd y^i}\right|_p = \sum \tilde{v}(x^i)\left. \frac{\pd}{\pd y^i}\right|_p = 0,
+\]
+so $\Phi$ is injective. Therefore we may think of the $k$-dimensional subspace $\Phi(T_pS) \subseteq T_pM$ as "$T_pS$ living inside $T_pM$".
+
+\subsection{Embedded Submanifolds}
+
+Recall the definition of an embedded submanifold.
+\begin{definition}
+Let $M$ be a smooth manifold. $S \subseteq M$ is an embedded submanifold of dimension $k$ if it is a smooth manifold of dimension $k$ such that the inclusion map $i : S \hookrightarrow M$ is an embedding (topological embedding and an immersion).
+\end{definition}
+
+Let $M$ be a smooth manifold and $S \subseteq M$ a subset which is also a smooth manifold. Is it true that the inclusion $i : S \hookrightarrow M$ is $C^\infty$? Not always. Consider the case $\Gamma_f$ for $f(x) = |x|$. Then $\Gamma_f$ is a smooth manifold and a subset of the smooth manifold $\R^2$, but the inclusion $\Gamma_f \hookrightarrow \R^2$ is not smooth.
+
+Give $S$ the subspace topology, so that $i : S \hookrightarrow M$ is a topological embedding. Suppose $S$ is equipped with a smooth structure such that $i$ is $C^\infty$. We claim that $i$ is then an embedding, in the sense that, in addition to being a topological embedding, it is an immersion. (The proof will be a homework exercise.)
+
+An embedded submanifold "inherits" the smooth structure from $M$ in the following sense:
+\begin{proposition}
+If $f : M \to \R$ is $C^\infty$ and $S \subseteq M$ is an embedded submanifold, then $f|_S : S \to \R$ is $C^\infty$.
+\end{proposition}
+\begin{proof}
+$f|_S = f \circ i$.
+\end{proof}
+
+What is the tangent space to an embedded submanifold $S \subseteq M$? The inclusion $i : S \hookrightarrow M$ has injective differential $i_{*,p} : T_pS \to T_pM$, and so we can think of the $k$-dimensional subspace $i_{*,p}(T_pS) \subseteq T_pM$ as "$T_pS$ living inside $T_pM$". Moreover, in reference to the tangent space of a regular submanifold, we have $i_{*,p} = \Phi$, since
+\[
+i_{*,p}(v)(f) = v(f \circ i) = v(f|_S) = \tilde{v}(f)
+\]
+for every $f \in C_p^\infty(M)$ and $v \in T_pS$.
+
+\subsection{Equivalence of the Two}
+
+After noticing the similarities between regular and embedded submanifolds, one might ask whether or not they are the same. The answer is yes.
+\begin{theorem}
+Let $M$ be a smooth manifold and $S \subseteq M$. $S$ is a regular submanifold of dimension $k$ if and only if $S$ is an embedded submanifold of dimension $k$.
+\end{theorem}
+\begin{proof}
+Suppose $S$ is a regular submanifold of dimension $k$. It is given the subspace topology, so $i : S \hookrightarrow M$ is a topological embedding. Let $(U, \phi)$ be an adapted chart relative to $S$. Then $(U \cap S, \phi_S)$ is a coordinate chart on $S$. The coordinate representation of $i$ in these two charts is
+\[
+\phi \circ i \circ \phi_S^{-1} : (x^1, \dots, x^k) \mapsto (x^1, \dots, x^k, 0, \dots, 0),
+\]
+since $U \cap S$ is defined by the vanishing of the last $n-k$ coordinates. In this form it is clear that $i : S \hookrightarrow M$ is an immersion, so $S$ is an embedded submanifold.
+
+The converse follows from the following slightly more general proposition.
+\end{proof}
+\begin{proposition}
+If $f : N \to M$ is an embedding, then $f(N)$ is a regular submanifold of $M$.
+\end{proposition}
+\begin{proof}
+Let $p \in N$. By the immersion theorem, we can find coordinate charts $(U, \phi) = (U, x^1, \dots, x^n)$ at $p$ and $(V, \psi) = (V, y^1, \dots, y^m)$ at $f(p)$ with respect to which $f$, in coordinates, takes on the form
+\[
+\psi \circ f \circ \phi^{-1} : \phi(U \cap f^{-1}(V)) \to \R^m, \qquad(x^1, \dots, x^n) \mapsto (x^1, \dots, x^n, 0, \dots, 0).
+\]
+By possibly shrinking $U$, assume that $f(U) \subseteq V$. We may do this by replacing $U$ with $U \cap f^{-1}(V)$, which is open in $N$; we will still have a coordinate chart at $p$ and the above identity will still hold.
+
+We show that $f(U)$ is defined by the vanishing of $y^{n+1}, \dots, y^m$. More precisely, that
+\[
+f(U) = \{ z \in V : y^{n+1}(z) = \cdots = y^m(z) = 0 \}.
+\]
+Suppose $q \in U$. Then $f(q)$ satisfies $\psi(f(q)) = (\psi \circ f \circ \phi^{-1})(\phi(q))$, of which the last $m-n$ coordinates vanish. This proves the $\subseteq$ inclusion. Conversely, suppose $z \in V$ satisfies $y^{n+1}(z) = \cdots = y^m(z) = 0$. Then $\psi(z)$ is in the image of $\psi \circ f \circ \phi^{-1}$ because of the vanishing of the last $m-n$ coordinates, so there is a $q \in \phi(U)$ such that $(\psi \circ f \circ \phi^{-1})(q) = \psi(z)$, implying $z = f(\phi^{-1}(q)) \in f(U)$. This proves the $\supseteq$ inclusion, and completes the proof that $f(U)$ is defined by the vanishing of $y^{n+1}, \dots, y^m$.
+
+Since $f$ is a homeomorphism onto its image, $f(U)$ is open in the subspace topology on $f(N)$, so we can find an open set $W$ of $M$ such that $f(U) = W \cap f(N)$. Then
+\begin{align*}
+(V \cap W) \cap f(N) &= V \cap f(U) \\
+&= f(U) \qquad \text{(because we made } f(U) \subseteq V)
+\end{align*}
+is defined by the vanishing of $y^{n+1}, \dots, y^m$, which implies that $(V \cap W, y^1, \dots,  y^m)$ is an adapted chart at $f(p)$ relative to $f(N)$. Therefore $f(N)$ is a regular submanifold of $M$, of the same dimension as $N$.
+\end{proof}
+
+Therefore \emph{embedded submanifolds and regular submanifolds are one and the same thing.}
+
+\end{document}
+  
+
+  
