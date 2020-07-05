@@ -1,0 +1,159 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Lie Groups and Algebras (Additional Reading, Incomplete)}
+
+We will write the group operation for an arbitrary Lie group as multiplication, but in some cases (e.g. $\R^n$) we will use addition when necessary.
+
+\subsection{Motivation and Definitions}
+
+A Lie group is a manifold with a group structure such that the group operations of multiplication and inversion are smooth. We can think of Lie groups as the smooth analogue of topological groups; topological spaces with continuous group multiplication and inversion. A Lie group is a "homogeneous" space, in the sense that left-multiplication by a fixed element is a diffeomorphism of the group with itself and so, in some sense, the group is locally everywhere the same. More precisely, if $G$ is a Lie group, $g \in G$, and $\ell_g : G \to G$ is left-multiplication by $g$, then $\ell_g$ is a diffeomorphism of $G$ with itself taking the identity element $e$ to $g$. Therefore, in the study of Lie groups, it suffices to study the properties of the group at the identity. We now make these notions precise.
+
+\begin{definition}
+A Lie group is a smooth manifold $G$ equipped with a group structure such that multiplication
+\[
+\mu : G \times G \to G \qquad (g, h) \mapsto gh
+\]
+and inversion
+\[
+\i : G \to G \qquad g \mapsto g^{-1}
+\]
+are smooth.
+\end{definition}
+Since $\ell_g^{-1} = \ell_{g^{-1}}$, left-multiplication is a diffeomorphism of $G$ with itself, and similarly for right-multiplication. We have the following equivalent condition for being a Lie group.
+
+\begin{proposition}
+$G$ is a Lie group if and only if the map $k : G \times G \to G$ defined by $k(g,h) = gh^{-1}$ is smooth.
+\end{proposition}
+\begin{proof}
+If $G$ is a Lie group, then $k = \mu \circ (\mathrm{id}_G, \i)$ is smooth. Conversely, if $k$ is smooth, then $\i = k \circ (e, \mathrm{id}_G)$ is smooth and $\mu = k \circ (\mathrm{id}_G, \i)$ is smooth, where $e$ denotes the identity element of $G$.
+\end{proof}
+
+\begin{definition}
+A Lie subgroup of the Lie group $G$ is an immersed submanifold $H$ that is also a subgroup such that the group operations on $H$ are smooth.
+\end{definition}
+
+We must impose the condition that the group operations on $H$ are smooth; $H$ is merely an immersed submanifold, so it does not follow that the group operations on $H$ are smooth. If $H$ is embedded then this is the case, which is the content of the following theorem. First, recall the following technical lemma.
+
+\begin{lemma}
+Let $F : N \to M$ be a smooth map and let $S$ be a subset of $M$ containing $F(N)$. If $S$ is a regular submanifold of $M$, then the restriction of the codomain of $F$ to $S$ is smooth.
+\end{lemma}
+\begin{proof}
+For convenience, denote by $\tilde{F} : N \to S$ the map obtained by restricting the codomain of $F$. Let $p \in N$, and suppose the dimensions of $N,M,S$ are $n,m,s$, respectively. Choose a slice chart $(V, \psi) = (V, y^1, \dots, y^m)$ on $M$ at $F(p)$ such that $V \cap S$ is defined by the vanishing of $y^{s+1},\dots,y^m$. Let $\psi_S = (y^1, \dots, y^s)$ be the induced coordinate chart on $S$ at $F(p)$. Choose an open neighbourhood $U$ of $p$ with $F(U) \subseteq V$. Then $F(U) \subseteq V \cap S$, so if $q \in U$ we have
+\[
+(\psi \circ F)(q) = (y^1(F(q)), \dots, y^s(F(q)), 0, \dots, 0),
+\]
+so on $U$ we have
+\[
+\psi_S \circ \tilde{F} = (y^1 \circ F, \dots, y^s \circ F).
+\]
+Thus $\tilde{F}$ is smooth on $U$. Since $p$ was arbitrary, $\tilde{F}$ is smooth.
+\end{proof}
+
+For a counterexample of the preceding lemma in the case of an immersed submanifold, consider a parametrization of the figure eight in $\R^2$.
+
+\begin{theorem}
+If $H$ is an abstract subgroup of the Lie group $G$ and is also an embedded submanifold of $G$, then $H$ is a Lie subgroup of $G$.
+\end{theorem}
+\begin{proof}
+Embedded submanifolds are immersed submanifolds, so all we have to check is the smoothness of the operations on $H$. Let $i : H \hookrightarrow G$ be the inclusion map. Then multiplication on $H$ is given by $\mu \circ (i, i)$, where $\mu$ is the multiplication on $G$. The image of this map lies in the regular submanifold $H$, so restricting the codomain leaves us with the multiplication on $H$. This is smooth by the preceding lemma, since $H$ is an embedded submanifold. Similarly for the inversion map on $H$.
+\end{proof}
+
+We have the following important theorem, due to Cartan, which provides us with many examples of Lie groups.
+
+\begin{theorem}
+(Closed subgroup theorem) A closed subgroup of a Lie group is an embedded Lie subgroup.
+\end{theorem}
+
+\subsection{Examples of Lie Groups}
+
+\begin{enumerate}
+\item
+$\R^n$ with addition.
+\item
+$\R^*$, the non-zero real numbers, with multiplication.
+\item
+The (direct) product of Lie groups is another Lie group.
+\item
+$\C \setminus \{0\}$ with complex multiplication, and its embedded Lie subgroup $S^1$. $\C \setminus \{0\}$ is a Lie group for obvious reasons, and $S^1$ is an embedded Lie subgroup by either the closed subgroup theorem, or the theorem above.
+\item
+$\mathrm{Mat}_{n \times n}(\R)$ with matrix multiplication, and similarly $\mathrm{Mat}_{n \times n}(\C)$. This can be proven by identifying with $\R^{n^2}$ and $\C^{n^2}$, respectively.
+\item
+$GL(n, \R)$ is an abstract subgroup of $\mathrm{Mat}_{n \times n}(\R)$ and an embedded submanifold, since it is an open set, so $GL(n,\R)$ is an embedded Lie subgroup of $G$. Similarly with $\R$ replaced by $\C$.
+\item
+The orthogonal group $O(n)$ and the special linear group $SL(n, \R)$ are embedded Lie subgroups of $GL(n, \R)$, since they are embedded submanifolds and abstract subgroups. The unitary group $U(n)$ and the complex special linear group $SL(n, \C)$ are embedded Lie subgroups of $GL(n, \C)$ for similar reasons.
+\end{enumerate}
+
+\subsection{The Differential of det at I}
+
+To compute the differential of a map on a subgroup of $GL(n, \R)$, we need a curve of invertible matrices. Since $\det(e^X) = e^{\mathrm{Tr}(X)}$, the matrix exponential is useful for this purpose.
+
+Consider the determinant $\det : GL(n, \R) \to \R$. It is a smooth map because it is given by a polynomial. After the usual identifications, its differential at the identity is a map $\det_{*, I} : \R^{n \times n} \to \R$.
+
+\begin{theorem}
+$\det_{*,I}(X) = \mathrm{Tr}(X)$.
+\end{theorem}
+\begin{proof}
+Let $c(t) = e^{tX}$. Then $c$ is a smooth curve starting at $I$ with $c'(0) = X$. Therefore
+\begin{align*}
+\det_{*,I}(X) = \left. \frac{d}{dt} \right|_{t = 0} \det(e^{tX}) = \left. \frac{d}{dt} \right|_{t = 0} e^{t \mathrm{Tr}(X)} = \mathrm{Tr}(X). 
+\end{align*}
+\end{proof}
+
+\subsection{Some Properties of Lie Groups}
+
+It is possible to do the next exercise without invoking the closed subgroup theorem, but I would like to give an example of its application (due to the relative lack of content thus far).
+
+\begin{theorem}
+(Exercise 15.3, slight variation) The connected component of a Lie group $G$ containing the identity is an embedded Lie subgroup.
+\end{theorem}
+\begin{proof}
+Let $G_0$ be the connected component of $G$ which contains $e$. Let $\mu : G \times G \to G$ be multiplication and $\i : G \to G$ be inversion. These are both continuous maps. Fix $x \in G_0$. The image $\mu(\{x\} \times G_0)$ is connected, and it intersects $G_0$ because $\mu(x,e) = x \in G_0$. (This is where $e \in G_0$ is used.) Therefore $\mu(\{x\} \times G_0) \subseteq G_0$ and similarly $\i(G_0) \subseteq G_0$. It follows that $G_0$ is a subgroup of $G$. 
+
+Since $G$ is a manifold, it is locally connected and thus the connected components of $G$ are open. Then $G \setminus G_0$ is either empty or the union of the other connected components of $G$, so $G_0$ is closed. Then $G_0$ is a closed subgroup of $G$, so by the closed subgroup theorem $G_0$ is an embedded Lie subgroup of $G$. (To prove this without invoking the closed subgroup theorem, note that $G_0$ is open and so it is an embedded submanifold of $G$, so by the theorem directly following the statement of the closed subgroup theorem, it is an embedded Lie subgroup.)
+\end{proof}
+It is not hard to see that every connected component of a Lie group $G$ is of the form $gG_0$ for some $g \in G$.
+
+The following property holds for the more general topological group, whose space is merely a topological space and whose group operations are continuous with respect to the group's topology.
+
+\begin{theorem}
+(Exercise 15.4) An open subgroup $H$ of a connected Lie group $G$ is equal to $G$.
+\end{theorem}
+\begin{proof}
+$H$ is a subgroup, so it contains the identity $e$ of $G$ and is thus non-empty, so to show $H = G$ it suffices to show that $H$ is closed. If $g \in G \setminus H$, then $gH$ is an open neighbourhood of $g$ disjoint from $H$ (because the cosets partition the group). Therefore $G$ is nonempty, open, and closed, so we must have $H = G$.
+\end{proof}
+
+\subsection{The Tangent Space at I}
+(Finish this and the following sections.)
+\subsection{Left-Invariant Vector Fields}
+\subsection{Lie Algebras}
+\subsection{The Differential as a Lie Algebra Homomorphism}
+
+\end{document}
+  
+
+  
