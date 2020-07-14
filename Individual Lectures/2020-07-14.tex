@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{cancel}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Frobenius' Theorem in the Language of Bundles (July 14)}
+
+\subsection{What We've Done}
+
+Let us recall what we worked on last time, along with some corollaries. (Note that the "frame" terminology we used last lecture was not used in the standard way, so from now on we will avoid it.)
+
+\begin{theorem}
+Let $X_1, \dots, X_k$ be smooth linearly independent vector fields satisfying $[X_i, X_j] = 0$ for $1 \leq i, j \leq k$. Then for each $p \in M$, there is a coordinate chart $(U, x^1, \dots, x^n)$ at $p$ such that $X_i = \frac{\pd}{\pd x^i}$ for $i = 1, \dots, k$. The converse holds.
+
+Moreover, $S = \{x^{k+1} = \cdots = x^n = 0\}$ is a $k$-dimensional integral submanifold of $X_1, \dots, X_k$ containing $p$.
+
+Even better, $S^* = \{x^{k+1} = a^{k+1}, \dots, x^n = a^n\}$ for appropriate constants $a^{k+1}, \dots, x^n \in \R$ is also an integral submanifold of $X_1, \dots, X_k$. 
+\end{theorem}
+The $S^*$'s are an example of a $k$-dimensional foliation of $U$. A foliation of a manifold can be thought of as a partition of the manifold by lower dimensional submanifolds that "fit together nicely". This notion will be made precise later.
+
+If $k = 1$, then all of this follows from the fundamental theorem of flows.
+
+\subsection{Frobenius' Theorem in the Language of Vector Fields}
+
+The property that $X_1, \dots, X_k$ is necessary and sufficient for them to be coordinate vector fields, but it is not necessary for the existence of integral submanifolds.
+
+\begin{proposition}
+Let $S$ be an integral submanifold of the linearly independent $X_1, \dots, X_k \in \mathfrak{X}(M)$. Then
+\[
+[X_i, X_j] = \sum_{\ell = 1}^k a^\ell_{ij} X_\ell
+\]
+for some $a^\ell_{ij} \in C^\infty(U)$ and for any $1 \leq i,j \leq n$.
+\end{proposition}
+\begin{proof}
+This is an assignment problem.
+\end{proof}
+
+This property above is also sufficient for the existence of integral submanifolds.
+
+\begin{lemma}
+Let $X_1, \dots, X_k$ be smooth linearly independent vector fields which satisfy the conclusion of the preceding proposition. Then for each $p \in M$, there is a neighbourhood $U$ of $p$ and $Y_1, \dots, Y_k \in \mathfrak{X}(U)$ such that $[Y_i, Y_j] = 0$ for $1 \leq i,j \leq k$ and $\mathrm{span}(\{ (Y_1)_q, \dots, (Y_k)_q \}) = \mathrm{span}(\{ (X_1)_q, \dots, (X_k)_q \})$ for all $q \in U$.
+\end{lemma}
+
+With the preceding proposition and lemma in mind, we have Frobenius' theorem. However, the language used to state it is rather clunky, so we will develop some language that will allow us to state Frobenius' theorem very nicely in the language of subbundles of the tangent bundle.
+
+\subsection{Subbundles}
+
+Choose a $k$-dimensional subspace $\Delta_p \subseteq T_pM$ at each point $p \in M$. Does there exist a $k$-dimensional submanifold $S$ of $M$ such that $\Delta_q = T_qS$ for all $q \in S$? (Here, we abuse notation and write $T_qS$ to mean $i_{*,q}(T_qS)$ rather than $T_qS$, as the former is actually a subspace of $T_qM$.) The answer is not always.
+
+Let $\Delta = \bigcup_{p \in M} \Delta_p$. Then $\Delta$ is a subset of $TM$. We call $\Delta$ a \emph{rank-$k$ distribution of $M$}, or alternatively, a \emph{rank-$k$ subbundle of $TM$}.
+
+\begin{definition}
+$\Delta \subseteq TM$ is a \emph{rank-$k$ subbundle of $TM$} if $\Delta_q = \pi|_\Delta^{-1}(\{q\})$ is a $k$-dimensional subspace of $T_qM$, for all $q \in M$. We say that $\Delta$ is a \emph{$C^\infty$ rank-$k$ subbundle} if $\pi|_\Delta : \Delta \to M$ is smooth.
+\end{definition}
+
+This definition of smoothness of a subbundle of $TM$ is rather clunky and hard to use. We will develop an equivalent notion which is much easier to work with.
+
+\begin{definition}
+A \emph{section of $\Delta$} is a map $X : M \to \Delta$ such that $\pi \circ X = \mathrm{id}$. We denote by $\Gamma(\Delta)$ the space of all smooth sections of $\Delta$. 
+\end{definition}
+
+We will see later on an assignment that $\Delta$ will be a submanifold of $TM$. (Of what dimension?)
+
+\begin{proposition}
+(Local frame criterion for subbundles)
+A rank-$k$ subbundle $\Delta$ of $TM$ is $C^\infty$ if and only if for all $p \in M$, there is a neighbourhood $U$ of $p$ and $X_1, \dots, X_K \in \mathfrak{X}(U)$ such that $\{ (X_1)_q, \dots, (X_k)_q \}$ forms a basis for $\Delta_q$, for every $q \in U$. (We call such a collection $X_1, \dots, X_k$ a local basis of $\Delta$.)
+\end{proposition}
+
+We will also call a $C^\infty$ subbundle of $TM$ a \emph{(smooth) distribution}.
+
+\begin{definition}
+A $C^\infty$ rank-$k$ subbundle $\Delta$ is said to be involutive if for every $p \in M$, there is a neighbourhood $U$ of $p$ in $M$ and a local basis $X_1, \dots, X_k$ defined on $U$ such that
+\[
+[X_i, X_k] = \sum_{\ell = 1}^k a^\ell_{ij} X_\ell
+\]
+for some $a^\ell_{ij} \in C^\infty(U)$ and for all $1 \leq i, j \leq k$. 
+\end{definition}
+Alternatively, $\Delta$ is involutive if the Lie bracket of any pair of smooth local sections of $\Delta$ is again a smooth local section of $\Delta$. A \emph{smooth local section of $\Delta$} is a smooth map $\sigma : U \to \Delta$ defined on an open set $U \subseteq M$ with $\pi \circ \sigma = \mathrm{id}$.
+
+The following is an algebraic characterization of involutivity. The proof is very easy.
+
+\begin{proposition}
+$\Delta$ is involutive if and only if $\Gamma(\Delta)$ is a Lie subalgebra of $\Gamma(TM)$.
+\end{proposition}
+\begin{proof}
+If $\Delta$ is involutive, then it is closed under the Lie bracket. Since $\Gamma(\Delta)$ is also a vector subspace of $\Gamma(TM)$, $\Gamma(\Delta)$ is a Lie subalgebra of $\Gamma(TM)$.
+
+Suppose conversely that $\Gamma(\Delta)$ is closed under the Lie bracket. Let $X, Y$ be smooth local sections of $\Delta$ defined on an open set $U$ in $M$. Given $p \in M$, choose a bump function $\rho \in C^\infty(M)$ which is identically $1$ on a neighbourhood $V \subseteq U$ of $p$ and is supported in $U$. Then $\rho X, \rho Y$ are smooth global sections of $\Delta$, so $[\rho X, \rho Y]$ is also a smooth global section of $\Delta$ by hypothesis. We have
+\[
+[\rho X, \rho Y] = \rho^2 [X, Y] + \rho (X\rho)Y - \rho (Y\rho)X,
+\]
+which equals $[X,Y]$ on $V$. Thus $[X,Y]_p \in \Delta_p$. Therefore $[X,Y]$ is a smooth local section of $\Delta$, implying that $\Delta$ is involutive.
+\end{proof}
+
+\subsection{Frobenius' Theorem in the Language of Bundles}
+
+\begin{definition}
+A $C^\infty$ distribution $\Delta$ of rank $k$ is said to be integrable if for all $p \in M$, there is an integral submanifold $S$ of $\Delta$ containing $p$. (That is, $T_qS = \Delta_q$ for all $q \in S$.)
+\end{definition}
+
+\begin{definition}
+A $C^\infty$ rank-$k$ distribution $\Delta$ is said to be completely integrable if for all $p \in M$, there is a "flat chart" $(U, \phi)$ of $M$ at $p$: $\frac{\pd}{\pd x^i}$ is a local basis of $\Delta$.
+
+If this is true, then each $S = \{ x^{k+1} = a^{k+1}, \dots, x^n = a^n \}$ is an integral submanifold for $\Delta$, for appropriately chosen constants $a^{k+1}, \dots, a^n \in \R$.
+\end{definition}
+
+Complete integrability implies integrability by our previous work. We have the following proposition.
+
+\begin{proposition}
+Every integrable distribution is involutive.
+\end{proposition}
+\begin{proof}
+Let $\Delta$ be a smooth rank-$k$ distribution that is integrable. Let $X,Y$ be smooth local sections of $\Delta$ defined on an open set $U$. Given $p \in M$, let $S$ be an integral submanifold of $\Delta$ containing $p$. Then $X_p, Y_p \in T_pS$, which implies that $[X,Y]_p \in T_pS = \Delta_p$. Since this is true for all $p \in U$, $[X,Y]$ is also a local section of $\Delta$. Therefore $\Delta$ is involutive.
+\end{proof}
+
+This gives rise to the following implications:
+\[
+\text{completely integrable} \implies \text{integrable} \implies \text{involutive}.
+\]
+Frobenius' theorem states that these are equivalences.
+
+\begin{theorem}
+(Frobenius' Theorem) Every involutive distribution is completely integrable.
+\end{theorem}
+
+The proof is essentially what we have already done. There is no more hard work to be done.
+
+Remark: Given $p \in M$, there is a maximal integral submanifold of $\Delta$ containing $p$. This is a non-trivial fact. These maximal integral submanifolds form a "$k$-dimensional foliation of $M$, whose "leaves" are the maximal integral submanifolds.
+
+Later we will give a PDE-theoretic version of Frobenius' theorem. This is only natural, since for $k = 1$, Frobenius' theorem is essentially the fundamental theorem of flows.
+
+\end{document}
+  
+
+  
