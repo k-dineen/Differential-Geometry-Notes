@@ -1,0 +1,153 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{cancel}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{The Exterior Derivative of a 1-form (July 21)}
+
+\subsection{A Remark on Coordinates}
+
+On $\R^n$, there is a natural isomorphism $\mathfrak{X}(\R^n) \to \Omega^1(\R^n)$ given by $a^i\frac{\pd}{\pd x^i} \mapsto \sum a^i dx^i$. As the notation suggests, this isomorphism is coordinate-dependent. However, $\R^n$ comes with a canonical set of global coordinates, so we are justified in calling this isomorphism natural.
+
+If $M$ is a smooth manifold with a global coordinate system, then we can definitely find such an isomorphism, but it will no longer be "natural". This is similar to how, given a finite dimensional vector space $V$, one constructs an isomorphism with the dual space of $V$ by first choosing a basis of $V$.
+
+If $M$ does not have a global coordinate system, then there is no guarantee that such an isomorphism will make sense on the overlaps of coordinate charts. We are, however, able to create a "local isomorphism" of sorts: if $(U, x^1, \dots, x^n)$ is a coordinate chart on $M$, then consider the map $\mathfrak{X}(U) \to \Omega^1(U)$ defined by $a^i \frac{\pd}{\pd x^i} \mapsto \sum a^i dx^i$. This makes sense because $\{ \frac{\pd}{\pd x^1}, \dots, \frac{\pd}{\pd x^n} \}$ and $\{dx^1, \dots, dx^n\}$ are frames of $TM$ and $T^*M$, respectively, over $U$. Moreover, these sets actually form bases of the $C^\infty(M)$-modules $\mathfrak{X}(U)$ and $\Omega^1(U)$, respectively. 
+
+\subsection{The Exterior Derivative}
+
+If $f \in C^\infty(M)$, then we have a smooth $1$-form $df = \frac{\pd f}{\pd x^i} dx^i$. We can imagine this as a map $d : C^\infty(M) \to \Omega^1(M)$. We call this map the \emph{exterior derivative}. Eventually, we will define $d$ on the space of all smooth forms of all degrees; here, $C^\infty(M)$ will be $\Omega^0(M)$, the space of smooth "$0$-forms".
+
+\begin{proposition}
+The exterior derivative $d$ has the following properties:
+\begin{enumerate}
+\item $d$ is $\R$-linear.
+\item $d(fg) = f dg + g df$.
+\item $d(f/g) = (g df - f dg)/g^2$.
+\item $d$ commutes with pullback.
+\item If $f$ is constant, $df = 0$.
+\item If $df = 0$, then $f$ is constant on the components of $M$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+We will only prove (6), which was left as an exercise in class. Suppose $df = 0$ for some $f \in C^\infty(M)$. Let $(U, x^1, \dots, x^n)$ be a coordinate chart on $M$, and suppose without loss of generality that $U$ is connected. Then $U$ is contained in some connected component of $M$. Here, $df = \frac{\pd f}{\pd x^i} dx^i = 0$, so $\frac{\pd f}{\pd x^i} = 0$ on $U$ for each $i$. Therefore $f$ is constant on $U$, implying that $f$ is locally constant on $M$. 
+
+Let $M'$ be a connected component of $M$. Choose $x_0 \in M'$, and consider the set $W =  \{ x \in M' : f(x) = f(x_0) \}$. Then $W$ is non-empty and closed by definition. If $x \in W$, then we can find a neighbourhood $U \subseteq M'$ of $x$ on which $f$ is constant. But then $U \subseteq W$, implying that $W$ is open. Since $M'$ is connected, we must have $W = M'$.
+\end{proof}
+(It is a more general and easy fact of point-set topology that a locally constant function on a connected space is constant. The proof follows the second paragraph of the previous one nearly verbatim.)
+
+Note that $d$ is \emph{not} a derivation on $C^\infty(M)$, despite (1) and (2) of the previous proposition. It cannot be a derivation since its codomain is $\Omega^1(M)$ and not $C^\infty(M)$.
+
+\subsection{Closed and Exact 1-forms}
+
+About the exterior derivative $d$ we ask two main questions. Is $d$ injective? Absolutely not, since $d(\text{const}) = 0$. Is $d$ surjective? The answer is "it depends on the topology of $M$".
+
+Let us attempt to derive a necessary and sufficient condition for $\omega \in \Omega^1(M)$ to equal $df$ for some $f \in C^\infty(M)$. Suppose $\omega = a_idx^i$ for some local coordinates $x^1, \dots, x^n$ on $U \subseteq M$. To ask if there is a function $f \in C^\infty(M)$ with $\omega = df$ is to ask if there is a solution to the following overdetermined system of PDEs:
+\[
+\begin{cases} 
+a_i = \frac{\pd f}{\pd a^i} \\
+i = 1, \dots, n
+\end{cases},
+\]
+which we will actually be able to answer using Frobenius' theorem.
+
+
+If $\omega = df$, then
+\[
+\frac{\pd a_i}{\pd x^j} = \frac{\pd}{\pd x^j} \frac{\pd f}{\pd x^i} = \frac{\pd}{\pd x^i} \frac{\pd f}{\pd x^j} = \frac{\pd a_j}{\pd x^i}.
+\]
+Therefore a necessary condition for $\omega = df$ is
+\[
+\tag{*}
+\frac{\pd a_i}{\pd x^j} = \frac{\pd a_j}{\pd x^i} \text{ for all charts } (U, x^1, \dots, x^n), \text{ where } \omega = a_idx^i \text{ on } U.
+\]
+We would like to formulate this in a coordinate-independent way. We can write (*) as
+\[
+0 = \frac{\pd}{\pd x^i}\left(\omega \left( \frac{\pd}{\pd x^j} \right)\right) - \frac{\pd}{\pd x^j} \left(\omega \left( \frac{\pd}{\pd x^i} \right)\right),
+\]
+which tempts us to write that this is equivalent to
+\[
+X(\omega(Y)) - Y(\omega(X)) = 0 \text{ for all } X, Y \in \mathfrak{X}(M).
+\]
+But not all vector fields are coordinate vector fields! (As we saw with the "mini Frobenius' theorem", the coordinate vector fields are precisely those that commute. Not all vector fields commute.)  There is, however, a slightly weaker condition we can replace this with that turns out to be the coordinate-independent formulation of (*) which we want.
+
+\begin{proposition}
+$\omega \in \Omega^1(M)$ satisfies (*) if and only if $X(\omega(Y)) - Y(\omega(X)) = \omega([X,Y])$ for all $X, Y \in \mathfrak{X}(M)$.
+\end{proposition}
+\begin{proof}
+Exercise.
+\end{proof}
+
+Sadly, our condition is not actually sufficient. Consider, on $M = \R^2 \setminus \{0\}$, the $1$-form
+\[
+\omega = \frac{-y}{x^2+y^2} dx + \frac{x}{x^2+y^2} dy.
+\]
+One checks that $\omega$ satisfies (*). We show, however, that $\omega \neq df$ for $f \in C^\infty(\R^2 \setminus \{0\})$. Consider
+\[
+\theta(x,y) = \begin{cases} 
+\arctan(y/x) & x > 0, y > 0, \\
+\pi + \arctan(y/x) & x < 0, \\
+2\pi + \arctan(y/x) & x > 0, y < 0, \\
+\pi/2 & x = 0, y > 0, \\
+3\pi/2 & x = 0, y < 0
+\end{cases}
+\]
+defined on the open set $U = \{(x,y) : x < 0 \text{ or } x \geq 0, y \neq 0\}$. Then $\omega = d\theta$ on $U$. If $\omega = df$ for some $f \in C^\infty(\R^2 \setminus \{0\})$, then $df = d\theta$, implying that $\theta = f + \text{const}$. This contradicts the fact that $\theta$ cannot be continuously extended to all of $\R^2 \setminus \{0\}$. See Spivak's \emph{Calculus on Manifolds} for more elaboration on this example.
+
+We now introduce some terminology that will help us describe our problem.
+\begin{definition}
+$\omega \in \Omega^1(M)$ is closed if it satisfies (*), and exact if there is an $f \in C^\infty(M)$ with $\omega = df$.
+\end{definition}
+We showed already that every exact form is closed in our derivation of the condition (*). We are therefore seeking an answer to the converse question: is every closed form exact? A sufficient condition in $\R^n$ is that the domain of the form in question be open and \emph{star-convex} - see the aforementioned book for a proof of this fact.
+
+\begin{theorem}
+Every closed $1$-form is locally exact: for all closed $\omega \in \Omega^1(M)$ and every $p \in M$, there is an open neighbourhood $U$ of $p$ such that $\omega = df$ for some $f \in C^\infty(U)$.
+\end{theorem}
+\begin{proof}
+Here is a vague outline of the proof:
+\begin{enumerate}
+\item 
+Find $X^1, \dots, X^n$ spanning the $C^\infty$ distribution $\Delta$.
+\item
+Show that $\Delta$ is involutive if and only if (*) is satisfied.
+\item
+Then $\Delta$ is completely integrable by Frobenius' theorem. Show that this is true if and only if $\omega = df$ for some $f \in C^\infty(U)$.
+\end{enumerate}
+\end{proof}
+A full proof of this theorem may be provided later by the author, if he feels up to the task of writing one.
+
+\subsection{A Remark on Geometry}
+
+Given $f \in C^\infty(M)$, can we define $\nabla f \in \mathfrak{X}(M)$? If $M = \R^n$, then $\nabla f = \sum \frac{\pd f}{\pd x^i} \frac{\pd}{\pd x^i}$, which is characterized by the property that $\langle \nabla f(p), v \rangle = (df)_p(v)$ for $v \in T_p\R^n$. This definition does not directly carry over to manifolds since it is very much coordinate-dependent.
+
+There is no straightforward generalization of $\nabla f$ to smooth manifolds available to us right now. The characterization of the gradient is very geometrical in nature, but the smooth manifolds we've been working on do not come with any "geometry" of sorts. 
+
+To this end, one defines a \emph{Riemannian metric}, which is, roughly speaking, a smoothly varying choice of inner product on every tangent space of $M$. With a Riemannian metric, one may define the gradient of a function; even better, one can define the divergence of a vector field!
+
+\textbf{Morally,} differential forms are the tools with which vector calculus is generalized to manifolds.
+
+\end{document}
+  
+
+  
