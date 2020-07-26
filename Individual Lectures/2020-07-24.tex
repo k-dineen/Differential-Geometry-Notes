@@ -1,0 +1,276 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{cancel}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\sgn}{\mathrm{sgn}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{$k$-forms (July 24)}
+
+\subsection{Multilinear Algebra}
+
+\begin{definition}
+An $(\ell, k)$-tensor on a real vector space $V$ is a multilinear map
+\[
+T : \underbrace{V^* \times \cdots \times V^*}_{\ell \text{ times}} \times V\underbrace{ \times \cdots \times V}_{k \text{ times}} \to \R.
+\]
+\end{definition}
+In this course we will mainly be concerned with $(0,k)$-tensors, and we'll mainly refer to them as $k$-tensors. Why are these important? We have some reasons:
+\begin{enumerate}
+\item
+The set of tensors have a rich algebraic structure. (They will form a "graded algebra.")
+\item
+They give us the objects we can integrate over. (It turns that the multilinear algebraic properties of forms allow us to define their integrals in a coordinate independent way.)
+\item
+They provide the framework needed to generalize vector calculus to manifolds.
+\end{enumerate}
+
+\begin{definition}
+A $k$-tensor (hereafter this refers to a $(0,k)$-tensor, as defined above) is alternating if 
+\[
+f(v_1, \dots, v_i, \dots, v_j, \dots, v_k) = -f(v_1, \dots, v_j, \dots, v_i, \dots, v_k)
+\]
+for all $v_1, \dots, v_k \in V$.
+\end{definition}
+We have multiple characterizations of algebraic tensors that will make working with them easier.
+\begin{proposition}
+Let $f$ be a $k$-tensor on $V$. The following are equivalent:
+\begin{enumerate}
+\item $f$ is alternating.
+\item $f(v_1, \dots, v_k) = 0$ whenever $v_i = v_k$ for some $i \neq j$.
+\item $f(v_1, \dots, v_k) = 0$ whenever $\{v_1, \dots, v_k\}$ is linearly independent.
+\item For all $\sigma \in S_k$, $\sigma f = \sgn(\sigma)f$, where $\sigma f$ is defined as the $k$-tensor $(\sigma f)(v_1, \dots, v_k) = f(v_{\sigma(1)}, \dots, v_{\sigma(k)})$.
+\end{enumerate}
+\end{proposition}
+
+Let us introduce some notation for the spaces of different kinds of tensors.
+\begin{itemize}
+\item $T_k(V)$ for the vector space of $k$-tensors.
+\item $A_k(V)$ for the vector space of alternating $k$-tensors.
+\item $S_k(V)$ for the vector space of symmetric $k$-tensors; those $k$-tensors $f$ satisfying $\sigma f = f$ for any $\sigma \in S_k.$
+\end{itemize}
+
+Now we define projection operators:
+\begin{align*}
+\mathrm{Sym} : &T_k(V) \to S_k(V) \\
+&f \mapsto \sum_{\sigma \in S_k} \sigma f
+\end{align*}
+and
+\begin{align*}
+\mathrm{Alt} : &T_k(V) \to A_k(V) \\
+&f \mapsto \frac{1}{k!} \sum_{\sigma} (\sgn(\sigma))\sigma f.
+\end{align*}
+The reason for the mysterious $1/k!$ in the definition of the operator $\mathrm{Alt}$ is a technical one: it makes a lot of results come out nicer. In particular,
+\begin{itemize}
+\item $f$ is symmetric if and only if $f = \mathrm{Sym}(f)$,
+\item $f$ is alternating if and only if $f = \mathrm{Alt}(f)$.
+\end{itemize}
+
+\begin{definition}
+For $f \in T_k(V)$ and $g \in T_\ell(V)$, define the tensor product $f \otimes g \in T_{k + \ell}(V)$ by $(f \otimes g)(v_1, \dots, v_k, v_{k+1}, \dots, v_{k+\ell}) \coloneqq f(v_1, \dots, v_k)g(v_{k+1}, \dots, v_{k+\ell})$.
+\end{definition}
+We want a product operation of the form $A_k(V) \times A_\ell(V) \to A_{k+\ell(V)}$. The tensor product does not satisfy this property, unfortunately. Our projection operators will help us define it, however.
+
+\begin{definition}
+For $f \in A_k(V)$ and $g \in A_\ell(V)$, define the wedge product $f \wedge g \in A_{k+\ell}(V)$ by
+\[
+f \wedge g = \frac{(k+\ell)!}{k!\ell!}\mathrm{Alt}(f \otimes g).
+\]
+\end{definition}
+The mysterious scalar multiple is, again, there for technical reasons. We also have
+\[
+f \wedge g = \frac{1}{k!\ell!} \sum_{\sigma \in S_{k+\ell}} \sgn(\sigma)\sigma(f \otimes g).
+\]
+Here are some properties of the wedge product $\wedge : A_k(V) \times A_\ell(V) \to A_{k+\ell}(V)$:
+\begin{enumerate}
+\item Bilinearity.
+\item Associativity.
+\item Anticommutatitivty: $f \wedge g = (-1)^{k\ell}g \wedge f$. (This is the reason we always sum over increasing indices!)
+\item Fix a basis $e_1, \dots, e_n$ of $V$ and let $\alpha^1, \dots, \alpha^n$ be the dual basis for $V^* = A_1(V)$. For any increasing multi-index $I \subseteq \{1, \dots, n\}$ of length $k$, define $\alpha^I$ as the unique element of $A_k(V)$ sending $e_J = (e_{j_1}, \dots, e_{j_k})$ to $\delta^I_J$, where $J$ is another increasing multi-index of length $k$ from $\{1, \dots, n\}$. 
+
+Then 
+\[
+\{\alpha^I : I \text{ an increasing multi-index of length } k \text{ from } \{1, \dots, n\}\}
+\]
+forms a basis of $A_k(V)$. In particular, $\dim(A_k(V)) = {n \choose k}$. Also, $a^I = a^{i_1} \wedge \cdots \wedge a^{i_k}$.
+
+\item
+For any $\omega^1, \dots, \omega^k \in V^*$ and $v_1, \dots, v_k \in V$, $\omega^1 \wedge \cdots \wedge \omega^k(v_1, \dots, v_k) = \det(\omega^i(v_j))$.
+
+\item
+The wedge product is actually characterized by the above properties.
+\end{enumerate}
+
+Because of these properties, we will hereafter denote by $\bigwedge^k(V)$ the space of alternating $k$-tensors on a vector space $V$.
+
+\begin{definition}
+An $\R$-algebra $A$ is said to be graded if $A = \bigoplus_{k=0}^\infty A^k$, where each $A^k$ is an $\R$-vector space, such that the multiplication $A^k \times A^\ell$ maps into $A^{k+\ell}$. A graded algebra $A$ is said to be anticommutative if $ab = (-1)^{k\ell}ba$ for $a \in A^k$ and $b \in A^\ell$.
+\end{definition}
+
+Define $\bigwedge(V^*) \coloneqq \bigoplus_{k=0}^\infty \bigwedge^k(V^*) = \bigoplus_{k=0}^n \bigwedge^k(V^*)$. The properties of the wedge product make $\bigwedge(V^*)$ an associative anticommutatitve graded algebra over $\R$ of dimension $\sum_{k=0}^n {n \choose k} = 2^n$.
+
+\subsection{$k$-forms On Manifolds}
+
+We developed a notion of smoothness for $1$-forms on manifolds. We defined a $1$-form $\omega$ on $M$ to be smooth if it was smooth as a section of the cotangent bundle. We will follow a similar approach by giving the union of all of the spaces $A_k(T_pM)$, over $p \in M$, a smooth structure, which will allow us to talk about a smooth $k$-form. (Along the way, our notation will change a little.)
+
+Let $(U, x^1, \dots, x^n)$ be a coordinate chart on $M$ containing $p$. Then we have a basis $\{\left. \frac{\pd}{\pd x^1} \right|_p, \dots, \left. \frac{\pd}{\pd x^n} \right|_p\}$ of $T_pM$ with the dual basis $\{dx^1_p ,\dots, dx^n_p\}$. Therefore
+\[
+\{ dx_p^{i_1} \wedge \cdots \wedge dx_p^{i_k} : 1 \leq i_1 < \cdots < i_k \leq n \}
+\]
+is a basis of $\bigwedge^k(T_p^*M)$.
+
+Define $\bigwedge^k(T^*M) \coloneqq \bigcup_{p \in M} \bigwedge^k(T_p^*M)$. We call $\bigwedge^k(T^*M)$ the \emph{bundle of alternating $k$-tensors.} This comes with a projection map
+\begin{align*}
+\pi : &\bigwedge^k(T^*M) \to M \\
+&\omega \mapsto p \qquad \text{ whenever } \omega \in \bigwedge^k(T_p^*M)
+\end{align*}
+We can equip $\bigwedge^k(T^*M)$ with a topology and smooth structure making it into a rank ${n \choose k}$ vector bundle. In fact, there is a unique topology and smooth structure for which this is the case. The construction is very similar to that for $TM$ and for $T^*M$. The idea is that for a chart $(U, \phi)$, define $\tilde{\phi} : \bigwedge^k(T^*U) \to \phi(U) \times \R^n$ by
+\[
+\tilde{\phi} : \omega \mapsto (\phi(p), \{c_I\}_I) \qquad \text{ whenever } \omega = \sum_I c_Idx^I \in \bigwedge^k(T_p^*M).
+\]
+(The sum is over increasing multi-indices $I$.) A detailed proof that $\bigwedge^k(T^*M)$ is a smooth rank-${n \choose k}$ vector bundle is left as an exercise. We will sometimes call $\bigwedge^k(T^*M)$ the \emph{$k$th exterior power of the cotangent bundle.}
+
+With a smooth structure on $\bigwedge^k(T^*M)$, we can talk begin to talk about smooth forms of higher degree.
+
+\begin{definition}
+A (differential) $k$-form on $M$ is a section of the $k$th exterior power of the cotangent bundle $\pi : \bigwedge^k(T^*M) \to M$. 
+\end{definition}
+For example, if $(U, x^1, \dots, x^n)$ is a chart on $M$, we can define $dx^I : U \to \bigwedge^k(T^*M)$ by $d^I = dx^{i_1} \wedge \cdots \wedge dx^{i_k}$, where the wedge product of two forms is defined pointwise. Thus $dx^I$ is a $k$-form on $U$.
+
+Just as $1$-forms act on vector fields, $k$-forms act on $k$-tuples of vector fields. Let $\omega$ be a $k$-form on $M$. For $X_1, \dots, X_k \in \mathfrak{X}(M)$, define $\omega(X_1, \dots, X_k) : M \to \R$ pointwise: $\omega(X_1, \dots, X_k)(p) \coloneqq \omega_p(X_{1p}, \dots, X_{kp})$. We note the following important property: if $h : M \to \R$ is a function, then
+\[
+\omega(X_1, \dots, hX_i, \dots, X_k) = h\omega(X_1,\dots,X_k).
+\]
+
+We now begin to discuss smooth $k$-forms. The definition is exactly what one would expect.
+
+\begin{definition}
+A $k$-form $\omega$ on $M$ is smooth if it is smooth as a section of $\bigwedge^k(T^*M)$. The set of all smooth $k$-forms on $M$ is denoted $\Omega^k(M)$. We have $\Omega^k(M) = \Gamma(\bigwedge^k(T^*M))$, using vector bundle notation. We also define $\Omega^0(M) = C^\infty(M)$.
+\end{definition}
+
+The space $\Omega^k(M)$ is an $\R$-vector space and a $C^\infty(M)$-module, as we should expect by now. We have some equivalent conditions for smoothness of a $k$-form. The proofs are left as easy exercises.
+\begin{proposition}
+Let $\omega$ be a $k$-form on $M$. The following are equivalent:
+\begin{enumerate}
+\item $\omega$ is smooth as a section of $\bigwedge^k(T^*M)$.
+\item For any chart $(U, x^1, \dots, x^n)$, $\omega = \sum_I c_I dx^I$ for some $c_I \in C^\infty(U)$, where the sum is over all increasing multi-indices $I$.
+\item
+By its action on vector fields, $\omega : \mathfrak{X}(M) \times \cdots \times \mathfrak{X}(M) \to C^\infty(M)$, and is $C^\infty(M)$-multilinear.
+\end{enumerate}
+\end{proposition}
+
+The next proposition is a higher degree form of a surprising result that we saw for $1$-forms. The proof is identical.
+\begin{proposition}
+Every $C^\infty(M)$-multilinear map $\omega : \mathfrak{X}(M) \times \cdots \times \mathfrak{X}(M) \to C^\infty(M)$ is a $k$-form.
+\end{proposition}
+
+Let's see some examples. Let $f^1, \dots, f^k \in C^\infty(M)$. Then we have $df^1, \dots, df^k \in \Omega^1(M)$. If $(U, x^1, \dots, x^n)$ is a chart, then $df^1 \wedge \cdots \wedge df^k = \sum c_I dx^I$, where the sum is over increasing multi-indices $I$. If $p \in M$, then evaluating at $p$ gives
+\[
+df_p^1 \wedge \cdots \wedge df_p^k = \sum c_I(p)dx_p^{i_1} \wedge \cdots \wedge dx_p^{i_k}.
+\]
+Evaluation at $\left. \frac{\pd}{\pd x^I} \right|_p$ (which means exactly what you think it means) gives
+\[
+c_I(p) = df_p^1 \wedge \cdots \wedge dx_p^k \left( \left. \frac{\pd}{\pd x^I} \right|_p \right) = \det \left(df_p^i \left( \left. \frac{\pd}{\pd x^{i_j}} \right|_p \right)\right) = \frac{\pd (f^1, \dots, f^k)}{\pd (x^{i_1}, \dots, x^{i_k})}(p),
+\]
+which is the determinant of the Jacobian evaluated at $p$. Therefore
+\[
+df^1 \wedge \cdots \wedge df^k = \sum_{1 \leq i_1 < \dots < i_k \leq n} \frac{\pd (f^1, \dots, f^k)}{\pd (x^{i_1}, \dots, x^{i_k})} dx^{i_1} \wedge \cdots \wedge dx^{i_k}.
+\]
+So $df^1 \wedge \cdots \wedge df^k \in \Omega^k(M)$. This leads us to ask the question: is it true in general that wedges of smooth forms on $M$ are also smooth forms on $M$? The answer is yes.
+
+Suppose $\omega \in \Omega^k(M)$ and $\eta \in \Omega^\ell(M)$. In local coordinates, we have
+\[
+\omega \wedge \eta = \left( \sum_I c_Idx^I \right) \wedge \left( \sum_J b_Jdx^J \right) = \sum_{I,J} c_Ib_Jdx^{IJ} \in \Omega^{k+\ell}(M),
+\]
+where $IJ$ is the multi-index $\{ i_1, \dots, i_k, j_1, \dots, j_\ell \}$, and all sums are over increasing multi-indices. Therefore the wedge product gives us a map $\wedge : \Omega^k(M) \times \Omega^\ell(M) \to \Omega^{k+\ell}(M)$. (We are not being too careful here, but it doesn't really matter in the end.)
+
+We extend the wedge product to $0$-forms in the obvious way: since $\Omega^0(M) = C^0(M)$, $f \wedge \omega = f\omega$ for $f \in \Omega^0(M)$ and $\omega \in \Omega^k(M)$.
+
+\subsection{Pullbacks of $k$-forms}
+
+Let $F : N \to M$ be a smooth map. We define 
+\begin{align*}
+F^{*,p} : &\bigwedge^k(T_{F(p)}^*M) \to \bigwedge^k(T_p^*N) \\
+&\theta \mapsto F^{*,p}(\theta) \coloneqq \theta \circ (F_{*,p}, \dots, F_{*,p}).
+\end{align*}
+That is, if $\theta \in \bigwedge^k(T_{F(p)}^*M)$ and $v_1, \dots, v_k \in T_{F(p)}M$, then $F^{*,p}(\theta)(v_1, \dots, v_k) = \theta(F_{*,p}(v_1), \dots, F_{*,p}(v_k))$.
+
+With this, we define the pullback of a $k$-form as follows: if $\omega$ is a $k$-form on $M$, define $F^*\omega$ on $N$ by
+\[
+(F^*\omega)_p \coloneqq F^{*,p}\omega_{F(p)} = \omega_{F(p)} \circ (F_{*,p}, \dots, F_{*,p}).
+\]
+
+The pullback has the following properties:
+\begin{proposition}
+\begin{enumerate}
+\item
+$F^*(a\omega + \eta) = aF^*\omega + F^*\eta$.
+\item
+For any $k$-form $\omega$ and $\ell$-form $\eta$, $F^*(\omega \wedge \eta) = F^*\omega \wedge F^*\eta$. (The pullback distributes over the wedge product.)
+\item
+$F^* : \Omega^k(M) \to \Omega^k(N)$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+We will prove only (3). In local coordinates,
+\begin{align*}
+F^*\omega &= F^*(\sum c_Idx^I) \\
+&= \sum (c_I \circ F) F^*(dx^{i_1} \wedge \cdots \wedge dx^{i_k}) \\
+&= \sum (c_I \circ F) d(x^{i_1} \circ F) \wedge \cdots \wedge d(x^{i_k} \circ F)
+\end{align*}
+the sum, as always, ranging over increasing multi-indices. Since each $d(x^{i_1} \circ F) \wedge \cdots \wedge d(x^{i_k} \circ F)$ is a smooth $k$-form, $F^*\omega$ must be a smooth $k$-form.
+\end{proof}
+
+\subsection{A Remark About Top Degree Forms}
+
+Let $M,N$ be smooth manifolds of common dimension $n$ with charts $(V, y^1, \dots, y^n)$ and $(U, x^1, \dots, x^n)$, respectively, and let $F : N \to M$ be a smooth map with $F(U) \subseteq V$, for simplicity. Then
+\[
+\Omega^n(V) = \{ f dy^1 \wedge \cdots \wedge dy^n : f \in C^\infty(V) \}
+\]
+is a $1$-dimensional $C^\infty(V)$-module. On $U$, 
+\[
+F^*(dy^1 \wedge \cdots \wedge dy^n) = dF^1 \wedge \cdots \wedge dF^n = \det \left( \frac{\pd F^i}{\pd x^j} \right) dx^1 \wedge \cdots \wedge dx^n,
+\]
+giving us the very important identity
+\[
+\boxed{F^*(f dy^1 \wedge \cdots \wedge dy^n) = (f \circ F)\det\left(\frac{\pd F^i}{\pd x^j} \right) dx^1 \wedge \cdots \wedge dx^n}
+\]
+that we will (likely) use extensively.
+
+Define
+\[
+\Omega^*(M) \coloneqq \bigoplus_{k=0}^\infty \Omega^k(M) = \bigoplus{k=0}^n \Omega^k(M).
+\]
+Equipped with the wedge product, $\Omega^*(M)$ is an associative anticommutative graded algebra over $\R$. This is what was meant in the first section of this lesson by "tensors have a very rich algebraic structure." As we can see, the algebraic structure of differential forms on a manifold is \emph{extremely} rich. In particular, $\Omega^*(M)$ is studied extensively in algebraic topology. (See, for example, de Rham cohomology.)
+
+Next time, we will develop the exterior derivative
+\begin{align*}
+&d : \Omega^k(M) \to \Omega^{k+1}(M) \\
+&d : \Omega^*(M) \to \Omega^*(M).
+\end{align*}
+
+\end{document}
+  
+
+  
