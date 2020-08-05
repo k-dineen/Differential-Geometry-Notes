@@ -1,0 +1,121 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb, amsfonts, mathtools, tikz-cd, float}
+\usepackage[left=2.5cm,right=2.5cm]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{cancel}
+
+\newcommand{\Int}{\mathrm{Int}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\pd}{\partial}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\sgn}{\mathrm{sgn}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}[section]
+
+\newtheorem{definition}{Definition}
+
+\pagestyle{myheadings}
+
+\begin{document}
+
+\section{Introducing Cartan's Calculus (August 4)}
+
+\subsection{Plan}
+
+We will develop \emph{Cartan's calculus}, which could be described as the calculus of differential forms. We will, in particular, do four things:
+\begin{enumerate}
+\item
+Develop a global intrinsic formula for the exterior derivative.
+\item
+Develop interior multiplication of forms, a certain antiderivation $\i_X$ of degree $-1$.
+\item
+Develop the notion of the Lie derivative of a $k$-form.
+\item
+Discuss how the previous three concepts interact with each other. In particular, we will prove \emph{Cartan's homotopy formula:} $\mathcal{L}_X = d\i_X + \i_X d$.
+\end{enumerate}
+
+The focus of today's lecture is (1).
+
+\subsection{A Global Intrinsic Formula For The Exterior Derivative of a $1$-form}
+
+Suppose $\omega \in \Omega^1(M)$. Recall that we said that $\omega$ is closed if
+\[
+\frac{\pd \omega_j}{\pd x^i} - \frac{\pd \omega_i}{\pd x^j} = 0 \qquad \text{ on every chart } (U, x^1, \dots, x^n).
+\]
+Notice two things:
+\begin{enumerate}[(i)]
+\item
+$\frac{\pd \omega_j}{\pd x^i} - \frac{\pd \omega_i}{\pd x^j}$ is antisymmetric in $i,j$, and it is the $i,j$-th component of $d\omega$:
+\[
+d\omega = \sum_{1 \leq i < j \leq n} \left( \frac{\pd \omega_j}{\pd x^i} - \frac{\pd \omega_i}{\pd x^j} \right) dx^i \wedge dx^j.
+\]
+This component is not coordinate-independent, but the property that it is zero is. Thus $\omega$ is closed if and only if $d\omega = 0$. We use this to generalize the notions of closedness and exactness to higher degree forms.
+\end{enumerate}
+
+\begin{definition}
+$\omega \in \Omega^k(M)$ is closed if $d\omega = 0$, and exact if $\omega = d\eta$ for some $\eta \in \Omega^{k-1}(M)$.
+\end{definition}
+
+\begin{enumerate}[(i)]
+\setcounter{enumi}{1} % shitty solution to get the definition there, but it works
+
+\item
+We showed that $\frac{\pd \omega_j}{\pd x^i} - \frac{\pd \omega_i}{\pd x^j} = 0$ on a coordinate open set $U$ if and only if for all $X,Y \in \mathfrak{X}(U)$, $X(\omega(Y)) - Y(\omega(X)) - \omega([X, Y]) = 0$. One shows with an easy bump function argument that if this holds on every chart, then this holds for vector fields on $M$ as well.
+\end{enumerate}
+
+We therefore have that $\omega \in \Omega^1(M)$ is closed if and only if $d\omega = 0$ , if and only if $X(\omega(Y)) - Y(\omega(X)) - \omega([X,Y]) = 0$ for all $X, Y \in \mathfrak{X}(M)$. This might lead one to thing that $d\omega$ and $X(\omega(Y)) - Y(\omega(X)) - \omega([X,Y])$ are related. In fact, they're the same thing.
+
+\begin{theorem}
+For every $\omega \in \Omega^1(M)$, $d\omega$ is, by its action on vector fields, given by
+\[
+d\omega (X, Y) = X(\omega(Y)) - Y(\omega(X)) - \omega([X,Y]).
+\]
+\end{theorem}
+\begin{proof}
+I will give a different proof than the one given in class. By linearity of both sides in $\omega$, we may assume that $\omega = f dg$, where $f, g \in C^\infty(U)$ for some (coordinate) open set $U$. If $X$ and $Y$ are smooth vector fields, then the left side is
+\[
+d(f dg)(X, Y) = df \wedge dg (X, Y) = df(X) dg(Y) - dg(X) df(Y) = (Xf)(Yg) - (Xg)(Yf),
+\]
+and the right side is
+\[
+X(f Yg) - Y(f Xg) - f dg([X, Y]) = ((Xf) (Yg) + f XYg) - ((Yf) (Xg) + f YX g) - f(XYg - YXg),
+\]
+which simplifies to equal the left side.
+\end{proof}
+
+\subsection{A Global Intrinsic Formula For The Exterior Derivative of a $k$-form}
+
+The general case is a not-so-straightforward of the case for $1$-forms.
+
+\begin{theorem}
+For every $\omega \in \Omega^k(M)$, $d\omega$ is, by its action on vector fields, given by
+\[
+d\omega(X_0, \dots, X_k) = \sum_{i=0}^k (-1)^i X_i \omega \left(X_0, \dots, \hat{X_i}, \dots, X_k \right) + \sum_{0 \leq i < j \leq k} (-1)^{i+j} \omega \left( [X_i, X_j], \dots, \hat{X_i}, \dots, \hat{X_j}, \dots, X_k \right).
+\]
+\end{theorem}
+\begin{proof}
+We will be able to give a very short proof of this once we develop Cartan's homotopy formula. For now, we outline a proof that does not use this. Define 
+\[
+D\omega : \mathfrak{X}(M) \times \cdots \times \mathfrak{X}(M) \to C^\infty(M)
+\]
+by the right-hand side of the formula. We can use uniqueness of the exterior derivative to prove that $d\omega = D\omega$. This proceeds in two main steps.
+\begin{enumerate}
+\item
+Show that $D\omega$ is a $(k+1)$-form by showing that $D\omega$ is $C^\infty(M)$-multilinear and alternating.
+\item
+Show that $D$ satisfies the characterizing properties of the exterior derivative to show that $d\omega = D\omega$, and conclude the result.
+\end{enumerate}
+\end{proof}
+
+\end{document}
+  
+
+  
